@@ -103,7 +103,7 @@ Greetings, future captains, here are the steps you need to do to get ready for a
    ```bash
    git remote add FtcRobotController https://github.com/FIRST-Tech-Challenge/FtcRobotController
    git fetch FtcRobotController
-   git merge --squash --allow-unrelated-histories FtcRobotController/master
+   git merge --squash --allow-unrelated-histories -X ours FtcRobotController/master
    ```
 4. Update the season and repository names in this `README.md`
 5. Edit the local repository links in this `README.md` to the new remote repository
