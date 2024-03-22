@@ -17,6 +17,8 @@ jobs:
       uses: actions/checkout@v4
     - name: Update FTC Robot Controller
       run: |
+        git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+        git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
         git remote add FtcRobotController https://github.com/FIRST-Tech-Challenge/FtcRobotController
         git fetch FtcRobotController
         git merge --squash --allow-unrelated-histories FtcRobotController/master
