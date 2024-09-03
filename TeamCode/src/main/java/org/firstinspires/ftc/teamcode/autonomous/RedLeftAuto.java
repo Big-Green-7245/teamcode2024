@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RedLeftAuto", group = "opmode")
 public class RedLeftAuto extends Autonomous {
