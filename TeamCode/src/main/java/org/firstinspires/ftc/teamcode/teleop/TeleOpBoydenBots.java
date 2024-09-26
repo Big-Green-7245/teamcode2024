@@ -45,8 +45,7 @@ public class TeleOpBoydenBots extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
-            TelemetryWrapper.setLineNoRender(3, "LeftSlidePos" + outputSlide.getCurrentPosition()[0]);
-            TelemetryWrapper.setLineNoRender(4, "RightSlidePos" + outputSlide.getCurrentPosition()[1]);
+            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos" + outputSlide.getCurrentPosition());
             TelemetryWrapper.setLineNoRender(5, "PivotPos" + pivot.getCurrentPosition());
             TelemetryWrapper.setLine(6, "ClawPos: " + clawServo.getPosition());
 

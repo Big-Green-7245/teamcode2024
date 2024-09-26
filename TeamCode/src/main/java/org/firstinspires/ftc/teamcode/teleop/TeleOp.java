@@ -89,12 +89,9 @@ public class TeleOp extends LinearOpMode {
                     TelemetryWrapper.setLineNoRender(2, "Output Box Lock State HALF UNLOCKED");
                     break;
             }
-            TelemetryWrapper.setLineNoRender(3, "LeftSlidePos" + outputSlide.getCurrentPosition()[0]);
-            TelemetryWrapper.setLineNoRender(4, "RightSlidePos" + outputSlide.getCurrentPosition()[1]);
-            TelemetryWrapper.setLineNoRender(5, "LeftSlideTargetPos" + outputSlide.getTargetPosition()[0]);
-            TelemetryWrapper.setLineNoRender(6, "RightSlideTargetPos" + outputSlide.getTargetPosition()[1]);
-            TelemetryWrapper.setLineNoRender(7, "LeftSlideButton" + outputSlide.isElevatorBtnPressed()[0]);
-            TelemetryWrapper.setLineNoRender(8, "RightSlideButton" + outputSlide.isElevatorBtnPressed()[1]);
+            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos" + outputSlide.getCurrentPosition());
+            TelemetryWrapper.setLineNoRender(5, "OutputSlideTargetPos" + outputSlide.getTargetPosition());
+            TelemetryWrapper.setLineNoRender(7, "OutputSlideButton" + outputSlide.isElevatorBtnPressed());
             TelemetryWrapper.setLineNoRender(9, "PivotPos" + pivot.getCurrentPosition());
             TelemetryWrapper.setLineNoRender(10, "PivotTargetPos" + pivot.getTargetPosition());
             TelemetryWrapper.setLine(11, "PivotButton" + pivot.isPressed());
