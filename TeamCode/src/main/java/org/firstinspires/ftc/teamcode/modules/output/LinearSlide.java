@@ -13,10 +13,8 @@ import org.firstinspires.ftc.teamcode.util.FinishCondition;
 public class LinearSlide implements Modulable, Tickable, FinishCondition {
     private final String name;
     private final double power;
-    private DcMotorEx elevatorLeft;
-    private DcMotorEx elevatorRight;
-    private TouchSensor elevatorBtnLeft;
-    private TouchSensor elevatorBtnRight;
+    private DcMotorEx elevator;
+    private TouchSensor elevatorButton;
     private boolean isBusy;
 
     public LinearSlide(String name, double power) {
@@ -24,40 +22,30 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
         this.power = power;
     }
 
-    public boolean[] isElevatorBtnPressed() {
-        return new boolean[]{elevatorBtnLeft.isPressed(), elevatorBtnRight.isPressed()};
+    public boolean isElevatorBtnPressed() {
+        return elevatorButton.isPressed();
     }
 
     @Override
     public void init(HardwareMap map) {
-        elevatorBtnLeft = map.get(RevTouchSensor.class, "leftBtn");
-        elevatorBtnRight = map.get(RevTouchSensor.class, "rightBtn");
-        elevatorLeft = (DcMotorEx) map.get(DcMotor.class, name + "Left");
-        elevatorLeft.setDirection(DcMotor.Direction.FORWARD);
-        elevatorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elevatorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elevatorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        elevatorRight = (DcMotorEx) map.get(DcMotor.class, name + "Right");
-        elevatorRight.setDirection(DcMotor.Direction.REVERSE);
-        elevatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elevatorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elevatorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        elevatorButton = map.get(RevTouchSensor.class, "leftBtn");
+        elevator = (DcMotorEx) map.get(DcMotor.class, name + "Left");
+        elevator.setDirection(DcMotor.Direction.FORWARD);
+        elevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
      * Warning: DO NOT use this if motor is currently running to position. Undefined behavior.
      */
     public void moveUsingEncoder(double power) {
-        elevatorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elevatorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elevatorLeft.setPower(power);
-        elevatorRight.setPower(power);
+        elevator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elevator.setPower(power);
     }
 
     public void startMoveToRelativePos(int relativePosition) {
-        startMoveToPos(Math.max((elevatorLeft.getCurrentPosition() + elevatorRight.getCurrentPosition()) / 2 + relativePosition, 10));
+        startMoveToPos(Math.max(elevator.getCurrentPosition() + relativePosition, 10));
     }
 
     public void startMoveToPosSetBusy(int position) {
@@ -67,12 +55,9 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
 
     public void startMoveToPos(int position) {
         isBusy = false;
-        elevatorLeft.setTargetPosition(position);
-        elevatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevatorLeft.setPower(power);
-        elevatorRight.setTargetPosition(position);
-        elevatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevatorRight.setPower(power);
+        elevator.setTargetPosition(position);
+        elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevator.setPower(power);
     }
 
     /**
@@ -89,21 +74,15 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
      */
     @Override
     public void tick() {
-        if ((elevatorBtnLeft.isPressed() && elevatorLeft.isBusy()) || (elevatorBtnRight.isPressed() && elevatorRight.isBusy())) {
-            int targetPosLeft = elevatorLeft.getTargetPosition();
-            int targetPosRight = elevatorRight.getTargetPosition();
-            double powerLeft = elevatorLeft.getPower();
-            double powerRight = elevatorRight.getPower();
-            elevatorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elevatorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elevatorLeft.setTargetPosition(Math.max(targetPosLeft, 0));
-            elevatorRight.setTargetPosition(Math.max(targetPosRight, 0));
-            elevatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elevatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elevatorLeft.setPower(powerLeft);
-            elevatorRight.setPower(powerRight);
+        if (elevatorButton.isPressed() && elevator.isBusy()) {
+            int targetPosLeft = elevator.getTargetPosition();
+            double powerLeft = elevator.getPower();
+            elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevator.setTargetPosition(Math.max(targetPosLeft, 0));
+            elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            elevator.setPower(powerLeft);
         }
-        if (isBusy && !elevatorLeft.isBusy() && !elevatorRight.isBusy()) {
+        if (isBusy && !elevator.isBusy()) {
             isBusy = false;
         }
     }
@@ -122,15 +101,15 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
     }
 
     public double getCurrent() {
-        return elevatorLeft.getCurrent(CurrentUnit.AMPS);
+        return elevator.getCurrent(CurrentUnit.AMPS);
     }
 
     public double getPower() {
-        return elevatorLeft.getPower();
+        return elevator.getPower();
     }
 
-    public int[] getTargetPosition() {
-        return new int[]{elevatorLeft.getTargetPosition(), elevatorRight.getTargetPosition()};
+    public int getTargetPosition() {
+        return elevator.getTargetPosition();
     }
 
     /**
@@ -139,7 +118,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
      * @return the current reading of the encoder for this motor
      * @see DcMotor#getCurrentPosition()
      */
-    public int[] getCurrentPosition() {
-        return new int[]{elevatorLeft.getCurrentPosition(), elevatorRight.getCurrentPosition()};
+    public int getCurrentPosition() {
+        return elevator.getCurrentPosition();
     }
 }
