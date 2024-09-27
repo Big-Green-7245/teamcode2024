@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
-@TeleOp(name = "TeleOpBigGreenRi3W", group = "opmode")
+@TeleOp(name = "TeleOpBigGreenRi3W", group = "Big Green")
 public class TeleOpBigGreenRi3W extends LinearOpMode {
     // Define attributes
     private static final String PROGRAM_VERSION = "0.1.0";
