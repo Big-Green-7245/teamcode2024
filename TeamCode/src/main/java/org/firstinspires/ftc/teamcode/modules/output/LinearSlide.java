@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules.output;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.modules.Modulable;
 import org.firstinspires.ftc.teamcode.modules.Tickable;
@@ -13,13 +10,19 @@ import org.firstinspires.ftc.teamcode.util.FinishCondition;
 public class LinearSlide implements Modulable, Tickable, FinishCondition {
     private final String name;
     private final double power;
+    private final DcMotorSimple.Direction direction;
     private DcMotorEx elevator;
     private TouchSensor elevatorButton;
     private boolean isBusy;
 
     public LinearSlide(String name, double power) {
+        this(name, power, DcMotorSimple.Direction.FORWARD);
+    }
+
+    public LinearSlide(String name, double power, DcMotorSimple.Direction direction) {
         this.name = name;
         this.power = power;
+        this.direction = direction;
     }
 
     public boolean isElevatorBtnPressed() {
@@ -28,9 +31,9 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
 
     @Override
     public void init(HardwareMap map) {
-        elevatorButton = map.get(RevTouchSensor.class, "leftBtn");
-        elevator = (DcMotorEx) map.get(DcMotor.class, name + "Left");
-        elevator.setDirection(DcMotor.Direction.FORWARD);
+        elevatorButton = map.get(RevTouchSensor.class, name + "Btn");
+        elevator = (DcMotorEx) map.get(DcMotor.class, name);
+        elevator.setDirection(direction);
         elevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

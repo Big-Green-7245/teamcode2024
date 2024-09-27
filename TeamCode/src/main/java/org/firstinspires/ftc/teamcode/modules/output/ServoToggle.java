@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.modules.output;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.modules.Modulable;
 
 public class ServoToggle implements Modulable {
@@ -21,6 +22,10 @@ public class ServoToggle implements Modulable {
 
     public double getPosition() {
         return servo.getPosition();
+    }
+
+    public double getInterpolatedPos() {
+        return Range.scale(servo.getPosition(), idlePos, actionPos, 0, 1);
     }
 
     public void setPosition(double position) {
@@ -67,6 +72,13 @@ public class ServoToggle implements Modulable {
     public void toggleAction() {
         action = !action;
         setAction(action);
+    }
+
+    /**
+     * Starts to move to claw to the given progress between 0 and 1
+     */
+    public void interpolateAction(double progress) {
+        servo.setPosition(Range.scale(progress, 0, 1, idlePos, actionPos));
     }
 }
 
