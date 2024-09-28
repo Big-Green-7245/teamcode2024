@@ -89,7 +89,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             }
             if (gp2.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the output position
-                outputSlide.startMoveToPosSetBusy(1400);
+                outputSlide.startMoveToPosSetBusy(1300);
             }
             if (gp2.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
