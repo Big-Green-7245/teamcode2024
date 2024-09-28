@@ -47,7 +47,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
         intakeSlide.init(hardwareMap, "intakeSlide", 0, 0.2, false);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.35, false);
+        outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
 
         // Wait for start
         TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");

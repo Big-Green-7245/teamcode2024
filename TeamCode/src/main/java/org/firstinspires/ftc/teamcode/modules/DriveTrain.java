@@ -65,7 +65,6 @@ public class DriveTrain implements Modulable {
      * @param factor applied to all power
      */
     public void move(double powerx, double powery, double turn, double factor) {
-        setModeToAllDriveMotors(DcMotor.RunMode.RUN_USING_ENCODER);
         double speedx = factor * powerx;
         double speedy = factor * powery;
         double offset = factor * turn;
