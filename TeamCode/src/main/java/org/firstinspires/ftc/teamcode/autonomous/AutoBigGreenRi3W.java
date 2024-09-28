@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -48,7 +50,7 @@ public class AutoBigGreenRi3W extends LinearOpMode {
         intakeSlide.init(hardwareMap, "intakeSlide", 0, 0.2, false);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.4, false);
+        outputBox.init(hardwareMap, "outputBox", 0, 0.35, false);
 
         // Wait for start
         TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
@@ -58,14 +60,24 @@ public class AutoBigGreenRi3W extends LinearOpMode {
 
         Actions.runBlocking(drive.actionBuilder(new Pose2d(0, 0, 0))
                 .splineTo(new Vector2d(27, 0), 7 * Math.PI / 4)
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(4, 23), 7 * Math.PI / 4)
                 .build()
         );
-        outputSlide.startMoveToPosSetBusy(1300);
-        while (opModeIsActive() && !outputSlide.isFinished()) {
-            outputSlide.tick();
-        }
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(new Pose2d(27, 0, 7 * Math.PI / 4))
+                        .setTangent(0)
+                        .splineToConstantHeading(new Vector2d(4, 23), 7 * Math.PI / 4)
+                        .build(),
+                new SequentialAction(
+                        telemetryPacket -> {
+                            outputSlide.startMoveToPosSetBusy(1350);
+                            return false;
+                        },
+                        telemetryPacket -> {
+                            outputSlide.tick();
+                            return opModeIsActive() && !outputSlide.isFinished();
+                        }
+                )
+        ));
         outputBox.setAction(true);
         sleep(500);
         outputBox.setAction(false);

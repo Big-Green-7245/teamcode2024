@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.modules.DriveTrain;
 import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
@@ -48,7 +47,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
         intakeSlide.init(hardwareMap, "intakeSlide", 0, 0.2, false);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.4, false);
+        outputBox.init(hardwareMap, "outputBox", 0, 0.35, false);
 
         // Wait for start
         TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
@@ -89,7 +88,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             }
             if (gp2.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the output position
-                outputSlide.startMoveToPosSetBusy(1300);
+                outputSlide.startMoveToPosSetBusy(1350);
             }
             if (gp2.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
