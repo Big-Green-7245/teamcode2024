@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.DriveTrain;
@@ -25,7 +24,6 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
     private Servo activeIntake;
     private LinearSlide outputSlide;
     private ServoToggle outputBox;
-    private DcMotor hangingActuator;
 
     @Override
     public void runOpMode() {
@@ -41,7 +39,6 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputBox = new ServoToggle();
-        hangingActuator = hardwareMap.get(DcMotor.class, "hangingActuator");
 
         driveTrain.init(hardwareMap);
         intakeSlide.init(hardwareMap, "intakeSlide", 0, 0.2, false);
@@ -100,8 +97,6 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             if (gp2.pressing(ButtonHelper.SQUARE)) {
                 outputBox.toggleAction();
             }
-
-            hangingActuator.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
 
             // Update telemetry
             TelemetryWrapper.setLineNoRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Running");

@@ -138,6 +138,7 @@ public class AutoBigGreenRi3W extends LinearOpMode {
         ));
         outputBox.setAction(true);
         sleep(500);
+
         // Move to second sample while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
