@@ -19,7 +19,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
     // Declare modules
     private ButtonHelper gp1, gp2;
     private DriveTrain driveTrain;
-    private ServoToggle intakeSlide;
+    private ServoToggle intakeSlide1, intakeSlide2;
     private ServoToggle intakePivot;
     private Servo activeIntake;
     private LinearSlide outputSlide;
@@ -34,14 +34,16 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
         driveTrain = new DriveTrain(this);
-        intakeSlide = new ServoToggle();
+        intakeSlide1 = new ServoToggle();
+        intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputBox = new ServoToggle();
 
         driveTrain.init(hardwareMap);
-        intakeSlide.init(hardwareMap, "intakeSlide", 0, 0.2, false);
+        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, false);
+        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, true);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
@@ -63,14 +65,17 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
 
             if (Math.abs(gamepad2.left_stick_y) > 0.0001) {
                 // Move intake slides
-                intakeSlide.interpolateAction(intakeSlide.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
+                intakeSlide1.interpolateAction(intakeSlide1.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
+                intakeSlide2.interpolateAction(intakeSlide2.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
             }
             if (gp2.pressing(ButtonHelper.dpad_up)) {
                 // Extend slides
-                intakeSlide.setAction(true);
+                intakeSlide1.setAction(true);
+                intakeSlide2.setAction(true);
             } else if (gp2.pressing(ButtonHelper.dpad_down)) {
                 // Retract slides
-                intakeSlide.setAction(false);
+                intakeSlide1.setAction(false);
+                intakeSlide2.setAction(false);
             }
             if (gp2.pressing(ButtonHelper.dpad_right)) {
                 // Toggle intake pivot between up and down
