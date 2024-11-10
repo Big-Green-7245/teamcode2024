@@ -4,7 +4,6 @@ import com.acmerobotics.roadrunner.*;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -23,12 +22,11 @@ public class AutoBigGreenRi3W extends LinearOpMode {
 
     // Declare modules
     private ButtonHelper gp1, gp2;
-    private ServoToggle intakeSlide;
+    private ServoToggle intakeSlide1, intakeSlide2;
     private ServoToggle intakePivot;
     private Servo activeIntake;
     private LinearSlide outputSlide;
     private ServoToggle outputBox;
-    private DcMotor hangingActuator;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,14 +37,15 @@ public class AutoBigGreenRi3W extends LinearOpMode {
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        intakeSlide = new ServoToggle();
+        intakeSlide1 = new ServoToggle();
+        intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputBox = new ServoToggle();
-        hangingActuator = hardwareMap.get(DcMotor.class, "hangingActuator");
 
-        intakeSlide.init(hardwareMap, "intakeSlide", 0, 0.2, false);
+        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, false);
+        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, true);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
@@ -57,20 +56,20 @@ public class AutoBigGreenRi3W extends LinearOpMode {
             outputSlide.tickBeforeStart();
         }
 
-        Actions.runBlocking(drive.actionBuilder(new Pose2d(36, 63, 3 * Math.PI / 2))
-                .splineTo(new Vector2d(36, 36), 5 * Math.PI / 4)
+        Actions.runBlocking(drive.actionBuilder(new Pose2d(0, 0, 0))
+                .splineTo(new Vector2d(27, 0), 7 * Math.PI / 4)
                 .build()
         );
 
         // Move to basket and deposit the preload sample
         Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(new Pose2d(36, 36, 5 * Math.PI / 4))
+                drive.actionBuilder(new Pose2d(27, 0, 7 * Math.PI / 4))
                         .setReversed(true)
-                        .splineTo(new Vector2d(59, 59), 5 * Math.PI / 4)
+                        .splineToConstantHeading(new Vector2d(4, 23), 7 * Math.PI / 4)
                         .build(),
                 new SequentialAction(
                         telemetryPacket -> {
-                            outputSlide.startMoveToPosSetBusy(1350);
+                            outputSlide.startMoveToPosSetBusy(1250);
                             return false;
                         },
                         telemetryPacket -> {
@@ -84,9 +83,9 @@ public class AutoBigGreenRi3W extends LinearOpMode {
 
         // Move to first sample while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
-                        .splineTo(new Vector2d(36, 25), 3 * Math.PI / 2)
-                        .turnTo(0)
+                drive.actionBuilder(new Pose2d(4, 23, 7 * Math.PI / 4))
+                        .splineTo(new Vector2d(38, 0), 4 * Math.PI / 2)
+                        .turnTo(Math.PI / 2)
                         .build(),
                 new SequentialAction(
                         telemetryPacket -> {
@@ -105,19 +104,21 @@ public class AutoBigGreenRi3W extends LinearOpMode {
         intakePivot.setAction(true);
         activeIntake.setPosition(1);
         sleep(500);
-        intakeSlide.interpolateAction(0.5);
+        intakeSlide1.interpolateAction(0.5);
+        intakeSlide2.interpolateAction(0.5);
         sleep(200);
         activeIntake.setPosition(0.5);
         intakePivot.setAction(false);
-        intakeSlide.setAction(false);
+        intakeSlide1.setAction(false);
+        intakeSlide2.setAction(false);
         sleep(500);
 
         // Move to basket the second time and deposit
         Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(new Pose2d(36, 25, 0))
-                        .turnTo(3 * Math.PI / 2)
+                drive.actionBuilder(new Pose2d(38, 0, Math.PI / 2))
+                        .turnTo(4 * Math.PI / 2)
                         .setReversed(true)
-                        .splineTo(new Vector2d(59, 59), 5 * Math.PI / 4)
+                        .splineToConstantHeading(new Vector2d(4, 23), 7 * Math.PI / 4)
                         .build(),
                 new SequentialAction(
                         telemetryPacket -> {
@@ -127,7 +128,7 @@ public class AutoBigGreenRi3W extends LinearOpMode {
                         new SleepAction(0.5),
                         telemetryPacket -> {
                             activeIntake.setPosition(0.5);
-                            outputSlide.startMoveToPosSetBusy(1350);
+                            outputSlide.startMoveToPosSetBusy(1250);
                             return false;
                         },
                         telemetryPacket -> {
@@ -141,9 +142,9 @@ public class AutoBigGreenRi3W extends LinearOpMode {
 
         // Move to second sample while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
-                        .splineTo(new Vector2d(36, 25), 3 * Math.PI / 2)
-                        .turnTo(0)
+                drive.actionBuilder(new Pose2d(4, 23, 7 * Math.PI / 4))
+                        .splineTo(new Vector2d(38, 0), 4 * Math.PI / 2)
+                        .turnTo(Math.PI / 2)
                         .build(),
                 new SequentialAction(
                         telemetryPacket -> {
