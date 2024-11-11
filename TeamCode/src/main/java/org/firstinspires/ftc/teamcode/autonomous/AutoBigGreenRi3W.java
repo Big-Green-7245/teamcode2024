@@ -57,6 +57,10 @@ public class AutoBigGreenRi3W extends LinearOpMode {
             outputSlide.tickBeforeStart();
         }
 
+        // Begin autonomous program
+        // See BigGreenTest.java for a visualization
+
+        // Start to move to the basket
         Actions.runBlocking(drive.actionBuilder(INITIAL_POSE)
                 .splineTo(new Vector2d(36, 36), 5 * Math.PI / 4)
                 .build()
@@ -65,19 +69,9 @@ public class AutoBigGreenRi3W extends LinearOpMode {
         // Move to basket and deposit the preload sample
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(new Pose2d(36, 36, 5 * Math.PI / 4))
-                        .setReversed(true)
-                        .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), 0)
+                        .splineToConstantHeading(new Vector2d(59, 59), Math.PI / 4)
                         .build(),
-                new SequentialAction(
-                        telemetryPacket -> {
-                            outputSlide.startMoveToPosSetBusy(1250);
-                            return false;
-                        },
-                        telemetryPacket -> {
-                            outputSlide.tick();
-                            return opModeIsActive() && !outputSlide.isFinished();
-                        }
-                )
+                moveSlideToPos(outputSlide, 1250)
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -85,57 +79,28 @@ public class AutoBigGreenRi3W extends LinearOpMode {
         // Move to first sample while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
-                        .splineTo(new Vector2d(36, 25), 3 * Math.PI / 2)
-                        .turnTo(0)
+                        .setTangent(5 * Math.PI / 4)
+                        .splineToSplineHeading(new Pose2d(36, 25, 0), 3 * Math.PI / 2)
                         .build(),
-                new SequentialAction(
-                        telemetryPacket -> {
-                            outputBox.setAction(false);
-                            outputSlide.startRetraction();
-                            return false;
-                        },
-                        telemetryPacket -> {
-                            outputSlide.tick();
-                            return opModeIsActive() && !outputSlide.isFinished();
-                        }
-                )
+                telemetryPacket -> {
+                    outputBox.setAction(false);
+                    return false;
+                },
+                retractSlide(outputSlide)
         ));
 
         // Intake the first sample
-        intakePivot.setAction(true);
-        activeIntake.setPosition(1);
-        sleep(500);
-        intakeSlide1.interpolateAction(0.5);
-        intakeSlide2.interpolateAction(0.5);
-        sleep(200);
-        activeIntake.setPosition(0.5);
-        intakePivot.setAction(false);
-        intakeSlide1.setAction(false);
-        intakeSlide2.setAction(false);
-        sleep(500);
+        Actions.runBlocking(intakeSample());
 
         // Move to basket the second time and deposit
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(new Pose2d(36, 25, 0))
-                        .turnTo(3 * Math.PI / 2)
-                        .setReversed(true)
-                        .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), 0)
+                        .setTangent(Math.PI / 2)
+                        .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
                         .build(),
                 new SequentialAction(
-                        telemetryPacket -> {
-                            activeIntake.setPosition(0);
-                            return false;
-                        },
-                        new SleepAction(0.5),
-                        telemetryPacket -> {
-                            activeIntake.setPosition(0.5);
-                            outputSlide.startMoveToPosSetBusy(1250);
-                            return false;
-                        },
-                        telemetryPacket -> {
-                            outputSlide.tick();
-                            return opModeIsActive() && !outputSlide.isFinished();
-                        }
+                        transferSample(),
+                        moveSlideToPos(outputSlide, 1250)
                 )
         ));
         outputBox.setAction(true);
@@ -144,20 +109,135 @@ public class AutoBigGreenRi3W extends LinearOpMode {
         // Move to second sample while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
-                        .splineTo(new Vector2d(36, 25), 3 * Math.PI / 2)
-                        .turnTo(0)
+                        .setTangent(5 * Math.PI / 4)
+                        .splineToSplineHeading(new Pose2d(46, 25, 0), 3 * Math.PI / 2)
+                        .build(),
+                telemetryPacket -> {
+                    outputBox.setAction(false);
+                    return false;
+                },
+                retractSlide(outputSlide)
+        ));
+
+        // Intake the second sample
+        Actions.runBlocking(intakeSample());
+
+        // Move to basket the third time and deposit
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(new Pose2d(46, 25, 0))
+                        .setTangent(Math.PI / 2)
+                        .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
                         .build(),
                 new SequentialAction(
-                        telemetryPacket -> {
-                            outputBox.setAction(false);
-                            outputSlide.startRetraction();
-                            return false;
-                        },
-                        telemetryPacket -> {
-                            outputSlide.tick();
-                            return opModeIsActive() && !outputSlide.isFinished();
-                        }
+                        transferSample(),
+                        moveSlideToPos(outputSlide, 1250)
                 )
         ));
+        outputBox.setAction(true);
+        sleep(500);
+
+        // Move to third sample while resetting output box and retracting slides
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
+                        .setTangent(5 * Math.PI / 4)
+                        .splineToSplineHeading(new Pose2d(56, 25, 0), 3 * Math.PI / 2)
+                        .build(),
+                telemetryPacket -> {
+                    outputBox.setAction(false);
+                    return false;
+                },
+                retractSlide(outputSlide)
+        ));
+
+        // Intake the third sample
+        Actions.runBlocking(intakeSample());
+
+        // Move to basket the fourth time and deposit
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(new Pose2d(56, 25, 0))
+                        .setTangent(Math.PI / 2)
+                        .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
+                        .build(),
+                new SequentialAction(
+                        transferSample(),
+                        moveSlideToPos(outputSlide, 1250)
+                )
+        ));
+        outputBox.setAction(true);
+        sleep(500);
+
+        // Retract slides
+        Actions.runBlocking(new ParallelAction(
+                telemetryPacket -> {
+                    outputBox.setAction(false);
+                    return false;
+                },
+                retractSlide(outputSlide)
+        ));
+    }
+
+    private Action moveSlideToPos(LinearSlide slide, int pos) {
+        return new SequentialAction(
+                telemetryPacket -> {
+                    slide.startMoveToPosSetBusy(pos);
+                    return false;
+                },
+                telemetryPacket -> {
+                    slide.tick();
+                    return opModeIsActive() && !slide.isFinished();
+                }
+        );
+    }
+
+    private Action retractSlide(LinearSlide slide) {
+        return new SequentialAction(
+                telemetryPacket -> {
+                    slide.startRetraction();
+                    return false;
+                },
+                telemetryPacket -> {
+                    slide.tick();
+                    return opModeIsActive() && !slide.isFinished();
+                }
+        );
+    }
+
+    private Action intakeSample() {
+        return new SequentialAction(
+                telemetryPacket -> {
+                    intakePivot.setAction(true);
+                    activeIntake.setPosition(1);
+                    return false;
+                },
+                new SleepAction(0.5),
+                telemetryPacket -> {
+                    intakeSlide1.interpolateAction(0.5);
+                    intakeSlide2.interpolateAction(0.5);
+                    return false;
+                },
+                new SleepAction(0.2),
+                telemetryPacket -> {
+                    activeIntake.setPosition(0.5);
+                    intakePivot.setAction(false);
+                    intakeSlide1.setAction(false);
+                    intakeSlide2.setAction(false);
+                    return false;
+                },
+                new SleepAction(0.5)
+        );
+    }
+
+    private Action transferSample() {
+        return new SequentialAction(
+                telemetryPacket -> {
+                    activeIntake.setPosition(0);
+                    return false;
+                },
+                new SleepAction(0.5),
+                telemetryPacket -> {
+                    activeIntake.setPosition(0.5);
+                    return false;
+                }
+        );
     }
 }
