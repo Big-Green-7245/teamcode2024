@@ -18,33 +18,33 @@ public class BigGreenTest {
                 .build();
 
         bot.runAction(bot.getDrive().actionBuilder(INITIAL_POSE)
+                // Move to basket and deposit the preload sample
                 .splineTo(new Vector2d(36, 36), 5 * Math.PI / 4)
+                .splineToConstantHeading(new Vector2d(59, 59), Math.PI / 4)
+                // Move to first sample while resetting output box and retracting slides
+                .setTangent(5 * Math.PI / 4)
+                .splineToSplineHeading(new Pose2d(36, 25, 0), 3 * Math.PI / 2)
+                // Move to basket the second time and deposit
+                .setTangent(Math.PI / 2)
+                .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
+                // Move to second sample while resetting output box and retracting slides
+                .setTangent(5 * Math.PI / 4)
+                .splineToSplineHeading(new Pose2d(46, 25, 0), 3 * Math.PI / 2)
+                // Move to basket the third time and deposit
+                .setTangent(Math.PI / 2)
+                .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
+                // Move to third sample while resetting output box and retracting slides
+                .setTangent(5 * Math.PI / 4)
+                .splineToSplineHeading(new Pose2d(56, 25, 0), 3 * Math.PI / 2)
+                // Move to basket the fourth time and deposit
+                .setTangent(Math.PI / 2)
+                .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
                 .build()
         );
-        // Move to basket and deposit the preload sample
-        bot.runAction(bot.getDrive().actionBuilder(new Pose2d(36, 36, 5 * Math.PI / 4))
-                .setReversed(true)
-                .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), 0)
-                .build()
-        );
-        // Move to first sample while resetting output box and retracting slides
-        bot.runAction(bot.getDrive().actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
-                .splineTo(new Vector2d(36, 25), 3 * Math.PI / 2)
-                .turnTo(0)
-                .build()
-        );
-        // Move to basket the second time and deposit
-        bot.runAction(bot.getDrive().actionBuilder(new Pose2d(36, 25, 0))
-                .turnTo(3 * Math.PI / 2)
-                .setReversed(true)
-                .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), 0)
-                .build()
-        );
-        // Move to second sample while resetting output box and retracting slides
-        bot.runAction(bot.getDrive().actionBuilder(new Pose2d(59, 59, 5 * Math.PI / 4))
-                .splineTo(new Vector2d(36, 25), 3 * Math.PI / 4)
-                .turnTo(0)
-                .build()
-        );
+
+        meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
+                .setDarkMode(true)
+                .addEntity(bot)
+                .start();
     }
 }
