@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
+import java.util.List;
+
 @TeleOp(name = "TeleOpBigGreenRi3W", group = "Big Green")
 public class TeleOpBigGreenRi3W extends LinearOpMode {
     // Define attributes
@@ -17,6 +20,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
     private static final double SPEED_MULTIPLIER = 0.9;
 
     // Declare modules
+    private List<LynxModule> hubs;
     private ButtonHelper gp1, gp2;
     private DriveTrain driveTrain;
     private ServoToggle intakeSlide1, intakeSlide2;
@@ -31,6 +35,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
         TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
+        hubs = hardwareMap.getAll(LynxModule.class);
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
         driveTrain = new DriveTrain(this);
@@ -48,14 +53,25 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
 
+        // Manual bulk caching to ensure sensors only get read once per loop
+        // This can save a lot of time in the execution loop
+        // See https://gm0.org/en/latest/docs/software/tutorials/bulk-reads.html
+        for (LynxModule hub : hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         // Wait for start
         TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
         while (opModeInInit()) {
+            clearBulkCache();
+
             outputSlide.tickBeforeStart();
         }
 
         // Main loop
         while (opModeIsActive()) {
+            clearBulkCache();
+
             // Update gamepads
             gp1.update();
             gp2.update();
@@ -110,6 +126,16 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             TelemetryWrapper.setLineNoRender(4, "OutputSlideTargetPos: " + outputSlide.getTargetPosition());
             TelemetryWrapper.setLineNoRender(5, "OutputSlideButton: " + outputSlide.isElevatorBtnPressed());
             TelemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
+        }
+    }
+
+    /**
+     * Resets the cache every iteration to update the sensors once every loop.
+     * @see <a href="https://gm0.org/en/latest/docs/software/tutorials/bulk-reads.html">Bulk Reads</a>
+     */
+    private void clearBulkCache() {
+        for (LynxModule hub : hubs) {
+            hub.clearBulkCache();
         }
     }
 }
