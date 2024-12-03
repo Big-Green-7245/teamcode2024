@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.modules.DriveTrain;
 import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
@@ -18,6 +19,7 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
     // Define attributes
     private static final String PROGRAM_VERSION = "0.1.0";
     private static final double SPEED_MULTIPLIER = 0.9;
+    private final ElapsedTime timer = new ElapsedTime();
 
     // Declare modules
     private List<LynxModule> hubs;
@@ -66,6 +68,10 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             clearBulkCache();
 
             outputSlide.tickBeforeStart();
+
+            // Debug loop times
+            TelemetryWrapper.setLine(2, "TeleOp Init loop time: " + timer.milliseconds() + " ms");
+            timer.reset();
         }
 
         // Main loop
@@ -79,11 +85,6 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             // Move drive train
             driveTrain.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, SPEED_MULTIPLIER);
 
-            if (Math.abs(gamepad2.left_stick_y) > 0.0001) {
-                // Move intake slides
-                intakeSlide1.interpolateAction(intakeSlide1.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
-                intakeSlide2.interpolateAction(intakeSlide2.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
-            }
             if (gp2.pressing(ButtonHelper.dpad_up)) {
                 // Extend slides
                 intakeSlide1.setAction(true);
@@ -92,6 +93,10 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
                 // Retract slides
                 intakeSlide1.setAction(false);
                 intakeSlide2.setAction(false);
+            } else if (Math.abs(gamepad2.left_stick_y) > 0.0001) {
+                // Move intake slides
+                intakeSlide1.interpolateAction(intakeSlide1.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
+                intakeSlide2.interpolateAction(intakeSlide2.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
             }
             if (gp2.pressing(ButtonHelper.dpad_right)) {
                 // Toggle intake pivot between up and down
@@ -100,19 +105,17 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             activeIntake.setPosition((gamepad2.right_trigger - gamepad2.left_trigger) / 2 + 0.5);
 
             // Move output slide
-            if (Math.abs(gamepad2.right_stick_y) > 0.0001 || outputSlide.isFinished()) {
-                // Move output slide by the right stick y if it is not zero and the slide is not currently moving to a position
-                outputSlide.startMoveToRelativePos((int) (-gamepad2.right_stick_y * 500));
-            }
             if (gp2.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the output position
                 outputSlide.startMoveToPosSetBusy(1350);
-            }
-            if (gp2.pressing(ButtonHelper.CROSS)) {
+            } else if (gp2.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
                 outputBox.setAction(false);
                 // Retract the slide to the bottom
                 outputSlide.startRetraction();
+            } else if (Math.abs(gamepad2.right_stick_y) > 0.0001) {
+                // Move output slide by the right stick y if it is not zero and the slide is not currently moving to a position
+                outputSlide.startMoveToRelativePos((int) (-gamepad2.right_stick_y * 500));
             }
             outputSlide.tick();
             if (gp2.pressing(ButtonHelper.SQUARE)) {
@@ -126,6 +129,10 @@ public class TeleOpBigGreenRi3W extends LinearOpMode {
             TelemetryWrapper.setLineNoRender(4, "OutputSlideTargetPos: " + outputSlide.getTargetPosition());
             TelemetryWrapper.setLineNoRender(5, "OutputSlideButton: " + outputSlide.isElevatorBtnPressed());
             TelemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
+
+            // Debug loop times
+            TelemetryWrapper.setLine(7, "TeleOp loop time: " + timer.milliseconds() + " ms");
+            timer.reset();
         }
     }
 
