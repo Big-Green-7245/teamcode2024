@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.modules.DriveTrain;
 import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
@@ -30,46 +31,52 @@ public class TeleOpBoydenBots extends LinearOpMode {
         gp2 = new ButtonHelper(gamepad2);
         driveTrain = new DriveTrain(this);
         clawServo = new ServoToggle();
-        outputSlide = new LinearSlide("outputSlide", 0.5);
 
         driveTrain.init(hardwareMap);
         pivot = hardwareMap.get(DcMotor.class, "pivot");
-        // Initializing the claw servo with min/max range and no reversed direction
-        clawServo.init(hardwareMap, "clawServo", 0, 0.3, false);  // Assuming range is 0 to 1 for open and close
+        clawServo.init(hardwareMap, "clawServo", 0, 0.3, false);
+
+        outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputSlide.init(hardwareMap);
 
         TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
 
-        while (opModeInInit()) {
-            outputSlide.tickBeforeStart();
-        }
+        while (opModeInInit()) {}
 
         while (opModeIsActive()) {
-            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos" + outputSlide.getCurrentPosition());
-            TelemetryWrapper.setLineNoRender(5, "PivotPos" + pivot.getCurrentPosition());
+            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos: " + outputSlide.getCurrentPosition());
+            TelemetryWrapper.setLineNoRender(5, "PivotPos: " + pivot.getCurrentPosition());
             TelemetryWrapper.setLine(6, "ClawPos: " + clawServo.getPosition());
 
-            // Updating button inputs from gamepads
             gp1.update();
             gp2.update();
+
             // Drive movement: left stick (direction), right stick (turn)
             driveTrain.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, SPEED_MULTIPLIER);
 
-            // right to increase power, left to decrease
             pivot.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
 
             if (gp2.pressing(ButtonHelper.dpad_up)) {
                 clawServo.toggleAction();
             }
 
-            if (Math.abs(gamepad2.right_stick_y) > 0.0001 || outputSlide.isFinished()) {
-                outputSlide.startMoveToRelativePos((int) -gamepad2.right_stick_y * 500);
-            } else if (gp2.pressing(ButtonHelper.y)) {
-                outputSlide.startMoveToPosSetBusy(1200);
-            } else if (gp2.pressing(ButtonHelper.a)) {
-                outputSlide.startRetraction();
+            if (Math.abs(gamepad2.left_stick_y) > 0.0001 || outputSlide.isFinished()) {
+                outputSlide.startMoveToRelativePos((int) -gamepad2.left_stick_y * 500);  // Adjust position based on joystick
             }
-            outputSlide.tick(); // each loop iteration
+            if (gp2.pressing(ButtonHelper.b)) {
+                outputSlide.startMoveToPosSetBusy(1200);  // Middle position preset
+            }
+            if (gp2.pressing(ButtonHelper.y)) {
+                outputSlide.startMoveToPosSetBusy(1500);  // Top position preset
+            }
+            if (gp2.pressing(ButtonHelper.a)) {
+                outputSlide.startRetraction();  // Retract slide fully
+            }
+
+            outputSlide.tick();
         }
     }
 }
+
+
+// Control hub: motors, Servo'
