@@ -106,7 +106,7 @@ public class TeleOp extends LinearOpMode {
             // Move output slide
             if (gp2.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the output position
-                outputSlide.startMoveToPosSetBusy(1350);
+                outputSlide.startMoveToPos(1350);
             } else if (gp2.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
                 outputBox.setAction(false);

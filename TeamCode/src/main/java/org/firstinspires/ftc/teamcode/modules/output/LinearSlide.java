@@ -13,7 +13,6 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
     private final DcMotorSimple.Direction direction;
     private DcMotorEx elevator;
     private TouchSensor elevatorButton;
-    private boolean isBusy;
 
     public LinearSlide(String name, double power) {
         this(name, power, DcMotorSimple.Direction.FORWARD);
@@ -51,13 +50,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
         startMoveToPos(Math.max(elevator.getCurrentPosition() + relativePosition, 10));
     }
 
-    public void startMoveToPosSetBusy(int position) {
-        startMoveToPos(position);
-        isBusy = true;
-    }
-
     public void startMoveToPos(int position) {
-        isBusy = false;
         elevator.setTargetPosition(position);
         elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elevator.setPower(power);
@@ -69,7 +62,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
      * YOU MUST call {@link #tick()} in a loop to stop the intakeSlide when it reaches the ground.
      */
     public void startRetraction() {
-        startMoveToPosSetBusy(-1000);
+        startMoveToPos(-1000);
     }
 
     /**
@@ -85,9 +78,6 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
             elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elevator.setPower(powerLeft);
         }
-        if (isBusy && !elevator.isBusy()) {
-            isBusy = false;
-        }
     }
 
     /**
@@ -96,11 +86,11 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
      */
     @Override
     public boolean isFinished() {
-        return !isBusy;
+        return !elevator.isBusy();
     }
 
     public void stop() {
-        isBusy = false;
+        startMoveToRelativePos(0);
     }
 
     public double getCurrent() {

@@ -64,10 +64,10 @@ public class TeleOpBoydenBots extends LinearOpMode {
                 outputSlide.startMoveToRelativePos((int) -gamepad2.left_stick_y * 500);  // Adjust position based on joystick
             }
             if (gp2.pressing(ButtonHelper.b)) {
-                outputSlide.startMoveToPosSetBusy(1200);  // Middle position preset
+                outputSlide.startMoveToPos(1200);  // Middle position preset
             }
             if (gp2.pressing(ButtonHelper.y)) {
-                outputSlide.startMoveToPosSetBusy(1500);  // Top position preset
+                outputSlide.startMoveToPos(1500);  // Top position preset
             }
             if (gp2.pressing(ButtonHelper.a)) {
                 outputSlide.startRetraction();  // Retract slide fully

@@ -179,7 +179,7 @@ public class AutoBasket extends LinearOpMode {
     private Action moveSlideToPos(LinearSlide slide, int pos) {
         return new SequentialAction(
                 telemetryPacket -> {
-                    slide.startMoveToPosSetBusy(pos);
+                    slide.startMoveToPos(pos);
                     return false;
                 },
                 telemetryPacket -> {
