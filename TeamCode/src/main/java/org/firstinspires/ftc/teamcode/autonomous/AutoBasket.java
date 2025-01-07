@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
 
-@Autonomous(name = "AutoBigGreenRi3W", group = "Big Green", preselectTeleOp = "TeleOpBigGreenRi3W")
-public class AutoBigGreenRi3W extends LinearOpMode {
+@Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOp")
+public class AutoBasket extends LinearOpMode {
     // Define attributes
     private static final String PROGRAM_VERSION = "0.1.0";
     private static final double SPEED_MULTIPLIER = 0.9;

@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
-@Autonomous(name = "AutoBigGreenPathTest", group = "Big Green", preselectTeleOp = "TeleOpBigGreenRi3W")
-public class AutoBigGreenPathTest extends LinearOpMode {
+@Autonomous(name = "AutoBasketPathTest", group = "Big Green", preselectTeleOp = "TeleOp")
+public class AutoBasketPathTest extends LinearOpMode {
     // Define attributes
     private static final String PROGRAM_VERSION = "0.1.0";
     private static final double SPEED_MULTIPLIER = 0.9;
