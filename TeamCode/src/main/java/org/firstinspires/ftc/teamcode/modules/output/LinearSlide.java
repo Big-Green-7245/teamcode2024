@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.modules.Tickable;
 import org.firstinspires.ftc.teamcode.util.FinishCondition;
 
 public class LinearSlide implements Modulable, Tickable, FinishCondition {
-    private final String name;
-    private final double power;
+    protected final String name;
+    protected final double power;
     private final DcMotorSimple.Direction direction;
     private DcMotorEx elevator;
     private TouchSensor elevatorButton;
@@ -47,7 +47,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
     }
 
     public void startMoveToRelativePos(int relativePosition) {
-        startMoveToPos(Math.max(elevator.getCurrentPosition() + relativePosition, 10));
+        startMoveToPos(Math.max(getCurrentPosition() + relativePosition, 10));
     }
 
     public void startMoveToPos(int position) {

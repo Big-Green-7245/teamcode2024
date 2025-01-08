@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.modules.DriveTrain;
-import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
+import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
@@ -27,7 +27,7 @@ public class TeleOp extends LinearOpMode {
     private ServoToggle intakeSlide1, intakeSlide2;
     private ServoToggle intakePivot;
     private Servo activeIntake;
-    private LinearSlide outputSlide;
+    private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
 
     @Override
@@ -44,15 +44,15 @@ public class TeleOp extends LinearOpMode {
         intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
+        outputSlide = new DoubleLinearSlides("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle();
 
         driveTrain.init(hardwareMap);
-        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, false);
-        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, true);
+        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, true);
+        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, false);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
+        outputBox.init(hardwareMap, "outputBox", 0, 0.3, true);
 
         // Manual bulk caching to ensure sensors only get read once per loop
         // This can save a lot of time in the execution loop
@@ -126,7 +126,7 @@ public class TeleOp extends LinearOpMode {
             TelemetryWrapper.setLineNoRender(2, "Gamepad2RightStickY: " + gamepad2.right_stick_y * 500);
             TelemetryWrapper.setLineNoRender(3, "OutputSlidePos: " + outputSlide.getCurrentPosition());
             TelemetryWrapper.setLineNoRender(4, "OutputSlideTargetPos: " + outputSlide.getTargetPosition());
-            TelemetryWrapper.setLineNoRender(5, "OutputSlideButton: " + outputSlide.isElevatorBtnPressed());
+            TelemetryWrapper.setLineNoRender(5, "OutputSlideButton Left: " + outputSlide.areElevatorButtonsPressed()[0] + " Right: " + outputSlide.areElevatorButtonsPressed()[1]);
             TelemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
 
             // Debug loop times
