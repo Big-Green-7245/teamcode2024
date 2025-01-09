@@ -29,6 +29,7 @@ public class TeleOp extends LinearOpMode {
     private Servo activeIntake;
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
+    private ServoToggle specimenClaw;
 
     @Override
     public void runOpMode() {
@@ -46,13 +47,15 @@ public class TeleOp extends LinearOpMode {
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle();
+        specimenClaw = new ServoToggle();
 
         driveTrain.init(hardwareMap);
         intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, true);
         intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, false);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.3, true);
+        outputBox.init(hardwareMap, "outputBox", 0, 0.4, true);
+        specimenClaw.init(hardwareMap, "specimenClaw", 0, 0.3, true);
 
         // Manual bulk caching to ensure sensors only get read once per loop
         // This can save a lot of time in the execution loop
@@ -119,6 +122,11 @@ public class TeleOp extends LinearOpMode {
             outputSlide.tick();
             if (gp2.pressing(ButtonHelper.SQUARE)) {
                 outputBox.toggleAction();
+            }
+
+            // Specimen claw
+            if (gp2.pressing(ButtonHelper.CIRCLE)) {
+                specimenClaw.toggleAction();
             }
 
             // Update telemetry

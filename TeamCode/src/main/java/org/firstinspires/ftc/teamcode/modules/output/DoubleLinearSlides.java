@@ -77,8 +77,8 @@ public class DoubleLinearSlides extends LinearSlide {
             double powerRight = elevatorRight.getPower();
             elevatorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             elevatorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elevatorLeft.setTargetPosition(Math.max(targetPosLeft, 0));
-            elevatorRight.setTargetPosition(Math.max(targetPosRight, 0));
+            elevatorLeft.setTargetPosition(Math.max(targetPosLeft, 10));
+            elevatorRight.setTargetPosition(Math.max(targetPosRight, 10));
             elevatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elevatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elevatorLeft.setPower(powerLeft);
