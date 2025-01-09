@@ -17,7 +17,7 @@ import java.util.List;
 public class TeleOp extends LinearOpMode {
     // Define attributes
     private static final String PROGRAM_VERSION = "0.1.0";
-    private static final double SPEED_MULTIPLIER = 0.9;
+    private static final double SPEED_MULTIPLIER = 1;
     private final ElapsedTime timer = new ElapsedTime();
 
     // Declare modules
@@ -55,7 +55,7 @@ public class TeleOp extends LinearOpMode {
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap, "outputBox", 0, 0.4, true);
-        specimenClaw.init(hardwareMap, "specimenClaw", 0, 0.3, true);
+        specimenClaw.init(hardwareMap, "specimenClaw", 0, 0.2, false);
 
         // Manual bulk caching to ensure sensors only get read once per loop
         // This can save a lot of time in the execution loop
