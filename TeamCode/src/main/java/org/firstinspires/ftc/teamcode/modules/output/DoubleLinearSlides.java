@@ -12,8 +12,8 @@ public class DoubleLinearSlides extends LinearSlide {
     private TouchSensor elevatorBtnLeft;
     private TouchSensor elevatorBtnRight;
 
-    public DoubleLinearSlides(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight) {
-        super(name, power, null);
+    public DoubleLinearSlides(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight, int limit) {
+        super(name, power, null, limit);
         this.directionLeft = directionLeft;
         this.directionRight = directionRight;
     }

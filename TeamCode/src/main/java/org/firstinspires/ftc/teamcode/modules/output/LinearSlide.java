@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules.output;
 
+import androidx.core.math.MathUtils;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -11,6 +12,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
     protected final String name;
     protected final double power;
     private final DcMotorSimple.Direction direction;
+    protected final int limit;
     private DcMotorEx elevator;
     private TouchSensor elevatorButton;
 
@@ -19,9 +21,14 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
     }
 
     public LinearSlide(String name, double power, DcMotorSimple.Direction direction) {
+        this(name, power, direction, Integer.MAX_VALUE);
+    }
+
+    public LinearSlide(String name, double power, DcMotorSimple.Direction direction, int limit) {
         this.name = name;
         this.power = power;
         this.direction = direction;
+        this.limit = limit;
     }
 
     public boolean isElevatorBtnPressed() {
@@ -47,7 +54,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
     }
 
     public void startMoveToRelativePos(int relativePosition) {
-        startMoveToPos(Math.max(getCurrentPosition() + relativePosition, 10));
+        startMoveToPos(MathUtils.clamp(getCurrentPosition() + relativePosition, 10, limit));
     }
 
     public void startMoveToPos(int position) {

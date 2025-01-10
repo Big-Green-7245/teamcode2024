@@ -45,7 +45,7 @@ public class TeleOp extends LinearOpMode {
         intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new DoubleLinearSlides("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
+        outputSlide = new DoubleLinearSlides("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 3300);
         outputBox = new ServoToggle();
         specimenClaw = new ServoToggle();
 
@@ -122,6 +122,10 @@ public class TeleOp extends LinearOpMode {
             outputSlide.tick();
             if (gp2.pressing(ButtonHelper.SQUARE)) {
                 outputBox.toggleAction();
+            } else if (gp1.pressing(ButtonHelper.right_bumper)) {
+                outputBox.setAction(true);
+            } else if (gp1.pressing(ButtonHelper.left_bumper)) {
+                outputBox.setAction(false);
             }
 
             // Specimen claw
@@ -132,9 +136,11 @@ public class TeleOp extends LinearOpMode {
             // Update telemetry
             TelemetryWrapper.setLineNoRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Running");
             TelemetryWrapper.setLineNoRender(2, "Gamepad2RightStickY: " + gamepad2.right_stick_y * 500);
-            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos: " + outputSlide.getCurrentPosition());
-            TelemetryWrapper.setLineNoRender(4, "OutputSlideTargetPos: " + outputSlide.getTargetPosition());
-            TelemetryWrapper.setLineNoRender(5, "OutputSlideButton Left: " + outputSlide.areElevatorButtonsPressed()[0] + " Right: " + outputSlide.areElevatorButtonsPressed()[1]);
+            int[] currentPositions = outputSlide.getCurrentPositions();
+            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos Left: " + currentPositions[0] + "; Right: " + currentPositions[1] + "; Diff: " + (currentPositions[1] - currentPositions[0]));
+            int[] targetPositions = outputSlide.getTargetPositions();
+            TelemetryWrapper.setLineNoRender(4, "OutputSlideTargetPos Left: " + targetPositions[0] + "; Right: " + targetPositions[1] + "; Diff: " + (targetPositions[1] - targetPositions[0]));
+            TelemetryWrapper.setLineNoRender(5, "OutputSlideButton Left: " + outputSlide.areElevatorButtonsPressed()[0] + "; Right: " + outputSlide.areElevatorButtonsPressed()[1]);
             TelemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
 
             // Debug loop times
