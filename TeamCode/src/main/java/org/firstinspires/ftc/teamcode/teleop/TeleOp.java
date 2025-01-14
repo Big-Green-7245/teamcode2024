@@ -34,7 +34,7 @@ public class TeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         TelemetryWrapper.init(telemetry, 20);
-        TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
         hubs = hardwareMap.getAll(LynxModule.class);
@@ -65,14 +65,14 @@ public class TeleOp extends LinearOpMode {
         }
 
         // Wait for start
-        TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
         while (opModeInInit()) {
             clearBulkCache();
 
             outputSlide.tickBeforeStart();
 
             // Debug loop times
-            TelemetryWrapper.setLine(2, "TeleOp Init loop time: " + timer.milliseconds() + " ms");
+            TelemetryWrapper.setLineAndRender(2, "TeleOp Init loop time: " + timer.milliseconds() + " ms");
             timer.reset();
         }
 
@@ -146,18 +146,18 @@ public class TeleOp extends LinearOpMode {
             double specimenClawTime = timer.milliseconds();
 
             // Update telemetry
-            TelemetryWrapper.setLineNoRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Running");
-            TelemetryWrapper.setLineNoRender(2, "Gamepad2RightStickY: " + gamepad2.right_stick_y * 500);
+            TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Running");
+            TelemetryWrapper.setLine(2, "Gamepad2RightStickY: " + gamepad2.right_stick_y * 500);
             int[] currentPositions = outputSlide.getCurrentPositions();
-            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos Left: " + currentPositions[0] + "; Right: " + currentPositions[1] + "; Diff: " + (currentPositions[1] - currentPositions[0]));
+            TelemetryWrapper.setLine(3, "OutputSlidePos Left: " + currentPositions[0] + "; Right: " + currentPositions[1] + "; Diff: " + (currentPositions[1] - currentPositions[0]));
             int[] targetPositions = outputSlide.getTargetPositions();
-            TelemetryWrapper.setLineNoRender(4, "OutputSlideTargetPos Left: " + targetPositions[0] + "; Right: " + targetPositions[1] + "; Diff: " + (targetPositions[1] - targetPositions[0]));
-            TelemetryWrapper.setLineNoRender(5, "OutputSlideButton Left: " + outputSlide.areElevatorButtonsPressed()[0] + "; Right: " + outputSlide.areElevatorButtonsPressed()[1]);
-            TelemetryWrapper.setLineNoRender(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
+            TelemetryWrapper.setLine(4, "OutputSlideTargetPos Left: " + targetPositions[0] + "; Right: " + targetPositions[1] + "; Diff: " + (targetPositions[1] - targetPositions[0]));
+            TelemetryWrapper.setLine(5, "OutputSlideButton Left: " + outputSlide.areElevatorButtonsPressed()[0] + "; Right: " + outputSlide.areElevatorButtonsPressed()[1]);
+            TelemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
 
             // Debug loop times
             double telemetryTime = timer.milliseconds();
-            TelemetryWrapper.setLineNoRender(7, String.format("TeleOp loop time: %s ms; ClearBulkCacheTime: %s ms; Gamepads: %s ms; DriveTrain: %s ms; Intake: %s ms; Output: %s ms; SpecimenClaw: %s ms; TelemetryTime: %s ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime));
+            TelemetryWrapper.setLine(7, String.format("TeleOp loop time: %s ms; ClearBulkCacheTime: %s ms; Gamepads: %s ms; DriveTrain: %s ms; Intake: %s ms; Output: %s ms; SpecimenClaw: %s ms; TelemetryTime: %s ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime));
             TelemetryWrapper.render();
             timer.reset();
         }

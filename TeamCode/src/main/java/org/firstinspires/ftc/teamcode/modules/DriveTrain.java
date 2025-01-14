@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -122,14 +121,15 @@ public class DriveTrain implements Modulable {
         TelemetryWrapper.setLine(0, "Running to (x:y:r)=(" + dX + ":" + dY + ":" + dTheta + ")");
         TelemetryWrapper.setLine(1, "Running delta (dFL:dFR:dBL:dBR)=(" + dFL + ":" + dFR + ":" + dBL + ":" + dBR + ")");
         TelemetryWrapper.setLine(2, "Wheels to (lf:rf:lr:rr)=(" + newFLTarget + ":" + newFRTarget + ":" + newBLTarget + ":" + newBRTarget + ")");
+        TelemetryWrapper.render();
         while (opMode.opModeIsActive() && (runtime.seconds() < timeout) && (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy())) {
-            TelemetryWrapper.setLine(3, "Running @ (" + frontRight.getCurrentPosition() + ":" + frontLeft.getCurrentPosition() + ":" + backRight.getCurrentPosition() + ":" + backLeft.getCurrentPosition() + ")");
+            TelemetryWrapper.setLineAndRender(3, "Running @ (" + frontRight.getCurrentPosition() + ":" + frontLeft.getCurrentPosition() + ":" + backRight.getCurrentPosition() + ":" + backLeft.getCurrentPosition() + ")");
         }
 
         // Stop all motion
         setZeroPowerBehaviorToAllDriveMotors(DcMotor.ZeroPowerBehavior.BRAKE);
         setPowerToAllDriveMotors(0);
-        TelemetryWrapper.setLine(10, "Motor power 0");
+        TelemetryWrapper.setLineAndRender(10, "Motor power 0");
 
         // Turn off RUN_TO_POSITION
         setModeToAllDriveMotors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

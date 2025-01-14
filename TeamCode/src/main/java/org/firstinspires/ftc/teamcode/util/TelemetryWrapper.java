@@ -44,8 +44,8 @@ public class TelemetryWrapper {
      * @param l Line number
      * @param message Message for line
      */
-    public static void setLine(int l, String message) {
-        setLineNoRender(l, message);
+    public static void setLineAndRender(int l, String message) {
+        setLine(l, message);
         render();
     }
 
@@ -54,7 +54,7 @@ public class TelemetryWrapper {
      * @param l Line number
      * @param message Message for line
      */
-    public static void setLineNoRender(int l, String message) {
+    public static void setLine(int l, String message) {
         if (l < 0 || l >= lines.length) return;
         lines[l] = message;
     }

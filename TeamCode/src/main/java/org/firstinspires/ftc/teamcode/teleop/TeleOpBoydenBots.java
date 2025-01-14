@@ -25,7 +25,7 @@ public class TeleOpBoydenBots extends LinearOpMode {
     @Override
     public void runOpMode() {
         TelemetryWrapper.init(telemetry, 20);
-        TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
@@ -39,14 +39,15 @@ public class TeleOpBoydenBots extends LinearOpMode {
         outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputSlide.init(hardwareMap);
 
-        TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
 
         while (opModeInInit()) {}
 
         while (opModeIsActive()) {
-            TelemetryWrapper.setLineNoRender(3, "OutputSlidePos: " + outputSlide.getCurrentPosition());
-            TelemetryWrapper.setLineNoRender(5, "PivotPos: " + pivot.getCurrentPosition());
+            TelemetryWrapper.setLine(3, "OutputSlidePos: " + outputSlide.getCurrentPosition());
+            TelemetryWrapper.setLine(5, "PivotPos: " + pivot.getCurrentPosition());
             TelemetryWrapper.setLine(6, "ClawPos: " + clawServo.getPosition());
+            TelemetryWrapper.render();
 
             gp1.update();
             gp2.update();
@@ -79,4 +80,4 @@ public class TeleOpBoydenBots extends LinearOpMode {
 }
 
 
-// Control hub: motors, Servo'
+// Control hub: motors, Servo

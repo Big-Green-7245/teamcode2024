@@ -32,7 +32,7 @@ public class AutoBasket extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         TelemetryWrapper.init(telemetry, 20);
-        TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
         gp1 = new ButtonHelper(gamepad1);
@@ -52,7 +52,7 @@ public class AutoBasket extends LinearOpMode {
         outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
 
         // Wait for start
-        TelemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
         while (opModeInInit()) {
             outputSlide.tickBeforeStart();
         }
