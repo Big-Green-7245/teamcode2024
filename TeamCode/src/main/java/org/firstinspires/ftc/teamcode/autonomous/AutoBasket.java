@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.roadrunner.*;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,11 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
-import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
-
-import java.lang.Math;
 
 @Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOp")
 public class AutoBasket extends LinearOpMode {
@@ -73,7 +73,7 @@ public class AutoBasket extends LinearOpMode {
                 drive.actionBuilder(new Pose2d(36, 36, 5 * Math.PI / 4))
                         .splineToConstantHeading(new Vector2d(59, 59), Math.PI / 4)
                         .build(),
-                moveSlideToPos(outputSlide, 1750)
+                AutoHelper.moveSlideToPos(outputSlide, 1750)
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -88,11 +88,11 @@ public class AutoBasket extends LinearOpMode {
                     outputBox.setAction(false);
                     return false;
                 },
-                retractSlide(outputSlide)
+                AutoHelper.retractSlide(outputSlide)
         ));
 
         // Intake the first sample
-        Actions.runBlocking(intakeSample());
+        Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
 
         // Move to basket the second time and deposit
         Actions.runBlocking(new ParallelAction(
@@ -101,8 +101,8 @@ public class AutoBasket extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
                         .build(),
                 new SequentialAction(
-                        transferSample(),
-                        moveSlideToPos(outputSlide, 1250)
+                        AutoHelper.transferSample(activeIntake),
+                        AutoHelper.moveSlideToPos(outputSlide, 1250)
                 )
         ));
         outputBox.setAction(true);
@@ -118,11 +118,11 @@ public class AutoBasket extends LinearOpMode {
                     outputBox.setAction(false);
                     return false;
                 },
-                retractSlide(outputSlide)
+                AutoHelper.retractSlide(outputSlide)
         ));
 
         // Intake the second sample
-        Actions.runBlocking(intakeSample());
+        Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
 
         // Move to basket the third time and deposit
         Actions.runBlocking(new ParallelAction(
@@ -131,8 +131,8 @@ public class AutoBasket extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
                         .build(),
                 new SequentialAction(
-                        transferSample(),
-                        moveSlideToPos(outputSlide, 1250)
+                        AutoHelper.transferSample(activeIntake),
+                        AutoHelper.moveSlideToPos(outputSlide, 1250)
                 )
         ));
         outputBox.setAction(true);
@@ -148,11 +148,11 @@ public class AutoBasket extends LinearOpMode {
                     outputBox.setAction(false);
                     return false;
                 },
-                retractSlide(outputSlide)
+                AutoHelper.retractSlide(outputSlide)
         ));
 
         // Intake the third sample
-        Actions.runBlocking(intakeSample());
+        Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
 
         // Move to basket the fourth time and deposit
         Actions.runBlocking(new ParallelAction(
@@ -161,8 +161,8 @@ public class AutoBasket extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(59, 59, 5 * Math.PI / 4), Math.PI / 4)
                         .build(),
                 new SequentialAction(
-                        transferSample(),
-                        moveSlideToPos(outputSlide, 1250)
+                        AutoHelper.transferSample(activeIntake),
+                        AutoHelper.moveSlideToPos(outputSlide, 1250)
                 )
         ));
         outputBox.setAction(true);
@@ -174,72 +174,7 @@ public class AutoBasket extends LinearOpMode {
                     outputBox.setAction(false);
                     return false;
                 },
-                retractSlide(outputSlide)
+                AutoHelper.retractSlide(outputSlide)
         ));
-    }
-
-    private Action moveSlideToPos(LinearSlide slide, int pos) {
-        return new SequentialAction(
-                telemetryPacket -> {
-                    slide.startMoveToPos(pos);
-                    return false;
-                },
-                telemetryPacket -> {
-                    slide.tick();
-                    return opModeIsActive() && !slide.isFinished();
-                }
-        );
-    }
-
-    private Action retractSlide(LinearSlide slide) {
-        return new SequentialAction(
-                telemetryPacket -> {
-                    slide.startRetraction();
-                    return false;
-                },
-                telemetryPacket -> {
-                    slide.tick();
-                    return opModeIsActive() && !slide.isFinished();
-                }
-        );
-    }
-
-    private Action intakeSample() {
-        return new SequentialAction(
-                telemetryPacket -> {
-                    intakePivot.setAction(true);
-                    activeIntake.setPosition(1);
-                    return false;
-                },
-                new SleepAction(0.5),
-                telemetryPacket -> {
-                    intakeSlide1.interpolateAction(0.5);
-                    intakeSlide2.interpolateAction(0.5);
-                    return false;
-                },
-                new SleepAction(0.2),
-                telemetryPacket -> {
-                    activeIntake.setPosition(0.5);
-                    intakePivot.setAction(false);
-                    intakeSlide1.setAction(false);
-                    intakeSlide2.setAction(false);
-                    return false;
-                },
-                new SleepAction(0.5)
-        );
-    }
-
-    private Action transferSample() {
-        return new SequentialAction(
-                telemetryPacket -> {
-                    activeIntake.setPosition(0);
-                    return false;
-                },
-                new SleepAction(0.5),
-                telemetryPacket -> {
-                    activeIntake.setPosition(0.5);
-                    return false;
-                }
-        );
     }
 }
