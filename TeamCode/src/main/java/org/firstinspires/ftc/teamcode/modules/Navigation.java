@@ -25,6 +25,7 @@ public class Navigation {
     private double lastDriveTrainBearing;
 
     private LinearOpMode opMode;
+    private TelemetryWrapper telemetryWrapper;
 
     private DriveTrain driveTrain;
 
@@ -33,14 +34,15 @@ public class Navigation {
     BNO055IMU imu;
     private double initGyroReading;
 
-    public Navigation(double[] initPos, double initBearing, LinearOpMode opMode, HardwareMap map) {
+    public Navigation(double[] initPos, double initBearing, LinearOpMode opMode, HardwareMap map, TelemetryWrapper telemetryWrapper) {
         currentPos = initPos;
         lastAprilTagPos = initPos;
         lastDriveTrainPos = initPos;
         lastDriveTrainBearing = initBearing;
         currentBearing = initBearing;
         this.opMode = opMode;
-        driveTrain = new DriveTrain(opMode);
+        this.telemetryWrapper = telemetryWrapper;
+        driveTrain = new DriveTrain(opMode, telemetryWrapper);
         driveTrain.init(map);
         tagCam = new AprilTagWebcam();
         tagCam.init(map);
@@ -52,9 +54,9 @@ public class Navigation {
         imu = map.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         while (opMode.opModeInInit() && !imu.isGyroCalibrated()) {
-            TelemetryWrapper.setLineAndRender(2, "Calibrating gyro...");
+            telemetryWrapper.setLineAndRender(2, "Calibrating gyro...");
         }
-        TelemetryWrapper.setLineAndRender(2, "Gyro calibrated");
+        telemetryWrapper.setLineAndRender(2, "Gyro calibrated");
         initGyroReading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle - initBearing;
     }
 
@@ -113,7 +115,7 @@ public class Navigation {
         currentBearing = getGyroBearing();
         double dAngle = getMinAngle(currentBearing, targetBearing);
         while (opMode.opModeIsActive() && Math.abs(dAngle) > 1) {
-            TelemetryWrapper.setLineAndRender(6, "Target Bearing: " + targetBearing + " | " + "Current Bearing: " + currentBearing);
+            telemetryWrapper.setLineAndRender(6, "Target Bearing: " + targetBearing + " | " + "Current Bearing: " + currentBearing);
             driveTrain.move(0, 0, Math.signum(dAngle) * Range.clip(dAngle * dAngle / 1000, 0.1, 1), 1);
             currentBearing = getGyroBearing();
             dAngle = getMinAngle(currentBearing, targetBearing);
@@ -152,22 +154,22 @@ public class Navigation {
             double positivePower = direction * Math.signum((startPos[0] - targetPos[0]) * (currentPos[0] - targetPos[0]) + (startPos[1] - targetPos[1]) * (currentPos[1] - targetPos[1]));
             driveTrain.move(0, positivePower * (Range.clip(projectedDisplacementMagnitude * projectedDisplacementMagnitude / 200, 0.05, 0.7) - speed / 10), 0, 1);
             long curTime = System.currentTimeMillis(); // TODO debug remove
-            TelemetryWrapper.setLine(11, "Navigation movement time for tick: " + (curTime - prevTime)); // TODO debug remove
+            telemetryWrapper.setLine(11, "Navigation movement time for tick: " + (curTime - prevTime)); // TODO debug remove
 
-            TelemetryWrapper.setLine(5, "x: " + currentPos[0] + "| y: " + currentPos[1] + "| theta: " + currentBearing);
-            TelemetryWrapper.render();
+            telemetryWrapper.setLine(5, "x: " + currentPos[0] + "| y: " + currentPos[1] + "| theta: " + currentBearing);
+            telemetryWrapper.render();
             double[] currentEncPos = driveTrain.getEncPos();
             currentBearing = getGyroBearing();
-            TelemetryWrapper.setLineAndRender(10, "Detecting april tags..."); // TODO debug remove
+            telemetryWrapper.setLineAndRender(10, "Detecting april tags..."); // TODO debug remove
             lastAprilTagPos = tagCam.detectIter(currentBearing);
             if (tagCam.isDetecting) {
                 currentPos = lastAprilTagPos;
-                TelemetryWrapper.setLine(10, ""); // TODO debug remove
-                TelemetryWrapper.setLine(9, "April tag detected."); // TODO debug remove
-                TelemetryWrapper.setLine(7, "CAM");
-                TelemetryWrapper.render();
+                telemetryWrapper.setLine(10, ""); // TODO debug remove
+                telemetryWrapper.setLine(9, "April tag detected."); // TODO debug remove
+                telemetryWrapper.setLine(7, "CAM");
+                telemetryWrapper.render();
             } else {
-                TelemetryWrapper.setLineAndRender(7, "ENC");
+                telemetryWrapper.setLineAndRender(7, "ENC");
                 double delta = 0;
                 for (int i = 0; i < lastEncoderPos.length; i++) {
                     delta += Math.abs(currentEncPos[i] - lastEncoderPos[i]) / driveTrain.COUNTS_PER_INCH;
@@ -203,13 +205,13 @@ public class Navigation {
         }
         if (tagCam.isDetecting) {
             currentPos = lastAprilTagPos;
-            TelemetryWrapper.setLine(7, "CAM");
+            telemetryWrapper.setLine(7, "CAM");
         } else {
             currentPos = targetPos;
-            TelemetryWrapper.setLine(7, "ENC");
+            telemetryWrapper.setLine(7, "ENC");
         }
-        TelemetryWrapper.setLine(5, "x: " + currentPos[0] + "| y: " + currentPos[1] + "| theta: " + currentBearing);
-        TelemetryWrapper.render();
+        telemetryWrapper.setLine(5, "x: " + currentPos[0] + "| y: " + currentPos[1] + "| theta: " + currentBearing);
+        telemetryWrapper.render();
         driveTrain.stopStayInPlace();
     }
 
@@ -225,10 +227,10 @@ public class Navigation {
         while(!tagCam.isDetecting && opMode.opModeIsActive()){
             lastAprilTagPos = tagCam.detectIter(getGyroBearing());
         }
-        TelemetryWrapper.setLine(11, "Correction: " + 20/(startPos[0]-lastAprilTagPos[0]));
-        TelemetryWrapper.setLine(12, "x: " + startPos[0] + "y: "+ startPos[1]);
-        TelemetryWrapper.setLine(13, "x: " + lastAprilTagPos[0] + "y: "+ lastAprilTagPos[1]);
-        TelemetryWrapper.render();
+        telemetryWrapper.setLine(11, "Correction: " + 20/(startPos[0]-lastAprilTagPos[0]));
+        telemetryWrapper.setLine(12, "x: " + startPos[0] + "y: "+ startPos[1]);
+        telemetryWrapper.setLine(13, "x: " + lastAprilTagPos[0] + "y: "+ lastAprilTagPos[1]);
+        telemetryWrapper.render();
     }
 
     public void moveToPosAtAngle(double[] targetPos, double angle) {
@@ -251,16 +253,16 @@ public class Navigation {
         double[] displacement = new double[]{targetPos[0] - currentPos[0], targetPos[1] - currentPos[1]};
 
         while (opMode.opModeIsActive() && magnitude(displacement) > 4) {
-            TelemetryWrapper.setLineAndRender(5, "x: " + currentPos[0] + "| y: " + currentPos[1] + "| theta: " + currentBearing);
+            telemetryWrapper.setLineAndRender(5, "x: " + currentPos[0] + "| y: " + currentPos[1] + "| theta: " + currentBearing);
             double[] currentEncPos = driveTrain.getEncPos();
             currentBearing = getGyroBearing();
             lastAprilTagPos = tagCam.detectIter(currentBearing);
             if (tagCam.isDetecting) {
                 currentPos = lastAprilTagPos;
-                TelemetryWrapper.setLineAndRender(9, "CAM");
-                TelemetryWrapper.setLineAndRender(7, "CAM");
+                telemetryWrapper.setLineAndRender(9, "CAM");
+                telemetryWrapper.setLineAndRender(7, "CAM");
             } else {
-                TelemetryWrapper.setLineAndRender(7, "ENC");
+                telemetryWrapper.setLineAndRender(7, "ENC");
                 double delta = 0;
                 for (int i = 0; i < lastEncoderPos.length; i++) {
                     delta += Math.abs(currentEncPos[i] - lastEncoderPos[i]) / driveTrain.COUNTS_PER_INCH;

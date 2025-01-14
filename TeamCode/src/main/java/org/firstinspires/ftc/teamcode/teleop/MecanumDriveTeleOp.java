@@ -15,6 +15,7 @@ public class MecanumDriveTeleOp extends LinearOpMode {
     private final double speedMultiplier = 0.99;
 
     // Declare modules
+    private TelemetryWrapper telemetryWrapper;
     private ButtonHelper gp1, gp2;
     private DriveTrain driveTrain;
 
@@ -22,18 +23,17 @@ public class MecanumDriveTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TelemetryWrapper.init(telemetry, 20);
-
-        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + programVer + "\t Initializing");
+        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper.setLineAndRender(1, "TeleOp v" + programVer + "\t Initializing");
 
         // Robot modules initialization
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
-        driveTrain = new DriveTrain(this);
+        driveTrain = new DriveTrain(this, telemetryWrapper);
         driveTrain.init(hardwareMap);
 
         // Wait for start
-        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + programVer + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "TeleOp v" + programVer + "\t Press start to start >");
 
         while (opModeInInit()) {
         }

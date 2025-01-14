@@ -22,6 +22,7 @@ public class AutoBasket extends LinearOpMode {
     private static final Pose2d INITIAL_POSE = new Pose2d(36, 63, 3 * Math.PI / 2);
 
     // Declare modules
+    private TelemetryWrapper telemetryWrapper;
     private ButtonHelper gp1, gp2;
     private ServoToggle intakeSlide1, intakeSlide2;
     private ServoToggle intakePivot;
@@ -31,8 +32,8 @@ public class AutoBasket extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TelemetryWrapper.init(telemetry, 20);
-        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
         gp1 = new ButtonHelper(gamepad1);
@@ -52,7 +53,7 @@ public class AutoBasket extends LinearOpMode {
         outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
 
         // Wait for start
-        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
         while (opModeInInit()) {
             outputSlide.tickBeforeStart();
         }

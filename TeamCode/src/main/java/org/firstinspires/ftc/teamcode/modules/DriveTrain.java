@@ -18,6 +18,7 @@ public class DriveTrain implements Modulable {
     final double COUNTS_PER_INCH = 54*(10/8.5)*(24/33.25) * 2.54 / 3.06 ;
     final double COUNTS_PER_DEGREE = 11.5;
     private final LinearOpMode opMode;
+    private final TelemetryWrapper telemetryWrapper;
 
     public HardwareMap hwMap;
 
@@ -27,8 +28,9 @@ public class DriveTrain implements Modulable {
     public DcMotorEx frontLeft;
 
 
-    public DriveTrain(@NonNull LinearOpMode opMode) {
+    public DriveTrain(@NonNull LinearOpMode opMode, TelemetryWrapper telemetryWrapper) {
         this.opMode = opMode;
+        this.telemetryWrapper = telemetryWrapper;
     }
 
     @Override
@@ -118,18 +120,18 @@ public class DriveTrain implements Modulable {
         backRight.setPower(power);
         backLeft.setPower(power);
 
-        TelemetryWrapper.setLine(0, "Running to (x:y:r)=(" + dX + ":" + dY + ":" + dTheta + ")");
-        TelemetryWrapper.setLine(1, "Running delta (dFL:dFR:dBL:dBR)=(" + dFL + ":" + dFR + ":" + dBL + ":" + dBR + ")");
-        TelemetryWrapper.setLine(2, "Wheels to (lf:rf:lr:rr)=(" + newFLTarget + ":" + newFRTarget + ":" + newBLTarget + ":" + newBRTarget + ")");
-        TelemetryWrapper.render();
+        telemetryWrapper.setLine(0, "Running to (x:y:r)=(" + dX + ":" + dY + ":" + dTheta + ")");
+        telemetryWrapper.setLine(1, "Running delta (dFL:dFR:dBL:dBR)=(" + dFL + ":" + dFR + ":" + dBL + ":" + dBR + ")");
+        telemetryWrapper.setLine(2, "Wheels to (lf:rf:lr:rr)=(" + newFLTarget + ":" + newFRTarget + ":" + newBLTarget + ":" + newBRTarget + ")");
+        telemetryWrapper.render();
         while (opMode.opModeIsActive() && (runtime.seconds() < timeout) && (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy())) {
-            TelemetryWrapper.setLineAndRender(3, "Running @ (" + frontRight.getCurrentPosition() + ":" + frontLeft.getCurrentPosition() + ":" + backRight.getCurrentPosition() + ":" + backLeft.getCurrentPosition() + ")");
+            telemetryWrapper.setLineAndRender(3, "Running @ (" + frontRight.getCurrentPosition() + ":" + frontLeft.getCurrentPosition() + ":" + backRight.getCurrentPosition() + ":" + backLeft.getCurrentPosition() + ")");
         }
 
         // Stop all motion
         setZeroPowerBehaviorToAllDriveMotors(DcMotor.ZeroPowerBehavior.BRAKE);
         setPowerToAllDriveMotors(0);
-        TelemetryWrapper.setLineAndRender(10, "Motor power 0");
+        telemetryWrapper.setLineAndRender(10, "Motor power 0");
 
         // Turn off RUN_TO_POSITION
         setModeToAllDriveMotors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

@@ -16,6 +16,7 @@ public class TeleOpBoydenBots extends LinearOpMode {
     private final double SPEED_MULTIPLIER = 0.99;
 
     // Input helpers and hardware modules
+    private TelemetryWrapper telemetryWrapper;
     private ButtonHelper gp1, gp2;
     private DriveTrain driveTrain;
     private DcMotor pivot;
@@ -24,12 +25,12 @@ public class TeleOpBoydenBots extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TelemetryWrapper.init(telemetry, 20);
-        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
-        driveTrain = new DriveTrain(this);
+        driveTrain = new DriveTrain(this, telemetryWrapper);
         clawServo = new ServoToggle();
 
         driveTrain.init(hardwareMap);
@@ -39,15 +40,15 @@ public class TeleOpBoydenBots extends LinearOpMode {
         outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputSlide.init(hardwareMap);
 
-        TelemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
 
         while (opModeInInit()) {}
 
         while (opModeIsActive()) {
-            TelemetryWrapper.setLine(3, "OutputSlidePos: " + outputSlide.getCurrentPosition());
-            TelemetryWrapper.setLine(5, "PivotPos: " + pivot.getCurrentPosition());
-            TelemetryWrapper.setLine(6, "ClawPos: " + clawServo.getPosition());
-            TelemetryWrapper.render();
+            telemetryWrapper.setLine(3, "OutputSlidePos: " + outputSlide.getCurrentPosition());
+            telemetryWrapper.setLine(5, "PivotPos: " + pivot.getCurrentPosition());
+            telemetryWrapper.setLine(6, "ClawPos: " + clawServo.getPosition());
+            telemetryWrapper.render();
 
             gp1.update();
             gp2.update();

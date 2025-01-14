@@ -9,70 +9,73 @@ import java.util.Arrays;
  */
 
 public class TelemetryWrapper {
-    public static Telemetry t;
-    private static String[] lines;
+    private final Telemetry telemetry;
+    private final String[] lines;
+    private final Object[] args;
 
+    public TelemetryWrapper(Telemetry telemetry, int lines) {
+        this.telemetry = telemetry;
+        this.lines = new String[lines];
+        args = new Object[lines];
+        telemetry.clear();
+        reset();
+    }
 
     /**
-     * Initialize telemetry for TelemetryWrapper
-     * @param t Telemetry object from TeleOp
-     * @param nlines Number of lines TelemetryWrapper
-     * is to be initialized with.
+     * Sets the given line to the given message.
+     *
+     * @param line    the line number
+     * @param message the message string
      */
-    public static void init(Telemetry t, int nlines) {
-        t.clear();
-        TelemetryWrapper.t = t;
-        lines = new String[nlines];
+    public void setLine(int line, String message) {
+        if (line < 0 || line >= lines.length) return;
+        lines[line] = message;
+    }
+
+    /**
+     * Sets the given line to the given format and arguments.
+     *
+     * @param line   the line number
+     * @param format the format string
+     * @param args   the arguments to be formatted
+     */
+    public void setLine(int line, String format, Object... args) {
+        setLine(line, format);
+        this.args[line] = args;
+    }
+
+    /**
+     * Sets the given line to the given message and update the telemetry.
+     * Use {@link #setLine(int, String)} and {@link #render()} if updating multiple lines of telemetry.
+     *
+     * @param line    the line number
+     * @param message the message string
+     */
+    public void setLineAndRender(int line, String message) {
+        setLine(line, message);
         render();
     }
 
     /**
-     * Replace all null lines as empty and render all
-     * lines of data
+     * Updates the telemetry, with arguments if not null.
      */
-    public static void render() {
+    public void render() {
         for (int i = 0; i < lines.length; i++) {
-            if (lines[i] == null)
-                lines[i] = "";
-            t.addData("" + i, lines[i]);
+            if (lines[i].isEmpty()) continue;
+            if (args[i] != null) {
+                telemetry.addData("" + i, lines[i], args[i]);
+            } else {
+                telemetry.addData("" + i, lines[i]);
+            }
         }
-        t.update();
+        telemetry.update();
     }
 
     /**
-     * Set value for line and render
-     * @param l Line number
-     * @param message Message for line
+     * Resets all lines and arguments.
      */
-    public static void setLineAndRender(int l, String message) {
-        setLine(l, message);
-        render();
-    }
-
-    /**
-     * Set value for line without rendering
-     * @param l Line number
-     * @param message Message for line
-     */
-    public static void setLine(int l, String message) {
-        if (l < 0 || l >= lines.length) return;
-        lines[l] = message;
-    }
-
-    /**
-     * Reset total number of lines to new value
-     * @param l New number of lines for TelemetryWrapper
-     */
-    public static void setLines(int l) {
-        t.clear();
-        lines = new String[l];
-        render();
-    }
-
-    /**
-     * Clear all saved data in TelemetryWrapper
-     */
-    public static void clear() {
+    public void reset() {
         Arrays.fill(lines, "");
+        Arrays.fill(args, null);
     }
 }
