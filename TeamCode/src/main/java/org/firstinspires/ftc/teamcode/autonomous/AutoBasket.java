@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
-import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
@@ -23,12 +23,13 @@ public class AutoBasket extends LinearOpMode {
 
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
-    private ButtonHelper gp1, gp2;
+    private MecanumDrive drive;
     private ServoToggle intakeSlide1, intakeSlide2;
     private ServoToggle intakePivot;
     private Servo activeIntake;
-    private LinearSlide outputSlide;
+    private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
+    private ServoToggle specimenClaw;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,21 +37,21 @@ public class AutoBasket extends LinearOpMode {
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
-        gp1 = new ButtonHelper(gamepad1);
-        gp2 = new ButtonHelper(gamepad2);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, INITIAL_POSE);
+        drive = new MecanumDrive(hardwareMap, INITIAL_POSE);
         intakeSlide1 = new ServoToggle();
         intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
+        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle();
+        specimenClaw = new ServoToggle();
 
-        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, false);
-        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, true);
+        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, true);
+        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, false);
         intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
+        outputBox.init(hardwareMap, "outputBox", 0, 0.4, true);
+        specimenClaw.init(hardwareMap, "specimenClaw", 0, 0.2, false);
 
         // Wait for start
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");

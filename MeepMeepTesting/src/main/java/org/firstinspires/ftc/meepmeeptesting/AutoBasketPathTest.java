@@ -6,7 +6,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class BigGreenTest {
+public class AutoBasketPathTest {
     private static final Pose2d INITIAL_POSE = new Pose2d(36, 63, 3 * Math.PI / 2);
 
     public static void main(String[] args) {

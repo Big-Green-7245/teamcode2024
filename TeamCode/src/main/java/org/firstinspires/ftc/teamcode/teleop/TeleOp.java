@@ -46,7 +46,7 @@ public class TeleOp extends LinearOpMode {
         intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new DoubleLinearSlides("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 3300);
+        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 3300);
         outputBox = new ServoToggle();
         specimenClaw = new ServoToggle();
 

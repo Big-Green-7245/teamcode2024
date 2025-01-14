@@ -6,16 +6,14 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
-import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
-import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
-@Autonomous(name = "AutoBasketPathTest", group = "Big Green", preselectTeleOp = "TeleOp")
-public class AutoBasketPathTest extends LinearOpMode {
+/**
+ * This runs the path in {@link AutoBasket} without the input and output modules.
+ */
+@Autonomous(name = "AutoBasketPathOnly", group = "Big Green", preselectTeleOp = "TeleOp")
+public class AutoBasketPathOnly extends LinearOpMode {
     // Define attributes
     private static final String PROGRAM_VERSION = "0.1.0";
     private static final double SPEED_MULTIPLIER = 0.9;
@@ -23,12 +21,6 @@ public class AutoBasketPathTest extends LinearOpMode {
 
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
-    private ButtonHelper gp1, gp2;
-    private ServoToggle intakeSlide1, intakeSlide2;
-    private ServoToggle intakePivot;
-    private Servo activeIntake;
-    private LinearSlide outputSlide;
-    private ServoToggle outputBox;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,27 +28,11 @@ public class AutoBasketPathTest extends LinearOpMode {
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
-        gp1 = new ButtonHelper(gamepad1);
-        gp2 = new ButtonHelper(gamepad2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, INITIAL_POSE);
-        intakeSlide1 = new ServoToggle();
-        intakeSlide2 = new ServoToggle();
-        intakePivot = new ServoToggle();
-        activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
-        outputBox = new ServoToggle();
-
-        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, false);
-        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, true);
-        intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
-        outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.3, false);
 
         // Wait for start
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
-        while (opModeInInit()) {
-            outputSlide.tickBeforeStart();
-        }
+        while (opModeInInit()) {}
 
         // Begin autonomous program
         // See BigGreenTest.java for a visualization
