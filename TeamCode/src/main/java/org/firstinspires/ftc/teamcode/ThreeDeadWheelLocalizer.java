@@ -20,9 +20,9 @@ import org.firstinspires.ftc.teamcode.messages.ThreeDeadWheelInputsMessage;
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        public double par0YTicks = -1435.9338717496423; // y position of the first parallel encoder (in tick units)
-        public double par1YTicks = 1249.5406908074776; // y position of the second parallel encoder (in tick units)
-        public double perpXTicks = -753.9047450601705; // x position of the perpendicular encoder (in tick units)
+        public double par0YTicks = 0.0; // y position of the first parallel encoder (in tick units)
+        public double par1YTicks = 1.0; // y position of the second parallel encoder (in tick units)
+        public double perpXTicks = 0.0; // x position of the perpendicular encoder (in tick units)
     }
 
     public static Params PARAMS = new Params();
@@ -31,7 +31,7 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
 
     public final double inPerTick;
 
-    private int lastPar0Pos, lastPar1Pos, lastPerpPos;
+    private double lastPar0Pos, lastPar1Pos, lastPerpPos;
     private boolean initialized;
 
     public ThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick) {
@@ -70,9 +70,9 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
             );
         }
 
-        int par0PosDelta = par0PosVel.position - lastPar0Pos;
-        int par1PosDelta = par1PosVel.position - lastPar1Pos;
-        int perpPosDelta = perpPosVel.position - lastPerpPos;
+        double par0PosDelta = par0PosVel.position - lastPar0Pos;
+        double par1PosDelta = par1PosVel.position - lastPar1Pos;
+        double perpPosDelta = perpPosVel.position - lastPerpPos;
 
         Twist2dDual<Time> twist = new Twist2dDual<>(
                 new Vector2dDual<>(
