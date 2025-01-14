@@ -71,7 +71,7 @@ public class AutoBasket extends LinearOpMode {
                 drive.actionBuilder(new Pose2d(36, 36, 5 * Math.PI / 4))
                         .splineToConstantHeading(new Vector2d(59, 59), Math.PI / 4)
                         .build(),
-                moveSlideToPos(outputSlide, 1250)
+                moveSlideToPos(outputSlide, 1750)
         ));
         outputBox.setAction(true);
         sleep(500);

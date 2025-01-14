@@ -80,12 +80,18 @@ public class TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             clearBulkCache();
 
+            double clearBulkCacheTime = timer.milliseconds();
+
             // Update gamepads
             gp1.update();
             gp2.update();
 
+            double gamepadsTime = timer.milliseconds();
+
             // Move drive train
             driveTrain.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, SPEED_MULTIPLIER);
+
+            double driveTrainTime = timer.milliseconds();
 
             if (gp2.pressing(ButtonHelper.dpad_up)) {
                 // Extend slides
@@ -106,10 +112,12 @@ public class TeleOp extends LinearOpMode {
             }
             activeIntake.setPosition((gamepad2.right_trigger - gamepad2.left_trigger) / 2 + 0.5);
 
+            double intakeTime = timer.milliseconds();
+
             // Move output slide
             if (gp2.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the output position
-                outputSlide.startMoveToPos(1350);
+                outputSlide.startMoveToPos(1750);
             } else if (gp2.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
                 outputBox.setAction(false);
@@ -128,10 +136,14 @@ public class TeleOp extends LinearOpMode {
                 outputBox.setAction(false);
             }
 
+            double outputTime = timer.milliseconds();
+
             // Specimen claw
             if (gp2.pressing(ButtonHelper.CIRCLE)) {
                 specimenClaw.toggleAction();
             }
+
+            double specimenClawTime = timer.milliseconds();
 
             // Update telemetry
             TelemetryWrapper.setLineNoRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Running");
@@ -141,10 +153,12 @@ public class TeleOp extends LinearOpMode {
             int[] targetPositions = outputSlide.getTargetPositions();
             TelemetryWrapper.setLineNoRender(4, "OutputSlideTargetPos Left: " + targetPositions[0] + "; Right: " + targetPositions[1] + "; Diff: " + (targetPositions[1] - targetPositions[0]));
             TelemetryWrapper.setLineNoRender(5, "OutputSlideButton Left: " + outputSlide.areElevatorButtonsPressed()[0] + "; Right: " + outputSlide.areElevatorButtonsPressed()[1]);
-            TelemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
+            TelemetryWrapper.setLineNoRender(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
 
             // Debug loop times
-            TelemetryWrapper.setLine(7, "TeleOp loop time: " + timer.milliseconds() + " ms");
+            double telemetryTime = timer.milliseconds();
+            TelemetryWrapper.setLineNoRender(7, String.format("TeleOp loop time: %s ms; ClearBulkCacheTime: %s ms; Gamepads: %s ms; DriveTrain: %s ms; Intake: %s ms; Output: %s ms; SpecimenClaw: %s ms; TelemetryTime: %s ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime));
+            TelemetryWrapper.render();
             timer.reset();
         }
     }
