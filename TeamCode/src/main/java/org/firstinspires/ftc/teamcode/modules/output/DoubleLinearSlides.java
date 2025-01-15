@@ -26,7 +26,7 @@ public class DoubleLinearSlides extends LinearSlide {
 
     @Override
     public boolean isElevatorBtnPressed() {
-        return elevatorBtnLeft.isPressed() && elevatorBtnRight.isPressed();
+        return elevatorBtnLeft.isPressed() || elevatorBtnRight.isPressed();
     }
 
     public boolean[] areElevatorButtonsPressed() {
@@ -98,7 +98,7 @@ public class DoubleLinearSlides extends LinearSlide {
      */
     @Override
     public boolean isFinished() {
-        return !elevatorLeft.isBusy() && !elevatorRight.isBusy();
+        return !elevatorLeft.isBusy() || !elevatorRight.isBusy();
     }
 
     @Override

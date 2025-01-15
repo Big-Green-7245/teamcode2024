@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.autonomous.AutoHelper;
 import org.firstinspires.ftc.teamcode.modules.DriveTrain;
 import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
@@ -118,7 +119,7 @@ public class TeleOp extends LinearOpMode {
             // Move output slide
             if (gp2.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the output position
-                outputSlide.startMoveToPos(1750);
+                outputSlide.startMoveToPos(AutoHelper.BASKET_SLIDE_HIGH);
             } else if (gp2.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
                 outputBox.setAction(false);
@@ -153,12 +154,13 @@ public class TeleOp extends LinearOpMode {
             telemetryWrapper.setLine(3, "OutputSlidePos Left: " + currentPositions[0] + "; Right: " + currentPositions[1] + "; Diff: " + (currentPositions[1] - currentPositions[0]));
             int[] targetPositions = outputSlide.getTargetPositions();
             telemetryWrapper.setLine(4, "OutputSlideTargetPos Left: " + targetPositions[0] + "; Right: " + targetPositions[1] + "; Diff: " + (targetPositions[1] - targetPositions[0]));
-            telemetryWrapper.setLine(5, "OutputSlideButton Left: " + outputSlide.areElevatorButtonsPressed()[0] + "; Right: " + outputSlide.areElevatorButtonsPressed()[1]);
+            boolean[] elevatorButtons = outputSlide.areElevatorButtonsPressed();
+            telemetryWrapper.setLine(5, "OutputSlideButton Left: " + elevatorButtons[0] + "; Right: " + elevatorButtons[1]);
             telemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
 
             // Debug loop times
             double telemetryTime = timer.milliseconds();
-            telemetryWrapper.setLine(7, "TeleOp loop time: %s ms; ClearBulkCacheTime: %s ms; Gamepads: %s ms; DriveTrain: %s ms; Intake: %s ms; Output: %s ms; SpecimenClaw: %s ms; TelemetryTime: %s ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime);
+            telemetryWrapper.setLine(7, "TeleOp loop time: %.2f ms; ClearBulkCacheTime: %.2f ms; Gamepads: %.2f ms; DriveTrain: %.2f ms; Intake: %.2f ms; Output: %.2f ms; SpecimenClaw: %.2f ms; TelemetryTime: %.2f ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime);
             telemetryWrapper.render();
             timer.reset();
         }

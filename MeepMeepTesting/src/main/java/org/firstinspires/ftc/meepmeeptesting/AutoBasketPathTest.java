@@ -7,8 +7,8 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class AutoBasketPathTest {
-    private static final Pose2d INITIAL_POSE = new Pose2d(36, 63, 3 * Math.PI / 2);
-    private static final Pose2d BASKET_POSE = new Pose2d(56, 56, 5 * Math.PI / 4);
+    private static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
+    private static final Pose2d BASKET_POSE = new Pose2d(54, 54, 5 * Math.PI / 4);
     private static final Pose2d SAMPLE_1_POSE = new Pose2d(36, 26, 0);
     private static final Pose2d SAMPLE_2_POSE = new Pose2d(46, 26, 0);
     private static final Pose2d SAMPLE_3_POSE = new Pose2d(56, 26, 0);
@@ -18,10 +18,10 @@ public class AutoBasketPathTest {
 
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
                 .setConstraints(50, 50, Math.PI, Math.PI, 12)
-                .setStartPose(INITIAL_POSE)
+                .setStartPose(BASKET_INITIAL_POSE)
                 .build();
 
-        bot.runAction(bot.getDrive().actionBuilder(INITIAL_POSE)
+        bot.runAction(bot.getDrive().actionBuilder(BASKET_INITIAL_POSE)
                 // Move to basket and deposit the preload sample
                 .splineTo(new Vector2d(36, 36), 5 * Math.PI / 4)
                 .splineToConstantHeading(BASKET_POSE.position, Math.PI / 4)
