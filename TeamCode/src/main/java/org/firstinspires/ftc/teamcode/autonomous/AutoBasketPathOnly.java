@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 /**
@@ -28,7 +29,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
-        MecanumDrive drive = new MecanumDrive(hardwareMap, INITIAL_POSE);
+        MecanumDrive drive = new PinpointDrive(hardwareMap, INITIAL_POSE);
 
         // Wait for start
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");

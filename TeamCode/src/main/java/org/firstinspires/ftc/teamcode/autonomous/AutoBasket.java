@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
@@ -37,7 +38,7 @@ public class AutoBasket extends LinearOpMode {
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
-        drive = new MecanumDrive(hardwareMap, INITIAL_POSE);
+        drive = new PinpointDrive(hardwareMap, INITIAL_POSE);
         intakeSlide1 = new ServoToggle();
         intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
