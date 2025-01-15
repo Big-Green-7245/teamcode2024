@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -8,6 +9,13 @@ import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 
 public class AutoHelper {
+    static final Pose2d INITIAL_POSE = new Pose2d(36, 63, 3 * Math.PI / 2);
+    static final Pose2d BASKET_POSE = new Pose2d(56, 56, 5 * Math.PI / 4);
+    static final Pose2d SAMPLE_1_POSE = new Pose2d(36, 26, 0);
+    static final Pose2d SAMPLE_2_POSE = new Pose2d(46, 26, 0);
+    static final Pose2d SAMPLE_3_POSE = new Pose2d(56, 26, 0);
+    static final int SLIDE_HIGH = 1750;
+
     static Action moveSlideToPos(LinearSlide slide, int pos) {
         return new SequentialAction(
                 telemetryPacket -> {
