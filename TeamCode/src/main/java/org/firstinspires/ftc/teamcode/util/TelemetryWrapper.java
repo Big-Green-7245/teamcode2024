@@ -11,12 +11,12 @@ import java.util.Arrays;
 public class TelemetryWrapper {
     private final Telemetry telemetry;
     private final String[] lines;
-    private final Object[] args;
+    private final Object[][] args;
 
     public TelemetryWrapper(Telemetry telemetry, int lines) {
         this.telemetry = telemetry;
         this.lines = new String[lines];
-        args = new Object[lines];
+        args = new Object[lines][];
         telemetry.clear();
         reset();
     }

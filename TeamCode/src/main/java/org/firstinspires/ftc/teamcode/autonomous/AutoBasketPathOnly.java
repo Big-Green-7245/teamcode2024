@@ -21,24 +21,25 @@ public class AutoBasketPathOnly extends LinearOpMode {
 
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
+    private MecanumDrive drive;
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetryWrapper = new TelemetryWrapper(telemetry, 20);
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
-        MecanumDrive drive = new PinpointDrive(hardwareMap, AutoHelper.INITIAL_POSE);
+        drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v" + PROGRAM_VERSION + "\t Press start to start >");
         while (opModeInInit()) {}
 
         // Begin autonomous program
-        // See BigGreenTest.java for a visualization
+        // See AutoBasketPathTest.java for a visualization
 
         // Start to move to the basket
-        Actions.runBlocking(drive.actionBuilder(AutoHelper.INITIAL_POSE)
+        Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_INITIAL_POSE)
                 .splineTo(new Vector2d(36, 36), 5 * Math.PI / 4)
                 .build()
         );

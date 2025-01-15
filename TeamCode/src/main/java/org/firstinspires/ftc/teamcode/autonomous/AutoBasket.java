@@ -34,10 +34,10 @@ public class AutoBasket extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetryWrapper = new TelemetryWrapper(telemetry, 20);
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
-        drive = new PinpointDrive(hardwareMap, AutoHelper.INITIAL_POSE);
+        drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
         intakeSlide1 = new ServoToggle();
         intakeSlide2 = new ServoToggle();
         intakePivot = new ServoToggle();
@@ -54,7 +54,7 @@ public class AutoBasket extends LinearOpMode {
         specimenClaw.init(hardwareMap, "specimenClaw", 0, 0.2, false);
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto v" + PROGRAM_VERSION + "\t Press start to start >");
         while (opModeInInit()) {
             outputSlide.tickBeforeStart();
         }
@@ -63,7 +63,7 @@ public class AutoBasket extends LinearOpMode {
         // See AutoBasketPathTest.java for a visualization
 
         // Start to move to the basket
-        Actions.runBlocking(drive.actionBuilder(AutoHelper.INITIAL_POSE)
+        Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_INITIAL_POSE)
                 .splineTo(new Vector2d(36, 36), 5 * Math.PI / 4)
                 .build()
         );
@@ -73,7 +73,7 @@ public class AutoBasket extends LinearOpMode {
                 drive.actionBuilder(new Pose2d(36, 36, 5 * Math.PI / 4))
                         .splineToConstantHeading(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SLIDE_HIGH)
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -102,7 +102,7 @@ public class AutoBasket extends LinearOpMode {
                         .build(),
                 new SequentialAction(
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SLIDE_HIGH)
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
                 )
         ));
         outputBox.setAction(true);
@@ -132,7 +132,7 @@ public class AutoBasket extends LinearOpMode {
                         .build(),
                 new SequentialAction(
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SLIDE_HIGH)
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
                 )
         ));
         outputBox.setAction(true);
@@ -162,7 +162,7 @@ public class AutoBasket extends LinearOpMode {
                         .build(),
                 new SequentialAction(
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SLIDE_HIGH)
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
                 )
         ));
         outputBox.setAction(true);
