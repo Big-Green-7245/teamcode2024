@@ -7,14 +7,14 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class AutoBasketPathTest {
-    static final Pose2d INITIAL_POSE = new Pose2d(36, 63, 3 * Math.PI / 2);
-    static final Pose2d BASKET_POSE = new Pose2d(56, 56, 5 * Math.PI / 4);
-    static final Pose2d SAMPLE_1_POSE = new Pose2d(36, 26, 0);
-    static final Pose2d SAMPLE_2_POSE = new Pose2d(46, 26, 0);
-    static final Pose2d SAMPLE_3_POSE = new Pose2d(56, 26, 0);
+    private static final Pose2d INITIAL_POSE = new Pose2d(36, 63, 3 * Math.PI / 2);
+    private static final Pose2d BASKET_POSE = new Pose2d(56, 56, 5 * Math.PI / 4);
+    private static final Pose2d SAMPLE_1_POSE = new Pose2d(36, 26, 0);
+    private static final Pose2d SAMPLE_2_POSE = new Pose2d(46, 26, 0);
+    private static final Pose2d SAMPLE_3_POSE = new Pose2d(56, 26, 0);
 
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(400);
+        MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
                 .setConstraints(50, 50, Math.PI, Math.PI, 12)
