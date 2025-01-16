@@ -14,6 +14,7 @@ public class AutoHelper {
     static final Pose2d SAMPLE_1_POSE = new Pose2d(36, 26, 0);
     static final Pose2d SAMPLE_2_POSE = new Pose2d(46, 26, 0);
     static final Pose2d SAMPLE_3_POSE = new Pose2d(56, 26, 0);
+    static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
     public static final int BASKET_SLIDE_HIGH = 2700;
 
     static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 61, Math.PI / 2);
