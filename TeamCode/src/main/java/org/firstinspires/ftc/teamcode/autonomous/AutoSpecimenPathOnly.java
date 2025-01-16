@@ -57,26 +57,19 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
                 .build()
         );
 
-        // Move to submersible to deposit second specimen
-        Actions.runBlocking(drive.actionBuilder(AutoHelper.OBSERVATION_ZONE_POSE)
-                .setTangent(3 * Math.PI / 2)
-                .splineToLinearHeading(AutoHelper.SUBMERSIBLE_POSE, 3 * Math.PI / 2)
-                .build()
-        );
+        for (int i = 0; i < 4; i++) {
+            // Move to submersible to deposit specimen
+            Actions.runBlocking(drive.actionBuilder(AutoHelper.OBSERVATION_ZONE_POSE)
+                    .setTangent(3 * Math.PI / 2)
+                    .splineToLinearHeading(AutoHelper.SUBMERSIBLE_POSE, 3 * Math.PI / 2)
+                    .build()
+            );
 
-        for (int i = 0; i < 3; i++) {
             // Move to the side while depositing the specimen
             // Move to observation zone and pick up specimen
             Actions.runBlocking(drive.actionBuilder(AutoHelper.SUBMERSIBLE_POSE)
                     .setTangent(0)
                     .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
-                    .build()
-            );
-
-            // Move to submersible to deposit specimen
-            Actions.runBlocking(drive.actionBuilder(AutoHelper.OBSERVATION_ZONE_POSE)
-                    .setTangent(3 * Math.PI / 2)
-                    .splineToLinearHeading(AutoHelper.SUBMERSIBLE_POSE, 3 * Math.PI / 2)
                     .build()
             );
         }

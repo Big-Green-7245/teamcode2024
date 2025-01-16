@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -38,16 +36,11 @@ public class AutoBasketPathOnly extends LinearOpMode {
         // Begin autonomous program
         // See AutoBasketPathTest.java for a visualization
 
-        // Start to move to the basket
-        Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_INITIAL_POSE)
-                .splineTo(new Vector2d(36, 36), 5 * Math.PI / 4)
-                .build()
-        );
-
         // Move to basket
         Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(new Pose2d(36, 36, 5 * Math.PI / 4))
-                        .splineToConstantHeading(AutoHelper.BASKET_POSE.position, Math.PI / 4)
+                drive.actionBuilder(AutoHelper.BASKET_INITIAL_POSE)
+                        .setTangent(3 * Math.PI / 2)
+                        .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build()
         ));
         sleep(500);
@@ -102,5 +95,13 @@ public class AutoBasketPathOnly extends LinearOpMode {
                         .build()
         ));
         sleep(500);
+
+        // Move to ascent zone
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(AutoHelper.BASKET_POSE)
+                        .setTangent(5 * Math.PI / 4)
+                        .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
+                        .build()
+        ));
     }
 }

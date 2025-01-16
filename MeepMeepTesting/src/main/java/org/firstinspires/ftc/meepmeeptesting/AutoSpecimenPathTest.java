@@ -81,8 +81,11 @@ public class AutoSpecimenPathTest {
                 .setTangent(3 * Math.PI / 2)
                 .splineToLinearHeading(SUBMERSIBLE_POSE, 3 * Math.PI / 2)
                 // Move to the side while depositing the fifth specimen
-//                .setTangent(0)
+                .setTangent(0)
 //                .splineToConstantHeading(SUBMERSIBLE_SIDE_POSE.position, 0)
+                // Move to observation zone and park
+//                .setTangent(Math.PI / 2)
+                .splineToLinearHeading(OBSERVATION_ZONE_POSE, Math.PI / 2)
                 .build()
         );
 
