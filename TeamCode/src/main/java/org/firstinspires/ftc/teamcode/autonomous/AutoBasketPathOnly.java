@@ -24,13 +24,13 @@ public class AutoBasketPathOnly extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetryWrapper = new TelemetryWrapper(telemetry);
-        telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v%s\t Initializing", PROGRAM_VERSION);
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v%s\t Press start to start >", PROGRAM_VERSION);
         while (opModeInInit()) {}
 
         // Begin autonomous program

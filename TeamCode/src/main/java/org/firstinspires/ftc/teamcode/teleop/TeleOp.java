@@ -36,7 +36,7 @@ public class TeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         telemetryWrapper = new TelemetryWrapper(telemetry);
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper.setLineAndRender(1, "TeleOp v%s\t Initializing", PROGRAM_VERSION);
 
         // Initialize robot modules
         hubs = hardwareMap.getAll(LynxModule.class);
@@ -67,14 +67,14 @@ public class TeleOp extends LinearOpMode {
         }
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "TeleOp v%s\t Press start to start >", PROGRAM_VERSION);
         while (opModeInInit()) {
             clearBulkCache();
 
             outputSlide.tickBeforeStart();
 
             // Debug loop times
-            telemetryWrapper.setLineAndRender(2, "TeleOp Init loop time: " + timer.milliseconds() + " ms");
+            telemetryWrapper.setLineAndRender(2, "TeleOp Init loop time: %s ms", timer.milliseconds());
             timer.reset();
         }
 
@@ -148,18 +148,18 @@ public class TeleOp extends LinearOpMode {
             double specimenClawTime = timer.milliseconds();
 
             // Update telemetry
-            telemetryWrapper.setLine(1, "TeleOp v" + PROGRAM_VERSION + "\t Running");
-            telemetryWrapper.setLine(2, "Gamepad2RightStickY: " + gamepad2.right_stick_y * 500);
+            telemetryWrapper.setLine(1, "TeleOp v%s\t Running", PROGRAM_VERSION);
+            telemetryWrapper.setLine(2, "Gamepad2RightStickY: %s", gamepad2.right_stick_y * 500);
             int[] currentPositions = outputSlide.getCurrentPositions();
-            telemetryWrapper.setLine(3, "OutputSlidePos Left: " + currentPositions[0] + "; Right: " + currentPositions[1] + "; Diff: " + (currentPositions[1] - currentPositions[0]));
+            telemetryWrapper.setLine(3, "OutputSlidePos Left: %d; Right: %d; Diff: %d", currentPositions[0], currentPositions[1], currentPositions[1] - currentPositions[0]);
             double telemetryCurrentPositionsTime = timer.milliseconds();
             int[] targetPositions = outputSlide.getTargetPositions();
-            telemetryWrapper.setLine(4, "OutputSlideTargetPos Left: " + targetPositions[0] + "; Right: " + targetPositions[1] + "; Diff: " + (targetPositions[1] - targetPositions[0]));
+            telemetryWrapper.setLine(4, "OutputSlideTargetPos Left: %d; Right: %d; Diff: %d", targetPositions[0], targetPositions[1], targetPositions[1] - targetPositions[0]);
             double telemetryTargetPositionsTime = timer.milliseconds();
             boolean[] elevatorButtons = outputSlide.areElevatorButtonsPressed();
-            telemetryWrapper.setLine(5, "OutputSlideButton Left: " + elevatorButtons[0] + "; Right: " + elevatorButtons[1]);
+            telemetryWrapper.setLine(5, "OutputSlideButton Left: %s; Right: %s", elevatorButtons[0], elevatorButtons[1]);
             double telemetryElevatorButtonsTime = timer.milliseconds();
-            telemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
+            telemetryWrapper.setLine(6, "OutputSlideCurrent: %sA", outputSlide.getCurrent());
 
             // Debug loop times
             double telemetryTime = timer.milliseconds();

@@ -33,7 +33,7 @@ public class AutoBasket extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetryWrapper = new TelemetryWrapper(telemetry);
-        telemetryWrapper.setLineAndRender(1, "Basket Auto v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto v%s\t Initializing", PROGRAM_VERSION);
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
@@ -53,7 +53,7 @@ public class AutoBasket extends LinearOpMode {
         specimenClaw.init(hardwareMap);
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "Basket Auto v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "Basket Auto v%s\t Press start to start >", PROGRAM_VERSION);
         while (opModeInInit()) {
             outputSlide.tickBeforeStart();
         }
