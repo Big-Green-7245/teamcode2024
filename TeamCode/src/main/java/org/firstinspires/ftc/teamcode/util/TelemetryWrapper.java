@@ -49,7 +49,7 @@ public class TelemetryWrapper {
     }
 
     /**
-     * Sets the given line to the given message and update the telemetry.
+     * Sets the given line to the given message and updates the telemetry.
      * Use {@link #setLine(int, String)} and {@link #render()} if updating multiple lines of telemetry.
      *
      * @param line    the line number
@@ -61,7 +61,20 @@ public class TelemetryWrapper {
     }
 
     /**
-     * Updates the telemetry, with arguments if not null.
+     * Sets the given line to the given format and arguments and updates the telemetry.
+     * Use {@link #setLine(int, String, Object...)} and {@link #render()} if updating multiple lines of telemetry.
+     *
+     * @param line   the line number
+     * @param format the format string
+     * @param args   the arguments to be formatted
+     */
+    public void setLineAndRender(int line, String format, Object... args) {
+        setLine(line, format, args);
+        render();
+    }
+
+    /**
+     * Updates each line of the telemetry, with arguments for that line if it has any ({@code args[i]} is not null).
      */
     public void render() {
         for (int i = 0; i < lines.length; i++) {
