@@ -23,7 +23,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper = new TelemetryWrapper(telemetry);
         telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules

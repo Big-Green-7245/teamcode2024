@@ -23,7 +23,7 @@ public class MecanumDriveTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper = new TelemetryWrapper(telemetry);
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + programVer + "\t Initializing");
 
         // Robot modules initialization

@@ -25,24 +25,24 @@ public class AutoSpecimen extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper = new TelemetryWrapper(telemetry);
         telemetryWrapper.setLineAndRender(1, "Specimen Auto\t Initializing");
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.SPECIMEN_INITIAL_POSE);
-        intakeSlide1 = new ServoToggle();
-        intakeSlide2 = new ServoToggle();
-        intakePivot = new ServoToggle();
+        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.2, true);
+        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.2, false);
+        intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
-        outputBox = new ServoToggle();
-        specimenClaw = new ServoToggle();
+        outputBox = new ServoToggle("outputBox", 0, 0.4, true);
+        specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
 
-        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, true);
-        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, false);
-        intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
+        intakeSlide1.init(hardwareMap);
+        intakeSlide2.init(hardwareMap);
+        intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.4, true);
-        specimenClaw.init(hardwareMap, "specimenClaw", 0, 0.2, false);
+        outputBox.init(hardwareMap);
+        specimenClaw.init(hardwareMap);
 
         specimenClaw.setAction(true);
 

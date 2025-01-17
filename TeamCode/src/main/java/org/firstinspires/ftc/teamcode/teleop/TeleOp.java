@@ -35,7 +35,7 @@ public class TeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper = new TelemetryWrapper(telemetry);
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         // Initialize robot modules
@@ -43,21 +43,21 @@ public class TeleOp extends LinearOpMode {
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
         driveTrain = new DriveTrain(this, telemetryWrapper);
-        intakeSlide1 = new ServoToggle();
-        intakeSlide2 = new ServoToggle();
-        intakePivot = new ServoToggle();
+        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.2, true);
+        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.2, false);
+        intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 3300);
-        outputBox = new ServoToggle();
-        specimenClaw = new ServoToggle();
+        outputBox = new ServoToggle("outputBox", 0, 0.4, true);
+        specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
 
         driveTrain.init(hardwareMap);
-        intakeSlide1.init(hardwareMap, "intakeSlide1", 0, 0.2, true);
-        intakeSlide2.init(hardwareMap, "intakeSlide2", 0, 0.2, false);
-        intakePivot.init(hardwareMap, "intakePivot", 0, 0.66, false);
+        intakeSlide1.init(hardwareMap);
+        intakeSlide2.init(hardwareMap);
+        intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
-        outputBox.init(hardwareMap, "outputBox", 0, 0.4, true);
-        specimenClaw.init(hardwareMap, "specimenClaw", 0, 0.2, false);
+        outputBox.init(hardwareMap);
+        specimenClaw.init(hardwareMap);
 
         // Manual bulk caching to ensure sensors only get read once per loop
         // This can save a lot of time in the execution loop
@@ -172,6 +172,7 @@ public class TeleOp extends LinearOpMode {
 
     /**
      * Resets the cache every iteration to update the sensors once every loop.
+     *
      * @see <a href="https://gm0.org/en/latest/docs/software/tutorials/bulk-reads.html">Bulk Reads</a>
      */
     private void clearBulkCache() {

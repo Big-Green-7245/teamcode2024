@@ -5,27 +5,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.Modulable;
 
 public class ServoToggle implements Modulable {
-    private String name;
+    private final String name;
+    private final double idlePos;
+    private final double actionPos;
+    private final boolean isReversed;
     protected Servo servo;
     private boolean action = false;
 
-    public void init(HardwareMap map, String servoName, double idlePos, double actionPos, boolean isReversed) {
-        name = servoName;
-        servo = map.get(Servo.class, name);
-        if (isReversed) {
-            servo.setDirection(Servo.Direction.REVERSE);
-        } else {
-            servo.setDirection(Servo.Direction.FORWARD);
-        }
-        servo.scaleRange(idlePos, actionPos);
-        setAction(action);
+    public ServoToggle(String name, double idlePos, double actionPos, boolean isReversed) {
+        this.name = name;
+        this.idlePos = idlePos;
+        this.actionPos = actionPos;
+        this.isReversed = isReversed;
     }
 
     @Override
     public void init(HardwareMap map) {
-        name = "outputClaw";
         servo = map.get(Servo.class, name);
-        servo.setDirection(Servo.Direction.REVERSE);
+        servo.setDirection(isReversed ? Servo.Direction.REVERSE : Servo.Direction.FORWARD);
+        servo.scaleRange(idlePos, actionPos);
+        setAction(action);
     }
 
     public double getPosition() {
