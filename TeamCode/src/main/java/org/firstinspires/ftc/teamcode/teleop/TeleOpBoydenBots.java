@@ -25,17 +25,17 @@ public class TeleOpBoydenBots extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper = new TelemetryWrapper(telemetry);
         telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
 
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
         driveTrain = new DriveTrain(this, telemetryWrapper);
-        clawServo = new ServoToggle();
+        clawServo = new ServoToggle("clawServo", 0, 0.3, false);
 
         driveTrain.init(hardwareMap);
         pivot = hardwareMap.get(DcMotor.class, "pivot");
-        clawServo.init(hardwareMap, "clawServo", 0, 0.3, false);
+        clawServo.init(hardwareMap);
 
         outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputSlide.init(hardwareMap);

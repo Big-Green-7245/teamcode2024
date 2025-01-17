@@ -13,10 +13,14 @@ public class TelemetryWrapper {
     private final String[] lines;
     private final Object[][] args;
 
+    public TelemetryWrapper(Telemetry telemetry) {
+        this(telemetry, 20);
+    }
+
     public TelemetryWrapper(Telemetry telemetry, int lines) {
         this.telemetry = telemetry;
         this.lines = new String[lines];
-        args = new Object[lines][];
+        this.args = new Object[lines][];
         telemetry.clear();
         reset();
     }

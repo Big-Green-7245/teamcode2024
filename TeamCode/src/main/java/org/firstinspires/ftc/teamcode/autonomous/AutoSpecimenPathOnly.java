@@ -15,7 +15,7 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetryWrapper = new TelemetryWrapper(telemetry, 20);
+        telemetryWrapper = new TelemetryWrapper(telemetry);
         telemetryWrapper.setLineAndRender(1, "Specimen Auto PATH ONLY\t Initializing");
 
         // Initialize robot modules
