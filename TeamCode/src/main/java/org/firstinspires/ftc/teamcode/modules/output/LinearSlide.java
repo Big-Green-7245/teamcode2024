@@ -73,7 +73,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
     }
 
     /**
-     * Checks if the slider is retracting and pressing the button. If it is, reset the encoder.
+     * Checks if the slide is retracting and pressing the button. If it is, reset the encoder.
      */
     @Override
     public void tick() {
@@ -81,7 +81,7 @@ public class LinearSlide implements Modulable, Tickable, FinishCondition {
             int targetPosLeft = elevator.getTargetPosition();
             double powerLeft = elevator.getPower();
             elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elevator.setTargetPosition(Math.max(targetPosLeft, 0));
+            elevator.setTargetPosition(Math.max(targetPosLeft, 10));
             elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elevator.setPower(powerLeft);
         }

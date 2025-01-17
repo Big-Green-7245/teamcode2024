@@ -105,8 +105,8 @@ public class TeleOp extends LinearOpMode {
                 intakeSlide2.setAction(false);
             } else if (Math.abs(gamepad2.left_stick_y) > 0.0001) {
                 // Move intake slides
-                intakeSlide1.interpolateAction(intakeSlide1.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
-                intakeSlide2.interpolateAction(intakeSlide2.getInterpolatedPos() - gamepad2.left_stick_y * 0.2);
+                intakeSlide1.setPosition(intakeSlide1.getPosition() - gamepad2.left_stick_y * 0.2);
+                intakeSlide2.setPosition(intakeSlide2.getPosition() - gamepad2.left_stick_y * 0.2);
             }
             if (gp2.pressing(ButtonHelper.dpad_right)) {
                 // Toggle intake pivot between up and down
@@ -152,15 +152,19 @@ public class TeleOp extends LinearOpMode {
             telemetryWrapper.setLine(2, "Gamepad2RightStickY: " + gamepad2.right_stick_y * 500);
             int[] currentPositions = outputSlide.getCurrentPositions();
             telemetryWrapper.setLine(3, "OutputSlidePos Left: " + currentPositions[0] + "; Right: " + currentPositions[1] + "; Diff: " + (currentPositions[1] - currentPositions[0]));
+            double telemetryCurrentPositionsTime = timer.milliseconds();
             int[] targetPositions = outputSlide.getTargetPositions();
             telemetryWrapper.setLine(4, "OutputSlideTargetPos Left: " + targetPositions[0] + "; Right: " + targetPositions[1] + "; Diff: " + (targetPositions[1] - targetPositions[0]));
+            double telemetryTargetPositionsTime = timer.milliseconds();
             boolean[] elevatorButtons = outputSlide.areElevatorButtonsPressed();
             telemetryWrapper.setLine(5, "OutputSlideButton Left: " + elevatorButtons[0] + "; Right: " + elevatorButtons[1]);
+            double telemetryElevatorButtonsTime = timer.milliseconds();
             telemetryWrapper.setLine(6, "OutputSlideCurrent: " + outputSlide.getCurrent() + "A");
 
             // Debug loop times
             double telemetryTime = timer.milliseconds();
             telemetryWrapper.setLine(7, "TeleOp loop time: %.2f ms; ClearBulkCacheTime: %.2f ms; Gamepads: %.2f ms; DriveTrain: %.2f ms; Intake: %.2f ms; Output: %.2f ms; SpecimenClaw: %.2f ms; TelemetryTime: %.2f ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime);
+            telemetryWrapper.setLine(8, "OutputSlideTelemetry CurrentPos: %.2f ms; TargetPos: %.2f ms; Buttons: %.2f ms; Current: %.2f ms", telemetryCurrentPositionsTime - specimenClawTime, telemetryTargetPositionsTime - telemetryCurrentPositionsTime, telemetryElevatorButtonsTime - telemetryTargetPositionsTime, telemetryTime - telemetryElevatorButtonsTime);
             telemetryWrapper.render();
             timer.reset();
         }

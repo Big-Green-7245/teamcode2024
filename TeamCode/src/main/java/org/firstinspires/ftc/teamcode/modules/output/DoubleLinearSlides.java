@@ -72,7 +72,7 @@ public class DoubleLinearSlides extends LinearSlide {
     }
 
     /**
-     * Checks if the slider is retracting and pressing the button. If it is, reset the encoder.
+     * Checks if either slide is retracting and pressing the button. If it is, reset the encoder.
      */
     @Override
     public void tick() {
