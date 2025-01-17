@@ -2,35 +2,12 @@ package org.firstinspires.ftc.teamcode.modules.output;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.modules.Modulable;
 
 public class ServoToggle implements Modulable {
-    private double actionPos = 0;
-    private double idlePos = 0.3;
     private String name;
     protected Servo servo;
     private boolean action = false;
-
-    public void setIdlePos(double pos) {
-        actionPos = pos;
-    }
-
-    public void setActionPos(double pos) {
-        idlePos = pos;
-    }
-
-    public double getPosition() {
-        return servo.getPosition();
-    }
-
-    public double getInterpolatedPos() {
-        return Range.scale(servo.getPosition(), idlePos, actionPos, 0, 1);
-    }
-
-    public void setPosition(double position) {
-        servo.setPosition(position);
-    }
 
     public void init(HardwareMap map, String servoName, double idlePos, double actionPos, boolean isReversed) {
         name = servoName;
@@ -40,8 +17,7 @@ public class ServoToggle implements Modulable {
         } else {
             servo.setDirection(Servo.Direction.FORWARD);
         }
-        this.idlePos = idlePos;
-        this.actionPos = actionPos;
+        servo.scaleRange(idlePos, actionPos);
         setAction(action);
     }
 
@@ -52,6 +28,19 @@ public class ServoToggle implements Modulable {
         servo.setDirection(Servo.Direction.REVERSE);
     }
 
+    public double getPosition() {
+        return servo.getPosition();
+    }
+
+    /**
+     * Starts to move to claw to the given position where 0 is the idlePos passed in init and 1 is the actionPos passed in init.
+     *
+     * @param position the position between 0 and 1
+     */
+    public void setPosition(double position) {
+        servo.setPosition(position);
+    }
+
     /**
      * Makes the claw start to move towards the specified position.
      *
@@ -60,9 +49,9 @@ public class ServoToggle implements Modulable {
     public void setAction(boolean isAction) {
         this.action = isAction;
         if (action) {
-            servo.setPosition(actionPos);
+            servo.setPosition(1);
         } else {
-            servo.setPosition(idlePos);
+            servo.setPosition(0);
         }
     }
 
@@ -70,15 +59,7 @@ public class ServoToggle implements Modulable {
      * Start to move the claw opposite to the current state.
      */
     public void toggleAction() {
-        action = !action;
-        setAction(action);
-    }
-
-    /**
-     * Starts to move to claw to the given progress between 0 and 1
-     */
-    public void interpolateAction(double progress) {
-        servo.setPosition(Range.scale(progress, 0, 1, idlePos, actionPos));
+        setAction(!action);
     }
 }
 

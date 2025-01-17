@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.*;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
+
+import java.lang.Math;
 
 public class AutoHelper {
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
@@ -17,7 +16,7 @@ public class AutoHelper {
     static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
     public static final int BASKET_SLIDE_HIGH = 2700;
 
-    static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 61, Math.PI / 2);
+    static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 62, Math.PI / 2);
     static final Pose2d INITIAL_SUBMERSIBLE_POSE = new Pose2d(-6, 36, Math.PI / 2);
     static final int OBSERVATION_ZONE_Y = 48;
     static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);
@@ -33,10 +32,7 @@ public class AutoHelper {
 
     static Action moveSlideToPos(LinearSlide slide, int pos) {
         return new SequentialAction(
-                telemetryPacket -> {
-                    slide.startMoveToPos(pos);
-                    return false;
-                },
+                new InstantAction(() -> slide.startMoveToPos(pos)),
                 telemetryPacket -> {
                     slide.tick();
                     return !slide.isFinished();
@@ -46,10 +42,7 @@ public class AutoHelper {
 
     static Action retractSlide(LinearSlide slide) {
         return new SequentialAction(
-                telemetryPacket -> {
-                    slide.startRetraction();
-                    return false;
-                },
+                new InstantAction(slide::startRetraction),
                 telemetryPacket -> {
                     slide.tick();
                     telemetryPacket.put("outputSlideCurrentPos", slide.getCurrentPosition());
@@ -61,44 +54,32 @@ public class AutoHelper {
 
     static Action intakeSample(ServoToggle intakeSlide1, ServoToggle intakeSlide2, ServoToggle intakePivot, Servo activeIntake) {
         return new SequentialAction(
-                telemetryPacket -> {
+                new InstantAction(() -> {
                     intakePivot.setAction(true);
                     activeIntake.setPosition(1);
-                    return false;
-                },
+                }),
                 new SleepAction(0.5),
-                telemetryPacket -> {
+                new InstantAction(() -> {
                     intakeSlide1.setAction(true);
                     intakeSlide2.setAction(true);
-                    return false;
-                },
+                }),
                 new SleepAction(0.5),
-                telemetryPacket -> {
+                new InstantAction(() -> {
                     intakePivot.setAction(false);
                     intakeSlide1.setAction(false);
                     intakeSlide2.setAction(false);
-                    return false;
-                },
+                }),
                 new SleepAction(0.5),
-                telemetryPacket -> {
-                    activeIntake.setPosition(0.5);
-                    return false;
-                }
+                new InstantAction(() -> activeIntake.setPosition(0.5))
         );
     }
 
     static Action transferSample(Servo activeIntake) {
         return new SequentialAction(
                 new SleepAction(0.5),
-                telemetryPacket -> {
-                    activeIntake.setPosition(0);
-                    return false;
-                },
+                new InstantAction(() -> activeIntake.setPosition(0)),
                 new SleepAction(0.5),
-                telemetryPacket -> {
-                    activeIntake.setPosition(0.5);
-                    return false;
-                }
+                new InstantAction(() -> activeIntake.setPosition(0.5))
         );
     }
 }

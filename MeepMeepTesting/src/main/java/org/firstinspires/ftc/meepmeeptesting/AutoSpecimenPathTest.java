@@ -7,7 +7,7 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class AutoSpecimenPathTest {
-    private static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 61, Math.PI / 2);
+    private static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 62, Math.PI / 2);
     private static final Pose2d INITIAL_SUBMERSIBLE_POSE = new Pose2d(-6, 36, Math.PI / 2);
     private static final int OBSERVATION_ZONE_Y = 48;
     private static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);

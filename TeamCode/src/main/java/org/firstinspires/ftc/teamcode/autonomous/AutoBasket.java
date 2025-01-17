@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -77,10 +78,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(5 * Math.PI / 4)
                         .splineToSplineHeading(AutoHelper.SAMPLE_1_POSE, 3 * Math.PI / 2)
                         .build(),
-                telemetryPacket -> {
-                    outputBox.setAction(false);
-                    return false;
-                },
+                new InstantAction(() -> outputBox.setAction(false)),
                 AutoHelper.retractSlide(outputSlide)
         ));
 
@@ -107,10 +105,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(5 * Math.PI / 4)
                         .splineToSplineHeading(AutoHelper.SAMPLE_2_POSE, 3 * Math.PI / 2)
                         .build(),
-                telemetryPacket -> {
-                    outputBox.setAction(false);
-                    return false;
-                },
+                new InstantAction(() -> outputBox.setAction(false)),
                 AutoHelper.retractSlide(outputSlide)
         ));
 
@@ -137,10 +132,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(5 * Math.PI / 4)
                         .splineToSplineHeading(AutoHelper.SAMPLE_3_POSE, 3 * Math.PI / 2)
                         .build(),
-                telemetryPacket -> {
-                    outputBox.setAction(false);
-                    return false;
-                },
+                new InstantAction(() -> outputBox.setAction(false)),
                 AutoHelper.retractSlide(outputSlide)
         ));
 
@@ -167,10 +159,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(5 * Math.PI / 4)
                         .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
                         .build(),
-                telemetryPacket -> {
-                    outputBox.setAction(false);
-                    return false;
-                },
+                new InstantAction(() -> outputBox.setAction(false)),
                 AutoHelper.retractSlide(outputSlide)
         ));
     }
