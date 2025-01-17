@@ -7,18 +7,18 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class AutoSpecimenPathTest {
-    private static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 62, Math.PI / 2);
-    private static final Pose2d INITIAL_SUBMERSIBLE_POSE = new Pose2d(-6, 36, Math.PI / 2);
+    private static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);
+    private static final Pose2d INITIAL_SUBMERSIBLE_POSE = new Pose2d(-6, 34.5, Math.PI / 2);
     private static final int OBSERVATION_ZONE_Y = 48;
     private static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);
-    private static final Pose2d SUBMERSIBLE_POSE = new Pose2d(-8, 36, Math.PI / 2);
-    private static final Pose2d SUBMERSIBLE_SIDE_POSE = new Pose2d(-4, 36, Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_1_POSE = new Pose2d(-41, 14, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_1_DEPOSIT_POSE = new Pose2d(-42, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_2_POSE = new Pose2d(-51, 14, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_2_DEPOSIT_POSE = new Pose2d(-52, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_3_POSE = new Pose2d(-61, 14, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_3_DEPOSIT_POSE = new Pose2d(-61, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
+    private static final Pose2d SUBMERSIBLE_POSE = new Pose2d(-8, 34.5, Math.PI / 2);
+    private static final Pose2d SUBMERSIBLE_SIDE_POSE = new Pose2d(-4, 34.5, Math.PI / 2);
+    private static final Pose2d SPECIMEN_SAMPLE_1_POSE = new Pose2d(-42, 14, 3 * Math.PI / 2);
+    private static final Pose2d SPECIMEN_SAMPLE_1_DEPOSIT_POSE = new Pose2d(-44, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
+    private static final Pose2d SPECIMEN_SAMPLE_2_POSE = new Pose2d(-52, 14, 3 * Math.PI / 2);
+    private static final Pose2d SPECIMEN_SAMPLE_2_DEPOSIT_POSE = new Pose2d(-54, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
+    private static final Pose2d SPECIMEN_SAMPLE_3_POSE = new Pose2d(-62, 14, 3 * Math.PI / 2);
+    private static final Pose2d SPECIMEN_SAMPLE_3_DEPOSIT_POSE = new Pose2d(-62, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
@@ -35,6 +35,7 @@ public class AutoSpecimenPathTest {
                 // Move to first sample while resetting specimen claw and retracting slides
                 .setTangent(Math.PI / 2)
                 .splineTo(new Vector2d(-36, 32), 3 * Math.PI / 2)
+                .splineTo(new Vector2d(-36, 28), 3 * Math.PI / 2)
                 .splineToSplineHeading(SPECIMEN_SAMPLE_1_POSE, Math.PI / 2)
                 // Push first sample to observation zone
                 .splineToConstantHeading(SPECIMEN_SAMPLE_1_DEPOSIT_POSE.position, Math.PI / 2)

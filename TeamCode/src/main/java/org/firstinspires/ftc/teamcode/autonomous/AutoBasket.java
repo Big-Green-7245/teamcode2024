@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.*;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,6 +11,8 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
+
+import java.lang.Math;
 
 @Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOp")
 public class AutoBasket extends LinearOpMode {
@@ -70,88 +70,43 @@ public class AutoBasket extends LinearOpMode {
                 AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
         ));
         outputBox.setAction(true);
-        sleep(500);
+        sleep(1000);
 
-        // Move to first sample while resetting output box and retracting slides
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToSplineHeading(AutoHelper.SAMPLE_1_POSE, 3 * Math.PI / 2)
-                        .build(),
-                new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.retractSlide(outputSlide)
-        ));
+        for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
+            // Move to sample while resetting output box and retracting slides
+            Actions.runBlocking(new ParallelAction(
+                    drive.actionBuilder(AutoHelper.BASKET_POSE)
+                            .setTangent(5 * Math.PI / 4)
+                            .splineToSplineHeading(samplePose, 3 * Math.PI / 2)
+                            .build(),
+                    new InstantAction(() -> outputBox.setAction(false)),
+                    new SequentialAction(
+                            AutoHelper.retractSlide(outputSlide),
+                            new InstantAction(() -> {
+                                intakePivot.setAction(true);
+                                activeIntake.setPosition(1);
+                            }),
+                            new SleepAction(0.7)
+                    )
+            ));
 
-        // Intake the first sample
-        Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
+            // Intake the sample
+            Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
 
-        // Move to basket the second time and deposit
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.SAMPLE_1_POSE)
-                        .setTangent(Math.PI / 2)
-                        .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                        .build(),
-                new SequentialAction(
-                        AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
-                )
-        ));
-        outputBox.setAction(true);
-        sleep(500);
-
-        // Move to second sample while resetting output box and retracting slides
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToSplineHeading(AutoHelper.SAMPLE_2_POSE, 3 * Math.PI / 2)
-                        .build(),
-                new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.retractSlide(outputSlide)
-        ));
-
-        // Intake the second sample
-        Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
-
-        // Move to basket the third time and deposit
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.SAMPLE_2_POSE)
-                        .setTangent(Math.PI / 2)
-                        .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                        .build(),
-                new SequentialAction(
-                        AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
-                )
-        ));
-        outputBox.setAction(true);
-        sleep(500);
-
-        // Move to third sample while resetting output box and retracting slides
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToSplineHeading(AutoHelper.SAMPLE_3_POSE, 3 * Math.PI / 2)
-                        .build(),
-                new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.retractSlide(outputSlide)
-        ));
-
-        // Intake the third sample
-        Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
-
-        // Move to basket the fourth time and deposit
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.SAMPLE_3_POSE)
-                        .setTangent(Math.PI / 2)
-                        .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                        .build(),
-                new SequentialAction(
-                        AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
-                )
-        ));
-        outputBox.setAction(true);
-        sleep(500);
+            // Move to basket and deposit
+            Actions.runBlocking(new ParallelAction(
+                    drive.actionBuilder(samplePose)
+                            .setTangent(Math.PI / 2)
+                            .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                            .build(),
+                    new SequentialAction(
+                            AutoHelper.transferSample(activeIntake),
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
+                    )
+            ));
+            outputBox.setAction(true);
+            sleep(1000);
+        }
 
         // Move to ascent zone while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(

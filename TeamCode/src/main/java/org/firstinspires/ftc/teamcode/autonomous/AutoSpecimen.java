@@ -67,26 +67,30 @@ public class AutoSpecimen extends LinearOpMode {
         // Start moving while retracting the output slides; reset specimen claw after a short sleep
         Actions.runBlocking(new ParallelAction(
                 // This big drive spline takes much longer than the other actions in this parallel action, so don't get confused.
-                drive.actionBuilder(AutoHelper.INITIAL_SUBMERSIBLE_POSE)
-                        // Move to first sample
-                        .setTangent(Math.PI / 2)
-                        .splineTo(new Vector2d(-36, 32), 3 * Math.PI / 2)
-                        .splineToSplineHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE, Math.PI / 2)
-                        // Push first sample to observation zone
-                        .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_DEPOSIT_POSE.position, Math.PI / 2)
-                        // Move to second sample
-                        .setTangent(3 * Math.PI / 2)
-                        .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_POSE.position, Math.PI / 2)
-                        // Push second sample to observation zone
-                        .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_DEPOSIT_POSE.position, Math.PI / 2)
-                        // Move to third sample
-                        .setTangent(3 * Math.PI / 2)
-                        .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_POSE.position, Math.PI / 2)
-                        // Push third sample to observation zone
-                        .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE.position, Math.PI / 2)
-                        // Move to observation zone and pick up second specimen
-                        .splineToConstantHeading(AutoHelper.OBSERVATION_ZONE_POSE.position, Math.PI / 2)
-                        .build(),
+                new SequentialAction(
+                        new SleepAction(0.1),
+                        drive.actionBuilder(AutoHelper.INITIAL_SUBMERSIBLE_POSE)
+                                // Move to first sample
+                                .setTangent(Math.PI / 2)
+                                .splineTo(new Vector2d(-36, 32), 3 * Math.PI / 2)
+                                .splineTo(new Vector2d(-36, 28), 3 * Math.PI / 2)
+                                .splineToSplineHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE, Math.PI / 2)
+                                // Push first sample to observation zone
+                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_DEPOSIT_POSE.position, Math.PI / 2)
+                                // Move to second sample
+                                .setTangent(3 * Math.PI / 2)
+                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_POSE.position, Math.PI / 2)
+                                // Push second sample to observation zone
+                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_DEPOSIT_POSE.position, Math.PI / 2)
+                                // Move to third sample
+                                .setTangent(3 * Math.PI / 2)
+                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_POSE.position, Math.PI / 2)
+                                // Push third sample to observation zone
+                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE.position, Math.PI / 2)
+                                // Move to observation zone and pick up second specimen
+                                .splineToConstantHeading(AutoHelper.OBSERVATION_ZONE_POSE.position, Math.PI / 2)
+                                .build()
+                ),
 
                 // Start retracting the output slides while we start moving
                 AutoHelper.retractSlide(outputSlide),
@@ -101,13 +105,16 @@ public class AutoSpecimen extends LinearOpMode {
         for (int i = 0; i < 4; i++) {
             // Move to submersible to deposit specimen
             Actions.runBlocking(new ParallelAction(
-                    drive.actionBuilder(AutoHelper.OBSERVATION_ZONE_POSE)
-                            .setTangent(3 * Math.PI / 2)
-                            .splineToLinearHeading(AutoHelper.SUBMERSIBLE_POSE, 3 * Math.PI / 2)
-                            .build(),
+                    new SequentialAction(
+                            new SleepAction(0.1),
+                            drive.actionBuilder(AutoHelper.OBSERVATION_ZONE_POSE)
+                                    .setTangent(3 * Math.PI / 2)
+                                    .splineToLinearHeading(AutoHelper.SUBMERSIBLE_POSE, 3 * Math.PI / 2)
+                                    .build()
+                    ),
                     new SequentialAction(
                             new InstantAction(() -> specimenClaw.setAction(true)),
-                            new SleepAction(100),
+                            new SleepAction(0.1),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH)
                     )
             ));
