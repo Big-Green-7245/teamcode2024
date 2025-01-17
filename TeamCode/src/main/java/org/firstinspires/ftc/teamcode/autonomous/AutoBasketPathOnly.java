@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 /**
@@ -20,6 +25,12 @@ public class AutoBasketPathOnly extends LinearOpMode {
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
     private MecanumDrive drive;
+    private ServoToggle intakeSlide1, intakeSlide2;
+    private ServoToggle intakePivot;
+    private Servo activeIntake;
+    private DoubleLinearSlides outputSlide;
+    private ServoToggle outputBox;
+    private ServoToggle specimenClaw;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,10 +39,26 @@ public class AutoBasketPathOnly extends LinearOpMode {
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
+        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.2, true);
+        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.2, false);
+        intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
+        activeIntake = hardwareMap.get(Servo.class, "activeIntake");
+        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
+        outputBox = new ServoToggle("outputBox", 0, 0.4, true);
+        specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
+
+        intakeSlide1.init(hardwareMap);
+        intakeSlide2.init(hardwareMap);
+        intakePivot.init(hardwareMap);
+        outputSlide.init(hardwareMap);
+        outputBox.init(hardwareMap);
+        specimenClaw.init(hardwareMap);
 
         // Wait for start
         telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY v%s\t Press start to start >", PROGRAM_VERSION);
-        while (opModeInInit()) {}
+        while (opModeInInit()) {
+            outputSlide.tickBeforeStart();
+        }
 
         // Begin autonomous program
         // See AutoBasketPathTest.java for a visualization
@@ -43,58 +70,26 @@ public class AutoBasketPathOnly extends LinearOpMode {
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build()
         ));
-        sleep(500);
+        sleep(1000);
 
-        // Move to first sample
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToSplineHeading(AutoHelper.SAMPLE_1_POSE, 3 * Math.PI / 2)
-                        .build()
-        ));
+        for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
+            // Move to sample
+            Actions.runBlocking(new ParallelAction(
+                    drive.actionBuilder(AutoHelper.BASKET_POSE)
+                            .setTangent(5 * Math.PI / 4)
+                            .splineToSplineHeading(samplePose, 3 * Math.PI / 2)
+                            .build()
+            ));
 
-        // Move to basket the second time
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.SAMPLE_1_POSE)
-                        .setTangent(Math.PI / 2)
-                        .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                        .build()
-        ));
-        sleep(500);
-
-        // Move to second sample
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToSplineHeading(AutoHelper.SAMPLE_2_POSE, 3 * Math.PI / 2)
-                        .build()
-        ));
-
-        // Move to basket the third time
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.SAMPLE_2_POSE)
-                        .setTangent(Math.PI / 2)
-                        .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                        .build()
-        ));
-        sleep(500);
-
-        // Move to third sample
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToSplineHeading(AutoHelper.SAMPLE_3_POSE, 3 * Math.PI / 2)
-                        .build()
-        ));
-
-        // Move to basket the fourth time
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.SAMPLE_3_POSE)
-                        .setTangent(Math.PI / 2)
-                        .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                        .build()
-        ));
-        sleep(500);
+            // Move to basket the second time
+            Actions.runBlocking(new ParallelAction(
+                    drive.actionBuilder(samplePose)
+                            .setTangent(Math.PI / 2)
+                            .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                            .build()
+            ));
+            sleep(1000);
+        }
 
         // Move to ascent zone
         Actions.runBlocking(new ParallelAction(
