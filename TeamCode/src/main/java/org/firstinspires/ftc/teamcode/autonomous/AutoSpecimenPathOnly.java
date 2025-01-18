@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -63,9 +63,9 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
         Actions.runBlocking(drive.actionBuilder(AutoHelper.INITIAL_SUBMERSIBLE_POSE)
                 // Move to first sample while resetting specimen claw and retracting slides
                 .setTangent(Math.PI / 2)
-                .splineTo(new Vector2d(-36, 32), 3 * Math.PI / 2)
-                .splineTo(new Vector2d(-36, 28), 3 * Math.PI / 2)
-                .splineToSplineHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE, Math.PI / 2)
+                .splineTo(AutoHelper.SPECIMEN_SAMPLE_1_INTERMEDIATE_1.position, 3 * Math.PI / 2)
+                .splineToSplineHeading(AutoHelper.SPECIMEN_SAMPLE_1_INTERMEDIATE_2, 3 * Math.PI / 2)
+                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE.position, Math.PI / 2)
                 // Push first sample to observation zone
                 .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_DEPOSIT_POSE.position, Math.PI / 2)
                 // Move to second sample
@@ -83,18 +83,17 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
                 .build()
         );
 
-        for (int i = 0; i < 4; i++) {
-            // Move to submersible to deposit specimen
+        for (Pose2d submersiblePose : AutoHelper.SUBMERSIBLE_POSES) {
+            // Pick up specimen and move to submersible
             Actions.runBlocking(drive.actionBuilder(AutoHelper.OBSERVATION_ZONE_POSE)
-                    .setTangent(3 * Math.PI / 2)
-                    .splineToLinearHeading(AutoHelper.SUBMERSIBLE_POSE, 3 * Math.PI / 2)
+                    .setTangent(7 * Math.PI / 4)
+                    .splineToLinearHeading(submersiblePose, 7 * Math.PI / 4)
                     .build()
             );
 
-            // Move to the side while depositing the specimen
-            // Move to observation zone and pick up specimen
-            Actions.runBlocking(drive.actionBuilder(AutoHelper.SUBMERSIBLE_POSE)
-                    .setTangent(0)
+            // Deposit the specimen and move to observation zone
+            Actions.runBlocking(drive.actionBuilder(submersiblePose)
+                    .setTangent(3 * Math.PI / 4)
                     .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
                     .build()
             );
