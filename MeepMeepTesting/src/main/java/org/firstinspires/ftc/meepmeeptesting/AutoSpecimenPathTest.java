@@ -12,16 +12,12 @@ public class AutoSpecimenPathTest {
     private static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);
     private static final double SUBMERSIBLE_Y = 34.5;
     private static final Pose2d INITIAL_SUBMERSIBLE_POSE = new Pose2d(-4, SUBMERSIBLE_Y, Math.PI / 2);
-    private static final int OBSERVATION_ZONE_Y = 48;
     private static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_1_INTERMEDIATE_1 = new Pose2d(-35, 32, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_1_INTERMEDIATE_2 = new Pose2d(-35, 28, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_1_POSE = new Pose2d(-42, 14, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_1_DEPOSIT_POSE = new Pose2d(-44, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_2_POSE = new Pose2d(-52, 14, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_2_DEPOSIT_POSE = new Pose2d(-54, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_3_POSE = new Pose2d(-62, 14, 3 * Math.PI / 2);
-    private static final Pose2d SPECIMEN_SAMPLE_3_DEPOSIT_POSE = new Pose2d(-62, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
+    private static final int SPECIMEN_SAMPLE_PICKUP_Y = 42;
+    private static final Pose2d SPECIMEN_SAMPLE_1_POSE = new Pose2d(-32, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
+    private static final Pose2d SPECIMEN_SAMPLE_2_POSE = new Pose2d(-42, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
+    private static final Pose2d SPECIMEN_SAMPLE_3_POSE = new Pose2d(-52, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
+    private static final List<Pose2d> SPECIMEN_SAMPLE_POSES = List.of(SPECIMEN_SAMPLE_1_POSE, SPECIMEN_SAMPLE_2_POSE, SPECIMEN_SAMPLE_3_POSE);
     private static final Pose2d SUBMERSIBLE_1_POSE = new Pose2d(-6, SUBMERSIBLE_Y, Math.PI / 2);
     private static final Pose2d SUBMERSIBLE_2_POSE = new Pose2d(-8, SUBMERSIBLE_Y, Math.PI / 2);
     private static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
@@ -41,24 +37,25 @@ public class AutoSpecimenPathTest {
                 .setTangent(3 * Math.PI / 2)
                 .splineToConstantHeading(INITIAL_SUBMERSIBLE_POSE.position, 3 * Math.PI / 2)
                 // Move to first sample while resetting specimen claw and retracting slides
-                .setTangent(Math.PI / 2)
-                .splineTo(SPECIMEN_SAMPLE_1_INTERMEDIATE_1.position, 3 * Math.PI / 2)
-                .splineToSplineHeading(SPECIMEN_SAMPLE_1_INTERMEDIATE_2, 3 * Math.PI / 2)
-                .splineToConstantHeading(SPECIMEN_SAMPLE_1_POSE.position, Math.PI / 2)
-                // Push first sample to observation zone
-                .splineToConstantHeading(SPECIMEN_SAMPLE_1_DEPOSIT_POSE.position, Math.PI / 2)
-                // Move to second sample
-                .setTangent(3 * Math.PI / 2)
-                .splineToConstantHeading(SPECIMEN_SAMPLE_2_POSE.position, Math.PI / 2)
-                // Push second sample to observation zone
-                .splineToConstantHeading(SPECIMEN_SAMPLE_2_DEPOSIT_POSE.position, Math.PI / 2)
-                // Move to third sample
-                .setTangent(3 * Math.PI / 2)
-                .splineToConstantHeading(SPECIMEN_SAMPLE_3_POSE.position, Math.PI / 2)
-                // Push third sample to observation zone
-                .splineToConstantHeading(SPECIMEN_SAMPLE_3_DEPOSIT_POSE.position, Math.PI / 2)
-                // Move to observation zone and pick up second specimen
-                .splineToConstantHeading(OBSERVATION_ZONE_POSE.position, Math.PI / 2);
+                .setTangent(3 * Math.PI / 4)
+                // Move to sample while starting intake
+                .splineToLinearHeading(SPECIMEN_SAMPLE_1_POSE, Math.PI);
+
+        for (int i = 1; i < SPECIMEN_SAMPLE_POSES.size(); i++) {
+            builder = builder
+                    // Intake and turn to observation zone
+                    .turnTo(3 * Math.PI / 4)
+                    // Spit out the sample and move to the next sample while starting intake
+                    .setTangent(Math.PI)
+                    .splineToLinearHeading(SPECIMEN_SAMPLE_POSES.get(i), Math.PI);
+        }
+
+        builder = builder
+                // Intake and turn to observation zone
+                .turnTo(3 * Math.PI / 4)
+                // Move to observation zone to pick up specimen
+                .setTangent(Math.PI / 4)
+                .splineToLinearHeading(OBSERVATION_ZONE_POSE, Math.PI / 2);
 
         for (Pose2d submersiblePose : SUBMERSIBLE_POSES) {
             // Pick up specimen and move to submersible

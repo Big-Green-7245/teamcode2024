@@ -60,26 +60,30 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
                 .build()
         );
 
+        // Move to first sample while resetting specimen claw and retracting slides
         Actions.runBlocking(drive.actionBuilder(AutoHelper.INITIAL_SUBMERSIBLE_POSE)
-                // Move to first sample while resetting specimen claw and retracting slides
-                .setTangent(Math.PI / 2)
-                .splineTo(AutoHelper.SPECIMEN_SAMPLE_1_INTERMEDIATE_1.position, 3 * Math.PI / 2)
-                .splineToSplineHeading(AutoHelper.SPECIMEN_SAMPLE_1_INTERMEDIATE_2, 3 * Math.PI / 2)
-                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE.position, Math.PI / 2)
-                // Push first sample to observation zone
-                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_DEPOSIT_POSE.position, Math.PI / 2)
-                // Move to second sample
-                .setTangent(3 * Math.PI / 2)
-                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_POSE.position, Math.PI / 2)
-                // Push second sample to observation zone
-                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_DEPOSIT_POSE.position, Math.PI / 2)
-                // Move to third sample
-                .setTangent(3 * Math.PI / 2)
-                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_POSE.position, Math.PI / 2)
-                // Push third sample to observation zone
-                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE.position, Math.PI / 2)
-                // Move to observation zone and pick up second specimen
-                .splineToConstantHeading(AutoHelper.OBSERVATION_ZONE_POSE.position, Math.PI / 2)
+                .setTangent(3 * Math.PI / 4)
+                .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE, Math.PI)
+                .build()
+        );
+
+        for (int i = 1; i < AutoHelper.SPECIMEN_SAMPLE_POSES.size(); i++) {
+            Actions.runBlocking(drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_POSES.get(i - 1))
+                    // Intake and turn to observation zone
+                    .turnTo(3 * Math.PI / 4)
+                    // Spit out the sample and move to the next sample while starting intake
+                    .setTangent(Math.PI)
+                    .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_POSES.get(i), Math.PI)
+                    .build()
+            );
+        }
+
+        Actions.runBlocking(drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_POSE)
+                // Intake and turn to observation zone
+                .turnTo(3 * Math.PI / 4)
+                // Move to observation zone to pick up specimen
+                .setTangent(Math.PI / 4)
+                .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
                 .build()
         );
 

@@ -82,11 +82,7 @@ public class AutoBasket extends LinearOpMode {
                     new InstantAction(() -> outputBox.setAction(false)),
                     new SequentialAction(
                             AutoHelper.retractSlide(outputSlide),
-                            new InstantAction(() -> {
-                                intakePivot.setAction(true);
-                                activeIntake.setPosition(1);
-                            }),
-                            new SleepAction(0.7)
+                            AutoHelper.startIntake(intakePivot, activeIntake)
                     )
             ));
 
@@ -100,6 +96,7 @@ public class AutoBasket extends LinearOpMode {
                             .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                             .build(),
                     new SequentialAction(
+                            new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
                     )
