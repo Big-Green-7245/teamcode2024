@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
@@ -19,6 +20,7 @@ public class AutoSpecimen extends LinearOpMode {
     private MecanumDrive drive;
     private ServoToggle intakeSlide1, intakeSlide2;
     private ServoToggle intakePivot;
+    private Servo activeIntake;
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
@@ -33,6 +35,7 @@ public class AutoSpecimen extends LinearOpMode {
         intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.2, true);
         intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.2, false);
         intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
+        activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
@@ -64,36 +67,27 @@ public class AutoSpecimen extends LinearOpMode {
                 AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH)
         ));
 
-        // Start moving while retracting the output slides; reset specimen claw after a short sleep
+        // Move to first sample while resetting specimen claw and retracting slides
         Actions.runBlocking(new ParallelAction(
                 // This big drive spline takes much longer than the other actions in this parallel action, so don't get confused.
                 new SequentialAction(
-                        new SleepAction(0.05),
+                        new SleepAction(0.1),
                         drive.actionBuilder(AutoHelper.INITIAL_SUBMERSIBLE_POSE)
                                 // Move to first sample
-                                .setTangent(Math.PI / 2)
-                                .splineTo(AutoHelper.SPECIMEN_SAMPLE_1_INTERMEDIATE_1.position, 3 * Math.PI / 2)
-                                .splineToSplineHeading(AutoHelper.SPECIMEN_SAMPLE_1_INTERMEDIATE_2, 3 * Math.PI / 2)
-                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE.position, Math.PI / 2)
-                                // Push first sample to observation zone
-                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_1_DEPOSIT_POSE.position, Math.PI / 2)
-                                // Move to second sample
-                                .setTangent(3 * Math.PI / 2)
-                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_POSE.position, Math.PI / 2)
-                                // Push second sample to observation zone
-                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_2_DEPOSIT_POSE.position, Math.PI / 2)
-                                // Move to third sample
-                                .setTangent(3 * Math.PI / 2)
-                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_POSE.position, Math.PI / 2)
-                                // Push third sample to observation zone
-                                .splineToConstantHeading(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE.position, Math.PI / 2)
-                                // Move to observation zone and pick up second specimen
-                                .splineToConstantHeading(AutoHelper.OBSERVATION_ZONE_POSE.position, Math.PI / 2)
+                                .setTangent(3 * Math.PI / 4)
+                                .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_1_POSE, Math.PI)
                                 .build()
                 ),
 
                 // Start retracting the output slides while we start moving
-                AutoHelper.retractSlide(outputSlide),
+                new SequentialAction(
+                        AutoHelper.retractSlide(outputSlide),
+                        AutoHelper.startIntake(intakePivot, activeIntake),
+                        new InstantAction(() -> {
+                            intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
+                            intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
+                        })
+                ),
 
                 // Open specimen claw after sleeping for a short time
                 new SequentialAction(
@@ -101,6 +95,57 @@ public class AutoSpecimen extends LinearOpMode {
                         new InstantAction(() -> specimenClaw.setAction(false))
                 )
         ));
+
+        for (int i = 1; i < AutoHelper.SPECIMEN_SAMPLE_POSES.size(); i++) {
+            // Intake and turn to observation zone
+            TrajectoryActionBuilder builder = drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_POSES.get(i - 1))
+                    .turnTo(3 * Math.PI / 4)
+                    .afterTime(0, new InstantAction(() -> {
+                        activeIntake.setPosition(1);
+                        intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                        intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                    }));
+            Actions.runBlocking(builder.build());
+
+            // Spit out the sample and move to the next sample while starting intake
+            Actions.runBlocking(builder.fresh()
+                    .setTangent(Math.PI)
+                    .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_POSES.get(i), Math.PI)
+                    .afterTime(0, new SequentialAction(
+                            AutoHelper.transferSample(activeIntake),
+                            new InstantAction(() -> {
+                                intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
+                                intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
+                            })
+                    ))
+                    .build()
+            );
+        }
+
+        // Intake and turn to observation zone
+        TrajectoryActionBuilder builder = drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_POSE)
+                .turnTo(3 * Math.PI / 4)
+                .afterTime(0, new InstantAction(() -> {
+                    activeIntake.setPosition(1);
+                    intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                    intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                }));
+        Actions.runBlocking(builder.build());
+
+        // Move to observation zone to pick up specimen
+        Actions.runBlocking(builder.fresh()
+                .setTangent(Math.PI / 4)
+                .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
+                .afterTime(0, new SequentialAction(
+                        AutoHelper.transferSample(activeIntake),
+                        new InstantAction(() -> {
+                            intakePivot.setAction(false);
+                            intakeSlide1.setAction(false);
+                            intakeSlide2.setAction(false);
+                        })
+                ))
+                .build()
+        );
 
         for (Pose2d submersiblePose : AutoHelper.SUBMERSIBLE_POSES) {
             // Pick up specimen and move to submersible
@@ -122,7 +167,7 @@ public class AutoSpecimen extends LinearOpMode {
             // Deposit the specimen and move to observation zone
             Actions.runBlocking(new ParallelAction(
                     new SequentialAction(
-                            new SleepAction(0.05),
+                            new SleepAction(0.1),
                             drive.actionBuilder(submersiblePose)
                                     .setTangent(3 * Math.PI / 4)
                                     .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)

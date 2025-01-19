@@ -21,16 +21,14 @@ public class AutoHelper {
     static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);
     static final double SUBMERSIBLE_Y = 34.5;
     static final Pose2d INITIAL_SUBMERSIBLE_POSE = new Pose2d(-4, SUBMERSIBLE_Y, Math.PI / 2);
-    static final int OBSERVATION_ZONE_Y = 48;
     static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_1_INTERMEDIATE_1 = new Pose2d(-35, 32, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_1_INTERMEDIATE_2 = new Pose2d(-35, 28, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_1_POSE = new Pose2d(-42, 14, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_1_DEPOSIT_POSE = new Pose2d(-44, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_2_POSE = new Pose2d(-52, 14, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_2_DEPOSIT_POSE = new Pose2d(-54, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_3_POSE = new Pose2d(-62, 14, 3 * Math.PI / 2);
-    static final Pose2d SPECIMEN_SAMPLE_3_DEPOSIT_POSE = new Pose2d(-62, OBSERVATION_ZONE_Y, 3 * Math.PI / 2);
+    static final int SPECIMEN_SAMPLE_PICKUP_Y = 42;
+    static final Pose2d SPECIMEN_SAMPLE_1_POSE = new Pose2d(-32, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
+    static final Pose2d SPECIMEN_SAMPLE_2_POSE = new Pose2d(-42, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
+    static final Pose2d SPECIMEN_SAMPLE_3_POSE = new Pose2d(-52, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
+    static final double SPECIMEN_INTAKE_SLIDE_PREPARE = 0.5;
+    static final double SPECIMEN_INTAKE_SLIDE_EXTEND = 0.8;
+    static final List<Pose2d> SPECIMEN_SAMPLE_POSES = List.of(SPECIMEN_SAMPLE_1_POSE, SPECIMEN_SAMPLE_2_POSE, SPECIMEN_SAMPLE_3_POSE);
     static final Pose2d SUBMERSIBLE_1_POSE = new Pose2d(-6, SUBMERSIBLE_Y, Math.PI / 2);
     static final Pose2d SUBMERSIBLE_2_POSE = new Pose2d(-8, SUBMERSIBLE_Y, Math.PI / 2);
     static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
@@ -60,6 +58,16 @@ public class AutoHelper {
         );
     }
 
+    static Action startIntake(ServoToggle intakePivot, Servo activeIntake) {
+        return new SequentialAction(
+                new InstantAction(() -> {
+                    intakePivot.setAction(true);
+                    activeIntake.setPosition(1);
+                }),
+                new SleepAction(0.7)
+        );
+    }
+
     static Action intakeSample(ServoToggle intakeSlide1, ServoToggle intakeSlide2, ServoToggle intakePivot, Servo activeIntake) {
         return new SequentialAction(
                 new InstantAction(() -> {
@@ -79,7 +87,6 @@ public class AutoHelper {
 
     static Action transferSample(Servo activeIntake) {
         return new SequentialAction(
-                new SleepAction(0.5),
                 new InstantAction(() -> activeIntake.setPosition(0)),
                 new SleepAction(0.5),
                 new InstantAction(() -> activeIntake.setPosition(0.5))
