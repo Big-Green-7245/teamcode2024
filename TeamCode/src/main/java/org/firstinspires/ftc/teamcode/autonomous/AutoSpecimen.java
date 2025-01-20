@@ -114,10 +114,13 @@ public class AutoSpecimen extends LinearOpMode {
 
             // Spit out the sample and move to the next sample while starting intake
             Actions.runBlocking(new ParallelAction(
-                    builder.fresh()
-                            .setTangent(Math.PI)
-                            .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_POSES.get(i), Math.PI)
-                            .build(),
+                    new SequentialAction(
+                            new SleepAction(0.3),
+                            builder.fresh()
+                                    .setTangent(Math.PI)
+                                    .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_POSES.get(i), Math.PI)
+                                    .build()
+                    ),
                     new SequentialAction(
                             AutoHelper.transferSample(activeIntake),
                             new InstantAction(() -> {
@@ -132,7 +135,10 @@ public class AutoSpecimen extends LinearOpMode {
         TrajectoryActionBuilder builder = drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_POSE)
                 .turnTo(3 * Math.PI / 4);
         Actions.runBlocking(new ParallelAction(
-                builder.build(),
+                new SequentialAction(
+                        new SleepAction(0.5),
+                        builder.build()
+                ),
                 new InstantAction(() -> {
                     activeIntake.setPosition(1);
                     intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
@@ -142,10 +148,13 @@ public class AutoSpecimen extends LinearOpMode {
 
         // Move to observation zone to pick up specimen
         Actions.runBlocking(new ParallelAction(
-                builder.fresh()
-                        .setTangent(Math.PI / 4)
-                        .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
-                        .build(),
+                new SequentialAction(
+                        new SleepAction(0.3),
+                        builder.fresh()
+                                .setTangent(Math.PI / 4)
+                                .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
+                                .build()
+                ),
                 new SequentialAction(
                         AutoHelper.transferSample(activeIntake),
                         new InstantAction(() -> {
