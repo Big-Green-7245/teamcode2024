@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.autonomous.AutoHelper;
-import org.firstinspires.ftc.teamcode.modules.DriveTrain;
 import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
@@ -14,18 +18,16 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.util.List;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "Big Green")
 public class TeleOp extends LinearOpMode {
-    // Define attributes
-    private static final String PROGRAM_VERSION = "0.1.0";
-    private static final double SPEED_MULTIPLIER = 1;
+    // Define constants
     private final ElapsedTime timer = new ElapsedTime();
+    private final Pose2d initialPose;
 
     // Declare modules
     private List<LynxModule> hubs;
     private TelemetryWrapper telemetryWrapper;
     private ButtonHelper gp1, gp2;
-    private DriveTrain driveTrain;
+    private MecanumDrive driveTrain;
     private ServoToggle intakeSlide1, intakeSlide2;
     private ServoToggle intakePivot;
     private Servo activeIntake;
@@ -33,25 +35,28 @@ public class TeleOp extends LinearOpMode {
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
 
+    public TeleOp(Pose2d initialPose) {
+        this.initialPose = initialPose;
+    }
+
     @Override
     public void runOpMode() {
         telemetryWrapper = new TelemetryWrapper(telemetry);
-        telemetryWrapper.setLineAndRender(1, "TeleOp v%s\t Initializing", PROGRAM_VERSION);
+        telemetryWrapper.setLineAndRender(1, "TeleOp \tInitializing");
 
         // Initialize robot modules
         hubs = hardwareMap.getAll(LynxModule.class);
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
-        driveTrain = new DriveTrain(this, telemetryWrapper);
-        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.2, true);
-        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.2, false);
+        driveTrain = new PinpointDrive(hardwareMap, initialPose);
+        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.25, true);
+        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.25, false);
         intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 3300);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
 
-        driveTrain.init(hardwareMap);
         intakeSlide1.init(hardwareMap);
         intakeSlide2.init(hardwareMap);
         intakePivot.init(hardwareMap);
@@ -67,7 +72,7 @@ public class TeleOp extends LinearOpMode {
         }
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "TeleOp v%s\t Press start to start >", PROGRAM_VERSION);
+        telemetryWrapper.setLineAndRender(1, "TeleOp \tPress start to start >");
         while (opModeInInit()) {
             clearBulkCache();
 
@@ -91,7 +96,8 @@ public class TeleOp extends LinearOpMode {
             double gamepadsTime = timer.milliseconds();
 
             // Move drive train
-            driveTrain.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, SPEED_MULTIPLIER);
+            driveTrain.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x), -gamepad1.right_stick_x));
+            driveTrain.updatePoseEstimate();
 
             double driveTrainTime = timer.milliseconds();
 
@@ -148,7 +154,7 @@ public class TeleOp extends LinearOpMode {
             double specimenClawTime = timer.milliseconds();
 
             // Update telemetry
-            telemetryWrapper.setLine(1, "TeleOp v%s\t Running", PROGRAM_VERSION);
+            telemetryWrapper.setLine(1, "TeleOp \tRunning");
             telemetryWrapper.setLine(2, "Gamepad2RightStickY: %s", gamepad2.right_stick_y * 500);
             int[] currentPositions = outputSlide.getCurrentPositions();
             telemetryWrapper.setLine(3, "OutputSlidePos Left: %d; Right: %d; Diff: %d", currentPositions[0], currentPositions[1], currentPositions[1] - currentPositions[0]);

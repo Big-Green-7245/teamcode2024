@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
-@Autonomous(name = "AutoSpecimenPathOnly", group = "Big Green", preselectTeleOp = "TeleOp")
+@Autonomous(name = "AutoSpecimenPathOnly", group = "Big Green", preselectTeleOp = "TeleOpSpecimen")
 public class AutoSpecimenPathOnly extends LinearOpMode {
     private TelemetryWrapper telemetryWrapper;
     private MecanumDrive drive;
@@ -28,8 +28,8 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.SPECIMEN_INITIAL_POSE);
-        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.2, true);
-        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.2, false);
+        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.25, true);
+        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.25, false);
         intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);

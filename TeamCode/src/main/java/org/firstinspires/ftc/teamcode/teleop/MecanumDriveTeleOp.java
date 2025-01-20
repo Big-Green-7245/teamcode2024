@@ -1,39 +1,35 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.modules.DriveTrain;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 @SuppressWarnings("FieldCanBeLocal")
 @TeleOp(name = "MecanumDriveTeleOp", group = "opmode")
 public class MecanumDriveTeleOp extends LinearOpMode {
-    // Define attributes
-    private final String programVer = "2.0";
-    private final double speedMultiplier = 0.99;
-
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
     private ButtonHelper gp1, gp2;
-    private DriveTrain driveTrain;
-
-    private ElapsedTime runtime = new ElapsedTime();
+    private MecanumDrive driveTrain;
 
     @Override
     public void runOpMode() {
         telemetryWrapper = new TelemetryWrapper(telemetry);
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + programVer + "\t Initializing");
+        telemetryWrapper.setLineAndRender(1, "Mecanum Drive TeleOp\t Initializing");
 
         // Robot modules initialization
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
-        driveTrain = new DriveTrain(this, telemetryWrapper);
-        driveTrain.init(hardwareMap);
+        driveTrain = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + programVer + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "Mecanum Drive TeleOp\t Press start to start >");
 
         while (opModeInInit()) {
         }
@@ -45,7 +41,8 @@ public class MecanumDriveTeleOp extends LinearOpMode {
             gp2.update();
 
             // DriveTrain wheels
-            driveTrain.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, speedMultiplier);
+            driveTrain.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x), -gamepad1.right_stick_x));
+            driveTrain.updatePoseEstimate();
         }
     }
 }

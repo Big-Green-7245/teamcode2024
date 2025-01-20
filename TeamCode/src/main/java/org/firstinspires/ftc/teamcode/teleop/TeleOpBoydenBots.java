@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import org.firstinspires.ftc.teamcode.modules.DriveTrain;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
@@ -12,13 +16,10 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 @TeleOp(name = "TeleOpBoydenBotsRi3W", group = "opmode")
 public class TeleOpBoydenBots extends LinearOpMode {
-    private final String PROGRAM_VERSION = "2.1";  // Version updated
-    private final double SPEED_MULTIPLIER = 0.99;
-
     // Input helpers and hardware modules
     private TelemetryWrapper telemetryWrapper;
     private ButtonHelper gp1, gp2;
-    private DriveTrain driveTrain;
+    private MecanumDrive driveTrain;
     private DcMotor pivot;
     private ServoToggle clawServo;  // Servo for the claw
     private LinearSlide outputSlide;
@@ -26,21 +27,20 @@ public class TeleOpBoydenBots extends LinearOpMode {
     @Override
     public void runOpMode() {
         telemetryWrapper = new TelemetryWrapper(telemetry);
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Initializing");
+        telemetryWrapper.setLineAndRender(1, "TeleOpBoydenBots \tInitializing");
 
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
-        driveTrain = new DriveTrain(this, telemetryWrapper);
+        driveTrain = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
         clawServo = new ServoToggle("clawServo", 0, 0.3, false);
 
-        driveTrain.init(hardwareMap);
         pivot = hardwareMap.get(DcMotor.class, "pivot");
         clawServo.init(hardwareMap);
 
         outputSlide = new LinearSlide("outputSlide", 0.5, DcMotorSimple.Direction.REVERSE);
         outputSlide.init(hardwareMap);
 
-        telemetryWrapper.setLineAndRender(1, "TeleOp v" + PROGRAM_VERSION + "\t Press start to start >");
+        telemetryWrapper.setLineAndRender(1, "TeleOpBoydenBots \tPress start to start >");
 
         while (opModeInInit()) {}
 
@@ -54,7 +54,8 @@ public class TeleOpBoydenBots extends LinearOpMode {
             gp2.update();
 
             // Drive movement: left stick (direction), right stick (turn)
-            driveTrain.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, SPEED_MULTIPLIER);
+            driveTrain.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x), -gamepad1.right_stick_x));
+            driveTrain.updatePoseEstimate();
 
             pivot.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
 

@@ -10,14 +10,14 @@ import java.util.List;
 
 public class AutoSpecimenPathTest {
     private static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);
-    private static final double SUBMERSIBLE_Y = 34.5;
+    private static final double SUBMERSIBLE_Y = 34;
     private static final Pose2d INITIAL_SUBMERSIBLE_POSE = new Pose2d(-4, SUBMERSIBLE_Y, Math.PI / 2);
-    private static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);
     private static final int SPECIMEN_SAMPLE_PICKUP_Y = 42;
     private static final Pose2d SPECIMEN_SAMPLE_1_POSE = new Pose2d(-32, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
     private static final Pose2d SPECIMEN_SAMPLE_2_POSE = new Pose2d(-42, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
     private static final Pose2d SPECIMEN_SAMPLE_3_POSE = new Pose2d(-52, SPECIMEN_SAMPLE_PICKUP_Y, 5 * Math.PI / 4);
     private static final List<Pose2d> SPECIMEN_SAMPLE_POSES = List.of(SPECIMEN_SAMPLE_1_POSE, SPECIMEN_SAMPLE_2_POSE, SPECIMEN_SAMPLE_3_POSE);
+    private static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);
     private static final Pose2d SUBMERSIBLE_1_POSE = new Pose2d(-6, SUBMERSIBLE_Y, Math.PI / 2);
     private static final Pose2d SUBMERSIBLE_2_POSE = new Pose2d(-8, SUBMERSIBLE_Y, Math.PI / 2);
     private static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);

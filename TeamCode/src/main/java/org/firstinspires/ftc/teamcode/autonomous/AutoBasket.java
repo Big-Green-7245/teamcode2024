@@ -14,12 +14,8 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
 
-@Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOp")
+@Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOpBasket")
 public class AutoBasket extends LinearOpMode {
-    // Define attributes
-    private static final String PROGRAM_VERSION = "0.1.0";
-    private static final double SPEED_MULTIPLIER = 0.9;
-
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
     private MecanumDrive drive;
@@ -33,12 +29,12 @@ public class AutoBasket extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetryWrapper = new TelemetryWrapper(telemetry);
-        telemetryWrapper.setLineAndRender(1, "Basket Auto v%s\t Initializing", PROGRAM_VERSION);
+        telemetryWrapper.setLineAndRender(1, "Basket Auto \tInitializing");
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
-        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.2, true);
-        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.2, false);
+        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.25, true);
+        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.25, false);
         intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
@@ -53,7 +49,7 @@ public class AutoBasket extends LinearOpMode {
         specimenClaw.init(hardwareMap);
 
         // Wait for start
-        telemetryWrapper.setLineAndRender(1, "Basket Auto v%s\t Press start to start >", PROGRAM_VERSION);
+        telemetryWrapper.setLineAndRender(1, "Basket Auto \tPress start to start >");
         while (opModeInInit()) {
             outputSlide.tickBeforeStart();
         }
