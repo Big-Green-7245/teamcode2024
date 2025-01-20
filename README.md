@@ -17,16 +17,27 @@ Then, open the project you just downloaded (called FtcRobotController) in Androi
 These two IDEs (Android Studio & Intellij) are essentially the same, and you should use Android Studio unless you know
 what you're doing.
 
-Now, you are ready to edit the Team Code will be located in `/TeamCode/src/main/java/org/firstinspires/ftc/teamcode`!
+Now, you are ready to edit the Team Code located in `/TeamCode/src/main/java/org/firstinspires/ftc/teamcode`!
 
 ---
 
 ## Introduction to the Code
 
 The main programs which the robot can execute are stored in the base `teamcode` folder.  
+The `teleop` folder contains main TeleOp programs.  
+The `autonomous` folder contains main autonomous programs.  
 Each feature/component on the robot is implemented in its own class in the `modules` folder.  
 The `state` folder offers a library to create a state machine, which is very useful in automating robots.  
-The `util` folder contains miscellaneous classes that help us interact with the robot and things like telemetry.
+The `util` folder contains miscellaneous classes that help us interact with the robot and things like telemetry.  
+Roadrunner classes are located in `messages`, `tuning`, and the base `teamcode` folder.
+See https://rr.brott.dev/ for how to use roadrunner.
+
+## Resources
+
+Many resources are available to get familiar with FTC code. Some are listed here:
+* Discord (Unofficial FIRST Tech Challenge)
+* [Game Manual 0](https://gm0.org/en/latest/)
+* [The Cookbook](https://cookbook.dairy.foundation/)
 
 ## Uploading the code to the robot
 
@@ -42,15 +53,6 @@ Once connected, it should look like this:
 ![Connected](.assets/connectedDevice.png)
 
 Click the run (or rerun) button to upload the code.
-
-### Making sure the code updates
-
-Every TeleOp/Autonomous program should have a programVer variable to keep track of version increments. Sometimes Android
-Studio does not update the code right away.
-
-```java
-final String programVer = "1.0";
-```
 
 ---
 
@@ -79,11 +81,7 @@ compileOptions {
     targetCompatibility JavaVersion.VERSION_1_8
 }
 ```
-and
-```groovy
-compileSdkVersion 29
-```
-in both files and replace `VERSON_1_8` with `VERSION_17` and `compileSdkVersion 29` with `compileSdkVersion 30`. Then reload gradle through a button that
+in both files and replace `VERSON_1_8` with `VERSION_17`. Then reload gradle through a button that
 should appear towards the top right or through the gradle menu on the right (Gradle -> Reload All Gradle Projects).
 
 ---
