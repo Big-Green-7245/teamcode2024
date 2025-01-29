@@ -80,7 +80,8 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
 
         Actions.runBlocking(drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_POSE)
                 // Intake and turn to observation zone
-                .turnTo(3 * Math.PI / 4)
+                .setTangent(Math.PI / 4)
+                .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE, Math.PI / 4)
                 // Move to observation zone to pick up specimen
                 .setTangent(Math.PI / 4)
                 .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)

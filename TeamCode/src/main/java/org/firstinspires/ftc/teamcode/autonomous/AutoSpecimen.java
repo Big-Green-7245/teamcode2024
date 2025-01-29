@@ -132,37 +132,42 @@ public class AutoSpecimen extends LinearOpMode {
         }
 
         // Intake and turn to observation zone
-        TrajectoryActionBuilder builder = drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_POSE)
-                .turnTo(3 * Math.PI / 4);
         Actions.runBlocking(new ParallelAction(
                 new SequentialAction(
                         new SleepAction(0.5),
-                        builder.build()
-                ),
-                new InstantAction(() -> {
-                    activeIntake.setPosition(1);
-                    intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
-                    intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
-                })
-        ));
-
-        // Move to observation zone to pick up specimen
-        Actions.runBlocking(new ParallelAction(
-                new SequentialAction(
-                        new SleepAction(0.3),
-                        builder.fresh()
+                        drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_POSE)
                                 .setTangent(Math.PI / 4)
-                                .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
+                                .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE, Math.PI / 4)
                                 .build()
                 ),
                 new SequentialAction(
-                        AutoHelper.transferSample(activeIntake),
+                        new InstantAction(() -> {
+                            activeIntake.setPosition(1);
+                            intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                            intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                        }),
+                        new SleepAction(0.5),
                         new InstantAction(() -> {
                             intakePivot.setAction(false);
                             intakeSlide1.setAction(false);
                             intakeSlide2.setAction(false);
-                        })
+                        }),
+                        new SleepAction(0.5),
+                        new InstantAction(() -> activeIntake.setPosition(0.5)),
+                        new SleepAction(0.5),
+                        AutoHelper.transferSample(activeIntake)
                 )
+        ));
+
+        // Move to observation zone to pick up specimen
+        Actions.runBlocking(new SequentialAction(
+                new InstantAction(() -> outputBox.setAction(true)),
+                new SleepAction(1),
+                new InstantAction(() -> outputBox.setAction(false)),
+                drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE)
+                        .setTangent(Math.PI / 4)
+                        .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
+                        .build()
         ));
 
         for (Pose2d submersiblePose : AutoHelper.SUBMERSIBLE_POSES) {

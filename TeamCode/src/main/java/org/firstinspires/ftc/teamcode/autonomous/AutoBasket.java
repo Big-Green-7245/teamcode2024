@@ -82,21 +82,24 @@ public class AutoBasket extends LinearOpMode {
                     )
             ));
 
-            // Intake the sample
-            Actions.runBlocking(AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake));
-
-            // Move to basket and deposit
+            // Intake the sample and move to basket
             Actions.runBlocking(new ParallelAction(
-                    drive.actionBuilder(samplePose)
-                            .setTangent(Math.PI / 2)
-                            .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                            .build(),
                     new SequentialAction(
+                            new SleepAction(0.5),
+                            drive.actionBuilder(samplePose)
+                                    .setTangent(Math.PI / 2)
+                                    .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                                    .build()
+                    ),
+                    new SequentialAction(
+                            AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
                     )
             ));
+
+            // Deposit the sample
             outputBox.setAction(true);
             sleep(1000);
         }

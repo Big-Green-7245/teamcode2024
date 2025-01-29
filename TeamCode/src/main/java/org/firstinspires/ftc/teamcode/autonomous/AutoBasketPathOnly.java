@@ -77,7 +77,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
                             .build()
             ));
 
-            // Move to basket the second time
+            // Move to basket
             Actions.runBlocking(new ParallelAction(
                     drive.actionBuilder(samplePose)
                             .setTangent(Math.PI / 2)
