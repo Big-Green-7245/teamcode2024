@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.*;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
-import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
+import org.firstinspires.ftc.teamcode.modules.LinearSlide;
+import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.EncoderConstants;
 
 import java.lang.Math;

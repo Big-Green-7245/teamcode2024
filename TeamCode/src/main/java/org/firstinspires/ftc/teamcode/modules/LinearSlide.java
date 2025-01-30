@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.modules.output;
+package org.firstinspires.ftc.teamcode.modules;
 
 import androidx.core.math.MathUtils;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.modules.Modulable;
-import org.firstinspires.ftc.teamcode.modules.Tickable;
+import org.firstinspires.ftc.teamcode.modules.util.Modulable;
+import org.firstinspires.ftc.teamcode.modules.util.Tickable;
 import org.firstinspires.ftc.teamcode.util.FinishCondition;
 
 public class LinearSlide implements Modulable, Tickable, FinishCondition {

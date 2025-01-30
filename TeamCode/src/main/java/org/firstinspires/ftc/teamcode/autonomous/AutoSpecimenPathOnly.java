@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
-import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
+import org.firstinspires.ftc.teamcode.modules.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 @Autonomous(name = "AutoSpecimenPathOnly", group = "Big Green", preselectTeleOp = "TeleOpSpecimen")

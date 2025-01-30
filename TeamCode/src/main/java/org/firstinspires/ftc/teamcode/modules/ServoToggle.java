@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.modules.output;
+package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.modules.Modulable;
+import org.firstinspires.ftc.teamcode.modules.util.Modulable;
 
 public class ServoToggle implements Modulable {
     private final String name;

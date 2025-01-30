@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.state;
 
-import org.firstinspires.ftc.teamcode.modules.Tickable;
+import org.firstinspires.ftc.teamcode.modules.util.Tickable;
 
 import java.util.*;
 

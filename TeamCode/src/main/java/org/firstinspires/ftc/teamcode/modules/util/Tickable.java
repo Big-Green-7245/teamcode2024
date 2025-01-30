@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.modules;
+package org.firstinspires.ftc.teamcode.modules.util;
 
 /**
  * Implement this interface if a module/component needs to be updated every cycle in the main loop.

@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.modules.output.LinearSlide;
-import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
+import org.firstinspires.ftc.teamcode.modules.LinearSlide;
+import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 

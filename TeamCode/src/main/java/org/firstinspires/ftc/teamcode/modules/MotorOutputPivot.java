@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.modules.output;
+package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import org.firstinspires.ftc.teamcode.modules.Modulable;
-import org.firstinspires.ftc.teamcode.modules.Tickable;
+import org.firstinspires.ftc.teamcode.modules.util.Modulable;
+import org.firstinspires.ftc.teamcode.modules.util.Tickable;
 
 public class MotorOutputPivot implements Modulable, Tickable {
     /**

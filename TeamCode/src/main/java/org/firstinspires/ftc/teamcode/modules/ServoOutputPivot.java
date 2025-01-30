@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.modules.output;
+package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
 
-import org.firstinspires.ftc.teamcode.modules.Modulable;
-import org.firstinspires.ftc.teamcode.modules.Tickable;
+import org.firstinspires.ftc.teamcode.modules.util.Modulable;
+import org.firstinspires.ftc.teamcode.modules.util.Tickable;
 
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.state;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.teamcode.modules.Tickable;
+import org.firstinspires.ftc.teamcode.modules.util.Tickable;
 import org.firstinspires.ftc.teamcode.util.FinishCondition;
 
 /**

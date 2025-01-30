@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.modules.output;
+package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.*;
