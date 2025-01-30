@@ -76,8 +76,9 @@ public class AutoBasket extends LinearOpMode {
                             .splineToSplineHeading(samplePose, 3 * Math.PI / 2)
                             .build(),
                     new InstantAction(() -> outputBox.setAction(false)),
+                    AutoHelper.retractSlide(outputSlide),
                     new SequentialAction(
-                            AutoHelper.retractSlide(outputSlide),
+                            new SleepAction(1),
                             AutoHelper.startIntake(intakePivot, activeIntake)
                     )
             ));

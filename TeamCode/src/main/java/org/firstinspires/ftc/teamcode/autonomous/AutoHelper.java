@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AutoHelper {
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
-    static final Pose2d BASKET_POSE = new Pose2d(54, 54, 5 * Math.PI / 4);
+    static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
     static final Pose2d SAMPLE_1_POSE = new Pose2d(34, 26, 0);
     static final Pose2d SAMPLE_2_POSE = new Pose2d(44, 26, 0);
     static final Pose2d SAMPLE_3_POSE = new Pose2d(54, 26, 0);
@@ -52,8 +52,6 @@ public class AutoHelper {
                 new InstantAction(slide::startRetraction),
                 telemetryPacket -> {
                     slide.tick();
-                    telemetryPacket.put("outputSlideCurrentPos", slide.getCurrentPosition());
-                    telemetryPacket.put("outputSlideTargetPos", slide.getTargetPosition());
                     return !slide.isFinished();
                 }
         );

@@ -7,7 +7,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class AutoBasketPathTest {
     private static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
-    private static final Pose2d BASKET_POSE = new Pose2d(54, 54, 5 * Math.PI / 4);
+    private static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
     private static final Pose2d SAMPLE_1_POSE = new Pose2d(34, 26, 0);
     private static final Pose2d SAMPLE_2_POSE = new Pose2d(44, 26, 0);
     private static final Pose2d SAMPLE_3_POSE = new Pose2d(54, 26, 0);
