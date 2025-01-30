@@ -148,26 +148,25 @@ public class AutoSpecimen extends LinearOpMode {
                         }),
                         new SleepAction(0.5),
                         new InstantAction(() -> {
-                            intakePivot.setAction(false);
                             intakeSlide1.setAction(false);
                             intakeSlide2.setAction(false);
-                        }),
-                        new SleepAction(0.5),
-                        new InstantAction(() -> activeIntake.setPosition(0.5)),
-                        new SleepAction(0.5),
-                        AutoHelper.transferSample(activeIntake)
+                        })
                 )
         ));
 
         // Move to observation zone to pick up specimen
-        Actions.runBlocking(new SequentialAction(
-                new InstantAction(() -> outputBox.setAction(true)),
-                new SleepAction(1),
-                new InstantAction(() -> outputBox.setAction(false)),
-                drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE)
-                        .setTangent(Math.PI / 4)
-                        .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
-                        .build()
+        Actions.runBlocking(new ParallelAction(
+                new SequentialAction(
+                        new SleepAction(0.3),
+                        drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE)
+                                .setTangent(Math.PI / 4)
+                                .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
+                                .build()
+                ),
+                new SequentialAction(
+                        AutoHelper.transferSample(activeIntake),
+                        new InstantAction(() -> intakePivot.setAction(false))
+                )
         ));
 
         for (Pose2d submersiblePose : AutoHelper.SUBMERSIBLE_POSES) {
