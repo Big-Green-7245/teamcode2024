@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.autonomous.AutoHelper;
 import org.firstinspires.ftc.teamcode.modules.output.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.output.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
+import org.firstinspires.ftc.teamcode.util.EncoderConstants;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class TeleOp extends LinearOpMode {
         intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.25, false);
         intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 3300);
+        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, (int) (8.58 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution()));
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
 
