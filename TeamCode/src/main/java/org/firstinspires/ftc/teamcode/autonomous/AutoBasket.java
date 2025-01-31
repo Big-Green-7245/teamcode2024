@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
@@ -19,7 +20,7 @@ public class AutoBasket extends LinearOpMode {
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
     private MecanumDrive drive;
-    private ServoToggle intakeSlide1, intakeSlide2;
+    private ServoToggle intakeSlide;
     private ServoToggle intakePivot;
     private Servo activeIntake;
     private DoubleLinearSlides outputSlide;
@@ -33,16 +34,14 @@ public class AutoBasket extends LinearOpMode {
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
-        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.25, true);
-        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.25, false);
-        intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
+        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.25, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
+        intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
 
-        intakeSlide1.init(hardwareMap);
-        intakeSlide2.init(hardwareMap);
+        intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
@@ -93,7 +92,7 @@ public class AutoBasket extends LinearOpMode {
                                     .build()
                     ),
                     new SequentialAction(
-                            AutoHelper.intakeSample(intakeSlide1, intakeSlide2, intakePivot, activeIntake),
+                            AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)

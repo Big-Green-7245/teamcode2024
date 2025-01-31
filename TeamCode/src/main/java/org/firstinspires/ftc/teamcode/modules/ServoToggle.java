@@ -5,24 +5,28 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.modules.util.Modulable;
 
 public class ServoToggle implements Modulable {
-    private final String name;
-    private final double idlePos;
-    private final double actionPos;
-    private final boolean isReversed;
-    protected Servo servo;
-    private boolean action = false;
+    protected final String name;
+    protected final double idlePos;
+    protected final double actionPos;
+    private final Servo.Direction direction;
+    private Servo servo;
+    protected boolean action = false;
 
     public ServoToggle(String name, double idlePos, double actionPos, boolean isReversed) {
+        this(name, idlePos, actionPos, isReversed ? Servo.Direction.REVERSE : Servo.Direction.FORWARD);
+    }
+
+    public ServoToggle(String name, double idlePos, double actionPos, Servo.Direction direction) {
         this.name = name;
         this.idlePos = idlePos;
         this.actionPos = actionPos;
-        this.isReversed = isReversed;
+        this.direction = direction;
     }
 
     @Override
     public void init(HardwareMap map) {
         servo = map.get(Servo.class, name);
-        servo.setDirection(isReversed ? Servo.Direction.REVERSE : Servo.Direction.FORWARD);
+        servo.setDirection(direction);
         servo.scaleRange(idlePos, actionPos);
         setAction(action);
     }
@@ -43,15 +47,11 @@ public class ServoToggle implements Modulable {
     /**
      * Makes the claw start to move towards the specified position.
      *
-     * @param isAction open or close the claw
+     * @param action open or close the claw
      */
-    public void setAction(boolean isAction) {
-        this.action = isAction;
-        if (action) {
-            servo.setPosition(1);
-        } else {
-            servo.setPosition(0);
-        }
+    public void setAction(boolean action) {
+        this.action = action;
+        setPosition(action ? 1 : 0);
     }
 
     /**

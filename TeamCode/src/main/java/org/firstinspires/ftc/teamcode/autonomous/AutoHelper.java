@@ -68,17 +68,13 @@ public class AutoHelper {
         );
     }
 
-    static Action intakeSample(ServoToggle intakeSlide1, ServoToggle intakeSlide2, ServoToggle intakePivot, Servo activeIntake) {
+    static Action intakeSample(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake) {
         return new SequentialAction(
-                new InstantAction(() -> {
-                    intakeSlide1.setPosition(0.5);
-                    intakeSlide2.setPosition(0.5);
-                }),
+                new InstantAction(() -> intakeSlide.setPosition(0.5)),
                 new SleepAction(0.5),
                 new InstantAction(() -> {
                     intakePivot.setAction(false);
-                    intakeSlide1.setAction(false);
-                    intakeSlide2.setAction(false);
+                    intakeSlide.setAction(false);
                 }),
                 new SleepAction(0.5),
                 new InstantAction(() -> activeIntake.setPosition(0.5))

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.autonomous.AutoHelper;
 import org.firstinspires.ftc.teamcode.modules.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.EncoderConstants;
@@ -29,7 +30,7 @@ public class TeleOp extends LinearOpMode {
     private TelemetryWrapper telemetryWrapper;
     private ButtonHelper gp1, gp2;
     private MecanumDrive driveTrain;
-    private ServoToggle intakeSlide1, intakeSlide2;
+    private ServoToggle intakeSlide;
     private ServoToggle intakePivot;
     private Servo activeIntake;
     private DoubleLinearSlides outputSlide;
@@ -50,16 +51,14 @@ public class TeleOp extends LinearOpMode {
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
         driveTrain = new PinpointDrive(hardwareMap, initialPose);
-        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.25, true);
-        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.25, false);
-        intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
+        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.25, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
+        intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, (int) (8.58 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution()));
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
 
-        intakeSlide1.init(hardwareMap);
-        intakeSlide2.init(hardwareMap);
+        intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
@@ -104,16 +103,13 @@ public class TeleOp extends LinearOpMode {
 
             if (gp2.pressing(ButtonHelper.dpad_up)) {
                 // Extend slides
-                intakeSlide1.setAction(true);
-                intakeSlide2.setAction(true);
+                intakeSlide.setAction(true);
             } else if (gp2.pressing(ButtonHelper.dpad_down)) {
                 // Retract slides
-                intakeSlide1.setAction(false);
-                intakeSlide2.setAction(false);
+                intakeSlide.setAction(false);
             } else if (Math.abs(gamepad2.left_stick_y) > 0.0001) {
                 // Move intake slides
-                intakeSlide1.setPosition(intakeSlide1.getPosition() - gamepad2.left_stick_y * 0.2);
-                intakeSlide2.setPosition(intakeSlide2.getPosition() - gamepad2.left_stick_y * 0.2);
+                intakeSlide.setPosition(intakeSlide.getPosition() - gamepad2.left_stick_y * 0.2);
             }
             if (gp2.pressing(ButtonHelper.dpad_right)) {
                 // Toggle intake pivot between up and down

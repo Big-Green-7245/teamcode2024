@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
@@ -18,7 +19,7 @@ import java.lang.Math;
 public class AutoSpecimen extends LinearOpMode {
     private TelemetryWrapper telemetryWrapper;
     private MecanumDrive drive;
-    private ServoToggle intakeSlide1, intakeSlide2;
+    private ServoToggle intakeSlide;
     private ServoToggle intakePivot;
     private Servo activeIntake;
     private DoubleLinearSlides outputSlide;
@@ -32,16 +33,14 @@ public class AutoSpecimen extends LinearOpMode {
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.SPECIMEN_INITIAL_POSE);
-        intakeSlide1 = new ServoToggle("intakeSlide1", 0, 0.25, true);
-        intakeSlide2 = new ServoToggle("intakeSlide2", 0, 0.25, false);
-        intakePivot = new ServoToggle("intakePivot", 0, 0.66, false);
+        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.25, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
+        intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
 
-        intakeSlide1.init(hardwareMap);
-        intakeSlide2.init(hardwareMap);
+        intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
@@ -83,10 +82,7 @@ public class AutoSpecimen extends LinearOpMode {
                 new SequentialAction(
                         AutoHelper.retractSlide(outputSlide),
                         AutoHelper.startIntake(intakePivot, activeIntake),
-                        new InstantAction(() -> {
-                            intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
-                            intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
-                        })
+                        new InstantAction(() -> intakeSlide.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE))
                 ),
 
                 // Open specimen claw after sleeping for a short time
@@ -107,8 +103,7 @@ public class AutoSpecimen extends LinearOpMode {
                     ),
                     new InstantAction(() -> {
                         activeIntake.setPosition(1);
-                        intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
-                        intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                        intakeSlide.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
                     })
             ));
 
@@ -123,10 +118,7 @@ public class AutoSpecimen extends LinearOpMode {
                     ),
                     new SequentialAction(
                             AutoHelper.transferSample(activeIntake),
-                            new InstantAction(() -> {
-                                intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
-                                intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE);
-                            })
+                            new InstantAction(() -> intakeSlide.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE))
                     )
             ));
         }
@@ -143,14 +135,10 @@ public class AutoSpecimen extends LinearOpMode {
                 new SequentialAction(
                         new InstantAction(() -> {
                             activeIntake.setPosition(1);
-                            intakeSlide1.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
-                            intakeSlide2.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
+                            intakeSlide.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_EXTEND);
                         }),
                         new SleepAction(0.5),
-                        new InstantAction(() -> {
-                            intakeSlide1.setAction(false);
-                            intakeSlide2.setAction(false);
-                        })
+                        new InstantAction(() -> intakeSlide.setAction(false))
                 )
         ));
 
