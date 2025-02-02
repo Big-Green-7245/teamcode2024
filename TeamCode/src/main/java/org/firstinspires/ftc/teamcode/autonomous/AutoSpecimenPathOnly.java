@@ -32,7 +32,7 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.SPECIMEN_INITIAL_POSE);
-        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.25, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
+        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);

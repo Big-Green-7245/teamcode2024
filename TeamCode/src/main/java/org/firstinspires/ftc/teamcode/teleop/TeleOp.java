@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -54,7 +53,7 @@ public class TeleOp extends LinearOpMode {
         gp1 = new ButtonHelper(gamepad1);
         gp2 = new ButtonHelper(gamepad2);
         driveTrain = new PinpointDrive(hardwareMap, initialPose);
-        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.25, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
+        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution()));

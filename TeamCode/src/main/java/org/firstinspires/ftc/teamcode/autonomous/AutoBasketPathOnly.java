@@ -38,7 +38,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
 
         // Initialize robot modules
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
-        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.25, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
+        intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
