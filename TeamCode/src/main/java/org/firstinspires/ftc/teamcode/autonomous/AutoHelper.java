@@ -30,7 +30,7 @@ public class AutoHelper {
     static final double SPECIMEN_INTAKE_SLIDE_EXTEND = 0.9;
     static final List<Pose2d> SPECIMEN_SAMPLE_POSES = List.of(SPECIMEN_SAMPLE_1_POSE, SPECIMEN_SAMPLE_2_POSE, SPECIMEN_SAMPLE_3_POSE);
     static final Pose2d SPECIMEN_SAMPLE_3_DEPOSIT_POSE = new Pose2d(-40, 52, 3 * Math.PI / 4);
-    public static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 60, 3 * Math.PI / 2);
+    public static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 61, 3 * Math.PI / 2);
     static final Pose2d SUBMERSIBLE_1_POSE = new Pose2d(-6, SUBMERSIBLE_Y, Math.PI / 2);
     static final Pose2d SUBMERSIBLE_2_POSE = new Pose2d(-8, SUBMERSIBLE_Y, Math.PI / 2);
     static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
@@ -46,7 +46,7 @@ public class AutoHelper {
                 }),
                 telemetryPacket -> {
                     slide.tick();
-                    return !slide.isFinished() || hanging.isFinished();
+                    return !slide.isFinished();
                 }
         );
     }
@@ -57,7 +57,7 @@ public class AutoHelper {
                 new InstantAction(hanging::startRetraction),
                 telemetryPacket -> {
                     slide.tick();
-                    return !slide.isFinished() || hanging.isFinished();
+                    return !slide.isFinished();
                 }
         );
     }

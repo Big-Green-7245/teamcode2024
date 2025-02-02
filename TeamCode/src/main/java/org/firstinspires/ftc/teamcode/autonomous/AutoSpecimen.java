@@ -74,7 +74,7 @@ public class AutoSpecimen extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 // This big drive spline takes much longer than the other actions in this parallel action, so don't get confused.
                 new SequentialAction(
-                        new SleepAction(0.1),
+                        new SleepAction(0.2),
                         drive.actionBuilder(AutoHelper.INITIAL_SUBMERSIBLE_POSE)
                                 // Move to first sample
                                 .setTangent(3 * Math.PI / 4)
@@ -114,7 +114,7 @@ public class AutoSpecimen extends LinearOpMode {
             // Spit out the sample and move to the next sample while starting intake
             Actions.runBlocking(new ParallelAction(
                     new SequentialAction(
-                            new SleepAction(0.3),
+                            new SleepAction(0.5),
                             builder.fresh()
                                     .setTangent(Math.PI)
                                     .splineToLinearHeading(AutoHelper.SPECIMEN_SAMPLE_POSES.get(i), Math.PI)
@@ -149,7 +149,7 @@ public class AutoSpecimen extends LinearOpMode {
         // Move to observation zone to pick up specimen
         Actions.runBlocking(new ParallelAction(
                 new SequentialAction(
-                        new SleepAction(0.3),
+                        new SleepAction(0.5),
                         drive.actionBuilder(AutoHelper.SPECIMEN_SAMPLE_3_DEPOSIT_POSE)
                                 .setTangent(Math.PI / 4)
                                 .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
@@ -181,7 +181,7 @@ public class AutoSpecimen extends LinearOpMode {
             // Deposit the specimen and move to observation zone
             Actions.runBlocking(new ParallelAction(
                     new SequentialAction(
-                            new SleepAction(0.1),
+                            new SleepAction(0.2),
                             drive.actionBuilder(submersiblePose)
                                     .setTangent(3 * Math.PI / 4)
                                     .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)

@@ -175,25 +175,25 @@ public class TeleOp extends LinearOpMode {
             double hangingTime = timer.milliseconds();
 
             // Update telemetry
-            telemetryWrapper.setLine(1, "TeleOp \tRunning");
-            telemetryWrapper.setLine(2, "Gamepad2RightStickY: %s", gamepad2.right_stick_y * 500);
-            int[] currentPositions = outputSlide.getCurrentPositions();
-            telemetryWrapper.setLine(3, "OutputSlidePos Left: %d; Right: %d; Diff: %d", currentPositions[0], currentPositions[1], currentPositions[1] - currentPositions[0]);
-            double telemetryCurrentPositionsTime = timer.milliseconds();
-            int[] targetPositions = outputSlide.getTargetPositions();
-            telemetryWrapper.setLine(4, "OutputSlideTargetPos Left: %d; Right: %d; Diff: %d", targetPositions[0], targetPositions[1], targetPositions[1] - targetPositions[0]);
-            double telemetryTargetPositionsTime = timer.milliseconds();
-            boolean[] elevatorButtons = outputSlide.areElevatorButtonsPressed();
-            telemetryWrapper.setLine(5, "OutputSlideButton Left: %s; Right: %s", elevatorButtons[0], elevatorButtons[1]);
-            double telemetryElevatorButtonsTime = timer.milliseconds();
-            telemetryWrapper.setLine(6, "OutputSlideCurrent: %sA", outputSlide.getCurrent());
-            double telemetrySlideCurrentTime = timer.milliseconds();
-            telemetryWrapper.setLine(7, "HangingMotorsCurrent: %sA", hanging.getCurrent());
+//            telemetryWrapper.setLine(1, "TeleOp \tRunning");
+//            telemetryWrapper.setLine(2, "Gamepad2RightStickY: %s", gamepad2.right_stick_y * 500);
+//            int[] currentPositions = outputSlide.getCurrentPositions();
+//            telemetryWrapper.setLine(3, "OutputSlidePos Left: %d; Right: %d; Diff: %d", currentPositions[0], currentPositions[1], currentPositions[1] - currentPositions[0]);
+//            double telemetryCurrentPositionsTime = timer.milliseconds();
+//            int[] targetPositions = outputSlide.getTargetPositions();
+//            telemetryWrapper.setLine(4, "OutputSlideTargetPos Left: %d; Right: %d; Diff: %d", targetPositions[0], targetPositions[1], targetPositions[1] - targetPositions[0]);
+//            double telemetryTargetPositionsTime = timer.milliseconds();
+//            boolean[] elevatorButtons = outputSlide.areElevatorButtonsPressed();
+//            telemetryWrapper.setLine(5, "OutputSlideButton Left: %s; Right: %s", elevatorButtons[0], elevatorButtons[1]);
+//            double telemetryElevatorButtonsTime = timer.milliseconds();
+//            telemetryWrapper.setLine(6, "OutputSlideCurrent: %sA", outputSlide.getCurrent());
+//            double telemetrySlideCurrentTime = timer.milliseconds();
+//            telemetryWrapper.setLine(7, "HangingMotorsCurrent: %sA", hanging.getCurrent());
 
             // Debug loop times
             double telemetryTime = timer.milliseconds();
             telemetryWrapper.setLine(8, "TeleOp loop time: %.2f ms; ClearBulkCacheTime: %.2f ms; Gamepads: %.2f ms; DriveTrain: %.2f ms; Intake: %.2f ms; Output: %.2f ms; SpecimenClaw: %.2f ms; Hanging: %.2f ms; TelemetryTime: %.2f ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, hangingTime - specimenClawTime, telemetryTime - hangingTime);
-            telemetryWrapper.setLine(9, "OutputSlideTelemetry CurrentPos: %.2f ms; TargetPos: %.2f ms; Buttons: %.2f ms; Current: %.2f ms; HangingCurrent: %.2f ms", telemetryCurrentPositionsTime - hangingTime, telemetryTargetPositionsTime - telemetryCurrentPositionsTime, telemetryElevatorButtonsTime - telemetryTargetPositionsTime, telemetrySlideCurrentTime - telemetryElevatorButtonsTime, telemetryTime - telemetrySlideCurrentTime);
+//            telemetryWrapper.setLine(9, "OutputSlideTelemetry CurrentPos: %.2f ms; TargetPos: %.2f ms; Buttons: %.2f ms; Current: %.2f ms; HangingCurrent: %.2f ms", telemetryCurrentPositionsTime - hangingTime, telemetryTargetPositionsTime - telemetryCurrentPositionsTime, telemetryElevatorButtonsTime - telemetryTargetPositionsTime, telemetrySlideCurrentTime - telemetryElevatorButtonsTime, telemetryTime - telemetrySlideCurrentTime);
             telemetryWrapper.render();
             timer.reset();
         }
