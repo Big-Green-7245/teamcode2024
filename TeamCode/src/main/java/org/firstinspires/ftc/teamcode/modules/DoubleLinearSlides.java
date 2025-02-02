@@ -1,32 +1,29 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
-import com.qualcomm.robotcore.hardware.*;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+import org.firstinspires.ftc.teamcode.modules.util.Modulable;
+import org.firstinspires.ftc.teamcode.modules.util.Tickable;
+import org.firstinspires.ftc.teamcode.util.FinishCondition;
 
-public class DoubleLinearSlides extends LinearSlide {
-    private final DcMotorSimple.Direction directionLeft;
-    private final DcMotorSimple.Direction directionRight;
-    private DcMotorEx elevatorLeft;
-    private DcMotorEx elevatorRight;
+/**
+ * This class adds a limit switch (rev touch sensor) at position 0 on top of two run to position motors.
+ * Otherwise, it is the same as {@link TwoRunToPositionMotors}.
+ * The only difference between this and {@link LinearSlide} is that this class has two motors instead of one.
+ */
+public class DoubleLinearSlides extends TwoRunToPositionMotors implements Modulable, Tickable, FinishCondition {
     private TouchSensor elevatorBtnLeft;
     private TouchSensor elevatorBtnRight;
 
     public DoubleLinearSlides(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight) {
-        super(name, power, null);
-        this.directionLeft = directionLeft;
-        this.directionRight = directionRight;
+        super(name, power, directionLeft, directionRight);
     }
 
-    public DoubleLinearSlides(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight, int limit) {
-        super(name, power, null, limit);
-        this.directionLeft = directionLeft;
-        this.directionRight = directionRight;
-    }
-
-    @Override
-    public boolean isElevatorBtnPressed() {
-        return elevatorBtnLeft.isPressed() || elevatorBtnRight.isPressed();
+    public DoubleLinearSlides(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight, int min, int max) {
+        super(name, power, directionLeft, directionRight, min, max);
     }
 
     public boolean[] areElevatorButtonsPressed() {
@@ -35,40 +32,19 @@ public class DoubleLinearSlides extends LinearSlide {
 
     @Override
     public void init(HardwareMap map) {
+        super.init(map);
         elevatorBtnLeft = map.get(RevTouchSensor.class, name + "LeftBtn");
         elevatorBtnRight = map.get(RevTouchSensor.class, name + "RightBtn");
-        elevatorLeft = (DcMotorEx) map.get(DcMotor.class, name + "Left");
-        elevatorLeft.setDirection(directionLeft);
-        elevatorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elevatorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elevatorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        elevatorRight = (DcMotorEx) map.get(DcMotor.class, name + "Right");
-        elevatorRight.setDirection(directionRight);
-        elevatorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elevatorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elevatorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
-     * Warning: DO NOT use this if motor is currently running to position. Undefined behavior.
+     * Starts to move the intakeSlide to the ground position.
+     * ONLY call this function once for every move to ground!
+     * YOU MUST call {@link #tick()} in a loop to stop the intakeSlide when it reaches the ground.
      */
     @Override
-    public void moveUsingEncoder(double power) {
-        elevatorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elevatorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elevatorLeft.setPower(power);
-        elevatorRight.setPower(power);
-    }
-
-    @Override
-    public void startMoveToPos(int position) {
-        elevatorLeft.setTargetPosition(position);
-        elevatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevatorLeft.setPower(power);
-        elevatorRight.setTargetPosition(position);
-        elevatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevatorRight.setPower(power);
+    public void startRetraction() {
+        startMoveToPos(-1000);
     }
 
     /**
@@ -76,56 +52,19 @@ public class DoubleLinearSlides extends LinearSlide {
      */
     @Override
     public void tick() {
-        if ((elevatorBtnLeft.isPressed() && elevatorLeft.isBusy()) || (elevatorBtnRight.isPressed() && elevatorRight.isBusy())) {
-            int targetPosLeft = elevatorLeft.getTargetPosition();
-            int targetPosRight = elevatorRight.getTargetPosition();
-            double powerLeft = elevatorLeft.getPower();
-            double powerRight = elevatorRight.getPower();
-            elevatorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elevatorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elevatorLeft.setTargetPosition(Math.max(targetPosLeft, 10));
-            elevatorRight.setTargetPosition(Math.max(targetPosRight, 10));
-            elevatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elevatorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elevatorLeft.setPower(powerLeft);
-            elevatorRight.setPower(powerRight);
+        if ((elevatorBtnLeft.isPressed() && motorLeft.isBusy()) || (elevatorBtnRight.isPressed() && motorRight.isBusy())) {
+            int targetPosLeft = motorLeft.getTargetPosition();
+            int targetPosRight = motorRight.getTargetPosition();
+            double powerLeft = motorLeft.getPower();
+            double powerRight = motorRight.getPower();
+            motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorLeft.setTargetPosition(Math.max(targetPosLeft, 10));
+            motorRight.setTargetPosition(Math.max(targetPosRight, 10));
+            motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorLeft.setPower(powerLeft);
+            motorRight.setPower(powerRight);
         }
-    }
-
-    /**
-     * @return true if the elevator is at the target position
-     * @implNote manually check the elevator position and the button because {@link DcMotor#isBusy()} has a lot of delay.
-     */
-    @Override
-    public boolean isFinished() {
-        return !elevatorLeft.isBusy() || !elevatorRight.isBusy();
-    }
-
-    @Override
-    public double getCurrent() {
-        return elevatorLeft.getCurrent(CurrentUnit.AMPS) + elevatorRight.getCurrent(CurrentUnit.AMPS);
-    }
-
-    @Override
-    public double getPower() {
-        return elevatorLeft.getPower() + elevatorRight.getPower();
-    }
-
-    @Override
-    public int getTargetPosition() {
-        return (elevatorLeft.getTargetPosition() + elevatorRight.getTargetPosition()) / 2;
-    }
-
-    public int[] getTargetPositions() {
-        return new int[]{elevatorLeft.getTargetPosition(), elevatorRight.getTargetPosition()};
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        return (elevatorLeft.getCurrentPosition() + elevatorRight.getCurrentPosition()) / 2;
-    }
-
-    public int[] getCurrentPositions() {
-        return new int[]{elevatorLeft.getCurrentPosition(), elevatorRight.getCurrentPosition()};
     }
 }

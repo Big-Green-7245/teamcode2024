@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.*;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.modules.LinearSlide;
+import org.firstinspires.ftc.teamcode.modules.RunToPositionMotor;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.util.EncoderConstants;
 
@@ -36,24 +36,28 @@ public class AutoHelper {
     static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
     static final Pose2d SUBMERSIBLE_4_POSE = new Pose2d(-12, SUBMERSIBLE_Y, Math.PI / 2);
     static final List<Pose2d> SUBMERSIBLE_POSES = List.of(SUBMERSIBLE_1_POSE, SUBMERSIBLE_2_POSE, SUBMERSIBLE_3_POSE, SUBMERSIBLE_4_POSE);
-    static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution());
+    public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution());
 
-    static Action moveSlideToPos(LinearSlide slide, int pos) {
+    static Action moveSlideToPos(RunToPositionMotor slide, RunToPositionMotor hanging, int pos) {
         return new SequentialAction(
-                new InstantAction(() -> slide.startMoveToPos(pos)),
+                new InstantAction(() -> {
+                    slide.startMoveToPos(pos);
+                    hanging.startMoveToPos(pos);
+                }),
                 telemetryPacket -> {
                     slide.tick();
-                    return !slide.isFinished();
+                    return !slide.isFinished() || hanging.isFinished();
                 }
         );
     }
 
-    static Action retractSlide(LinearSlide slide) {
+    static Action retractSlide(RunToPositionMotor slide, RunToPositionMotor hanging) {
         return new SequentialAction(
                 new InstantAction(slide::startRetraction),
+                new InstantAction(hanging::startRetraction),
                 telemetryPacket -> {
                     slide.tick();
-                    return !slide.isFinished();
+                    return !slide.isFinished() || hanging.isFinished();
                 }
         );
     }
@@ -70,7 +74,7 @@ public class AutoHelper {
 
     static Action intakeSample(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake) {
         return new SequentialAction(
-                new InstantAction(() -> intakeSlide.setPosition(0.5)),
+                new InstantAction(() -> intakeSlide.setPosition(1)),
                 new SleepAction(0.5),
                 new InstantAction(() -> {
                     intakePivot.setAction(false);

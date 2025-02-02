@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
+import org.firstinspires.ftc.teamcode.modules.TwoRunToPositionMotors;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 /**
@@ -28,6 +29,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
+    private TwoRunToPositionMotors hanging;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -42,12 +44,14 @@ public class AutoBasketPathOnly extends LinearOpMode {
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
+        hanging = new TwoRunToPositionMotors("hangingMotor", 1, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
+        hanging.init(hardwareMap);
 
         // Wait for start
         telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY \tPress start to start >");

@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
+import org.firstinspires.ftc.teamcode.modules.TwoRunToPositionMotors;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
@@ -26,6 +27,7 @@ public class AutoBasket extends LinearOpMode {
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
+    private TwoRunToPositionMotors hanging;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,12 +42,14 @@ public class AutoBasket extends LinearOpMode {
         outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
+        hanging = new TwoRunToPositionMotors("hangingMotor", 1, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
+        hanging.init(hardwareMap);
 
         // Wait for start
         telemetryWrapper.setLineAndRender(1, "Basket Auto \tPress start to start >");
@@ -62,7 +66,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
+                AutoHelper.moveSlideToPos(outputSlide, hanging, AutoHelper.BASKET_SLIDE_HIGH)
         ));
         outputBox.setAction(true);
         sleep(1000);
@@ -75,7 +79,7 @@ public class AutoBasket extends LinearOpMode {
                             .splineToSplineHeading(samplePose, 3 * Math.PI / 2)
                             .build(),
                     new InstantAction(() -> outputBox.setAction(false)),
-                    AutoHelper.retractSlide(outputSlide),
+                    AutoHelper.retractSlide(outputSlide, hanging),
                     new SequentialAction(
                             new SleepAction(1),
                             AutoHelper.startIntake(intakePivot, activeIntake)
@@ -95,7 +99,7 @@ public class AutoBasket extends LinearOpMode {
                             AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
+                            AutoHelper.moveSlideToPos(outputSlide, hanging, AutoHelper.BASKET_SLIDE_HIGH)
                     )
             ));
 
@@ -111,7 +115,7 @@ public class AutoBasket extends LinearOpMode {
                         .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
                         .build(),
                 new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.retractSlide(outputSlide)
+                AutoHelper.retractSlide(outputSlide, hanging)
         ));
     }
 }
