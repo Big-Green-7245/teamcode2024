@@ -69,7 +69,7 @@ public class AutoBasket extends LinearOpMode {
                 AutoHelper.moveSlideToPos(outputSlide, hanging, AutoHelper.BASKET_SLIDE_HIGH)
         ));
         outputBox.setAction(true);
-        sleep(1000);
+        sleep(1300);
 
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
             // Move to sample while resetting output box and retracting slides
@@ -105,7 +105,7 @@ public class AutoBasket extends LinearOpMode {
 
             // Deposit the sample
             outputBox.setAction(true);
-            sleep(1000);
+            sleep(1300);
         }
 
         // Move to ascent zone while resetting output box and retracting slides
