@@ -56,7 +56,7 @@ public class TeleOp extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution()));
+        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution()));
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
         hanging = new TwoRunToPositionMotors("hangingMotor", 1, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
@@ -134,7 +134,7 @@ public class TeleOp extends LinearOpMode {
                 hanging.startMoveToRelativePos(AutoHelper.BASKET_SLIDE_HIGH - outputSlide.getCurrentPosition());
             } else if (gp1.pressing(ButtonHelper.CIRCLE)) {
                 // Hanging step 1, robot slightly off the ground
-                int hangingPosition = (int) (2.42 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution());
+                int hangingPosition = (int) (2.42 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
                 outputSlide.startMoveToPos(hangingPosition);
                 hanging.startMoveToRelativePos(hangingPosition - outputSlide.getCurrentPosition());
             } else if (gp2.pressing(ButtonHelper.CROSS) || gp1.pressing(ButtonHelper.CROSS)) {

@@ -17,7 +17,7 @@ public class AutoHelper {
     static final Pose2d SAMPLE_3_POSE = new Pose2d(54, 26, 0);
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
     public static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
-    public static final int BASKET_SLIDE_HIGH = (int) (7.3 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution());
+    public static final int BASKET_SLIDE_HIGH = (int) (7.3 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
 
     static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);
     static final double SUBMERSIBLE_Y = 34;
@@ -36,7 +36,7 @@ public class AutoHelper {
     static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
     static final Pose2d SUBMERSIBLE_4_POSE = new Pose2d(-12, SUBMERSIBLE_Y, Math.PI / 2);
     static final List<Pose2d> SUBMERSIBLE_POSES = List.of(SUBMERSIBLE_1_POSE, SUBMERSIBLE_2_POSE, SUBMERSIBLE_3_POSE, SUBMERSIBLE_4_POSE);
-    public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * EncoderConstants.YELLOW_JACKET_312.getPulsesPerRevolution());
+    public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
 
     static Action moveSlideToPos(RunToPositionMotor slide, RunToPositionMotor hanging, int pos) {
         return new SequentialAction(
