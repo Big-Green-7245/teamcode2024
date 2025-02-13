@@ -69,7 +69,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build()
         ));
-        sleep(1000);
+        sleep(500);
 
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
             // Move to sample
@@ -87,8 +87,25 @@ public class AutoBasketPathOnly extends LinearOpMode {
                             .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                             .build()
             ));
-            sleep(1000);
+            sleep(500);
         }
+
+        // Move to ascent zone
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(AutoHelper.BASKET_POSE)
+                        .setTangent(5 * Math.PI / 4)
+                        .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
+                        .build()
+        ));
+
+        // Move to basket
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
+                        .setTangent(0)
+                        .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                        .build()
+        ));
+        sleep(500);
 
         // Move to ascent zone
         Actions.runBlocking(new ParallelAction(

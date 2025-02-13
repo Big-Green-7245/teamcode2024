@@ -69,7 +69,7 @@ public class AutoBasket extends LinearOpMode {
                 AutoHelper.moveSlideToPos(outputSlide, hanging, AutoHelper.BASKET_SLIDE_HIGH)
         ));
         outputBox.setAction(true);
-        sleep(600);
+        sleep(500);
 
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
             // Move to sample while resetting output box and retracting slides
@@ -105,8 +105,44 @@ public class AutoBasket extends LinearOpMode {
 
             // Deposit the sample
             outputBox.setAction(true);
-            sleep(600);
+            sleep(500);
         }
+
+        // Move to ascent zone while resetting output box and retracting slides
+        Actions.runBlocking(new ParallelAction(
+                drive.actionBuilder(AutoHelper.BASKET_POSE)
+                        .setTangent(5 * Math.PI / 4)
+                        .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
+                        .build(),
+                new InstantAction(() -> outputBox.setAction(false)),
+                AutoHelper.retractSlide(outputSlide, hanging),
+                new SequentialAction(
+                        new SleepAction(1),
+                        new InstantAction(() -> intakeSlide.setPosition(0.2))
+                )
+        ));
+
+        // Intake a sample and move to basket
+        Actions.runBlocking(AutoHelper.startIntake(intakePivot, activeIntake));
+        Actions.runBlocking(new ParallelAction(
+                new SequentialAction(
+                        new SleepAction(0.5),
+                        drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
+                                .setTangent(0)
+                                .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                                .build()
+                ),
+                new SequentialAction(
+                        AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake),
+                        new SleepAction(0.5),
+                        AutoHelper.transferSample(activeIntake),
+                        AutoHelper.moveSlideToPos(outputSlide, hanging, AutoHelper.BASKET_SLIDE_HIGH)
+                )
+        ));
+
+        // Deposit the sample
+        outputBox.setAction(true);
+        sleep(500);
 
         // Move to ascent zone while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(
