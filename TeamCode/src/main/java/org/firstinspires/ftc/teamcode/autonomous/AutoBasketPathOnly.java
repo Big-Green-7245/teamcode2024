@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.modules.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
-import org.firstinspires.ftc.teamcode.modules.TwoRunToPositionMotors;
+import org.firstinspires.ftc.teamcode.modules.motor.TwoRunToPositionMotors;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 /**

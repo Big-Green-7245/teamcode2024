@@ -1,29 +1,28 @@
-package org.firstinspires.ftc.teamcode.modules;
+package org.firstinspires.ftc.teamcode.modules.motor;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.modules.util.Modulable;
 
 /**
  * Two motors instead of one.
  */
-public class TwoRunToPositionMotors extends RunToPositionMotor implements Modulable {
+public class TwoRunToPositionMotors extends RunToPosition {
     private final DcMotorSimple.Direction directionLeft;
     private final DcMotorSimple.Direction directionRight;
     protected DcMotorEx motorLeft;
     protected DcMotorEx motorRight;
 
     public TwoRunToPositionMotors(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight) {
-        super(name, power, null);
+        super(name, power);
         this.directionLeft = directionLeft;
         this.directionRight = directionRight;
     }
 
     public TwoRunToPositionMotors(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight, int min, int max) {
-        super(name, power, null, min, max);
+        super(name, power, min, max);
         this.directionLeft = directionLeft;
         this.directionRight = directionRight;
     }

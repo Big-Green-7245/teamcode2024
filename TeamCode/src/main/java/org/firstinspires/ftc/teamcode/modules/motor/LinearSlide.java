@@ -1,18 +1,15 @@
-package org.firstinspires.ftc.teamcode.modules;
+package org.firstinspires.ftc.teamcode.modules.motor;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import org.firstinspires.ftc.teamcode.modules.util.Modulable;
-import org.firstinspires.ftc.teamcode.modules.util.Tickable;
-import org.firstinspires.ftc.teamcode.util.FinishCondition;
 
 /**
  * This class adds a limit switch (rev touch sensor) at position 0 on top of a run to position motor.
  */
-public class LinearSlide extends RunToPositionMotor implements Modulable, Tickable, FinishCondition {
+public class LinearSlide extends RunToPositionMotor {
     private TouchSensor elevatorButton;
 
     public LinearSlide(String name, double power) {

@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.*;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.modules.RunToPositionMotor;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
+import org.firstinspires.ftc.teamcode.modules.motor.RunToPosition;
 import org.firstinspires.ftc.teamcode.util.EncoderConstants;
 
 import java.lang.Math;
@@ -38,7 +38,7 @@ public class AutoHelper {
     static final List<Pose2d> SUBMERSIBLE_POSES = List.of(SUBMERSIBLE_1_POSE, SUBMERSIBLE_2_POSE, SUBMERSIBLE_3_POSE, SUBMERSIBLE_4_POSE);
     public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
 
-    static Action moveSlideToPos(RunToPositionMotor slide, RunToPositionMotor hanging, int pos) {
+    static Action moveSlideToPos(RunToPosition slide, RunToPosition hanging, int pos) {
         return new SequentialAction(
                 new InstantAction(() -> {
                     slide.startMoveToPos(pos);
@@ -51,7 +51,7 @@ public class AutoHelper {
         );
     }
 
-    static Action retractSlide(RunToPositionMotor slide, RunToPositionMotor hanging) {
+    static Action retractSlide(RunToPosition slide, RunToPosition hanging) {
         return new SequentialAction(
                 new InstantAction(slide::startRetraction),
                 new InstantAction(hanging::startRetraction),
