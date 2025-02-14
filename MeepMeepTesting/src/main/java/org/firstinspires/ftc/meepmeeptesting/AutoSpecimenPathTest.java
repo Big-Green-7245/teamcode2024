@@ -29,7 +29,7 @@ public class AutoSpecimenPathTest {
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
-                .setConstraints(50, 50, Math.PI, Math.PI, 12)
+                .setConstraints(60, 60, Math.PI, Math.PI, 14)
                 .setStartPose(SPECIMEN_INITIAL_POSE)
                 .build();
 

@@ -118,7 +118,7 @@ public class AutoBasket extends LinearOpMode {
                 AutoHelper.retractSlide(outputSlide, hanging),
                 new SequentialAction(
                         new SleepAction(1),
-                        new InstantAction(() -> intakeSlide.setPosition(0.2))
+                        new InstantAction(() -> intakeSlide.setPosition(0.4))
                 )
         ));
 

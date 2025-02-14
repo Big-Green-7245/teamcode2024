@@ -8,16 +8,16 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 public class AutoBasketPathTest {
     private static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     private static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
-    private static final Pose2d SAMPLE_1_POSE = new Pose2d(34, 26, 0);
-    private static final Pose2d SAMPLE_2_POSE = new Pose2d(44, 26, 0);
-    private static final Pose2d SAMPLE_3_POSE = new Pose2d(54, 26, 0);
+    private static final Pose2d SAMPLE_1_POSE = new Pose2d(35, 26, 0);
+    private static final Pose2d SAMPLE_2_POSE = new Pose2d(45, 26, 0);
+    private static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 26, 0);
     private static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
-                .setConstraints(50, 50, Math.PI, Math.PI, 12)
+                .setConstraints(60, 60, Math.PI, Math.PI, 14)
                 .setStartPose(BASKET_INITIAL_POSE)
                 .build();
 

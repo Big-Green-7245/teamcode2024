@@ -12,9 +12,9 @@ import java.util.List;
 public class AutoHelper {
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
-    static final Pose2d SAMPLE_1_POSE = new Pose2d(34, 26, 0);
-    static final Pose2d SAMPLE_2_POSE = new Pose2d(44, 26, 0);
-    static final Pose2d SAMPLE_3_POSE = new Pose2d(54, 26, 0);
+    static final Pose2d SAMPLE_1_POSE = new Pose2d(35, 26, 0);
+    static final Pose2d SAMPLE_2_POSE = new Pose2d(45, 26, 0);
+    static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 26, 0);
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
     public static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
     public static final int BASKET_SLIDE_HIGH = (int) (7.3 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
