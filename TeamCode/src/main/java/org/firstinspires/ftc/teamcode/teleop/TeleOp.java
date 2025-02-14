@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
-import org.firstinspires.ftc.teamcode.util.EncoderConstants;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.util.List;
@@ -58,7 +57,7 @@ public class TeleOp extends LinearOpMode {
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
-                1, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_1150.getPulsesPerRevolution())
+                1, (int) (0.1 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), (int) (8.58 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution())
         );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
@@ -133,7 +132,7 @@ public class TeleOp extends LinearOpMode {
                 outputSlide.startMoveToPos(AutoHelper.BASKET_SLIDE_HIGH);
             } else if (gp1.pressing(ButtonHelper.CIRCLE)) {
                 // Hanging step 1, robot slightly off the ground
-                int hangingPosition = (int) (2.42 * EncoderConstants.YELLOW_JACKET_1150.getPulsesPerRevolution());
+                int hangingPosition = (int) (2.42 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution());
                 outputSlide.startMoveToPos(hangingPosition);
             } else if (gp2.pressing(ButtonHelper.CROSS) || gp1.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
@@ -142,7 +141,7 @@ public class TeleOp extends LinearOpMode {
                 outputSlide.startRetraction();
             } else if (Math.abs(gamepad2.right_stick_y) > 0.0001) {
                 // Move output slide by the right stick y if it is not zero and the slide is not currently moving to a position
-                int relativePosition = (int) (-gamepad2.right_stick_y * EncoderConstants.YELLOW_JACKET_1150.getPulsesPerRevolution());
+                int relativePosition = (int) (-gamepad2.right_stick_y * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution());
                 outputSlide.startMoveToRelativePos(relativePosition);
             }
             outputSlide.tick();

@@ -63,8 +63,8 @@ public class DoubleLinearSlides extends TwoRunToPositionMotors {
             double powerRight = motorRight.getPower();
             motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motorLeft.setTargetPosition(Math.max(targetPosLeft, 10));
-            motorRight.setTargetPosition(Math.max(targetPosRight, 10));
+            motorLeft.setTargetPosition(Math.max(targetPosLeft, min));
+            motorRight.setTargetPosition(Math.max(targetPosRight, min));
             motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorLeft.setPower(powerLeft);

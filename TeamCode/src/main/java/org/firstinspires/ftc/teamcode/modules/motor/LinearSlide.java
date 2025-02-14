@@ -53,7 +53,7 @@ public class LinearSlide extends RunToPositionMotor {
             int targetPosLeft = motor.getTargetPosition();
             double powerLeft = motor.getPower();
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setTargetPosition(Math.max(targetPosLeft, 10));
+            motor.setTargetPosition(Math.max(targetPosLeft, min));
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setPower(powerLeft);
         }

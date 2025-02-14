@@ -37,7 +37,7 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
-                1, Integer.MIN_VALUE, Integer.MAX_VALUE
+                1, (int) (0.1 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), Integer.MAX_VALUE
         );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
