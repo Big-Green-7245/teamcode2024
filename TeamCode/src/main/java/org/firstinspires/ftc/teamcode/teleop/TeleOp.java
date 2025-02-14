@@ -58,7 +58,7 @@ public class TeleOp extends LinearOpMode {
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
-                1, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution())
+                1, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_1150.getPulsesPerRevolution())
         );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
@@ -133,7 +133,7 @@ public class TeleOp extends LinearOpMode {
                 outputSlide.startMoveToPos(AutoHelper.BASKET_SLIDE_HIGH);
             } else if (gp1.pressing(ButtonHelper.CIRCLE)) {
                 // Hanging step 1, robot slightly off the ground
-                int hangingPosition = (int) (2.42 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
+                int hangingPosition = (int) (2.42 * EncoderConstants.YELLOW_JACKET_1150.getPulsesPerRevolution());
                 outputSlide.startMoveToPos(hangingPosition);
             } else if (gp2.pressing(ButtonHelper.CROSS) || gp1.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
@@ -142,7 +142,7 @@ public class TeleOp extends LinearOpMode {
                 outputSlide.startRetraction();
             } else if (Math.abs(gamepad2.right_stick_y) > 0.0001) {
                 // Move output slide by the right stick y if it is not zero and the slide is not currently moving to a position
-                int relativePosition = (int) (-gamepad2.right_stick_y * 500);
+                int relativePosition = (int) (-gamepad2.right_stick_y * EncoderConstants.YELLOW_JACKET_1150.getPulsesPerRevolution());
                 outputSlide.startMoveToRelativePos(relativePosition);
             }
             outputSlide.tick();
