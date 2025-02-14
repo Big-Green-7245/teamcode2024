@@ -17,7 +17,7 @@ public class LinearSlide extends RunToPositionMotor {
     }
 
     public LinearSlide(String name, double power, DcMotorSimple.Direction direction) {
-        this(name, power, direction, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        super(name, power, direction);
     }
 
     public LinearSlide(String name, double power, DcMotorSimple.Direction direction, int min, int max) {
@@ -31,7 +31,7 @@ public class LinearSlide extends RunToPositionMotor {
     @Override
     public void init(HardwareMap map) {
         super.init(map);
-        elevatorButton = map.get(RevTouchSensor.class, name + "Btn");
+        elevatorButton = map.get(RevTouchSensor.class, motorInfo.get(0).first + "Btn");
     }
 
     /**

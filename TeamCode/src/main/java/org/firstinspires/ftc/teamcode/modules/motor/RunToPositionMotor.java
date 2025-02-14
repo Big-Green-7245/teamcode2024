@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode.modules.motor;
 
+import android.util.Pair;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class RunToPositionMotor extends RunToPosition {
-    private final DcMotorSimple.Direction direction;
+    // Allow a collection of motors.
+    protected final List<Pair<String, DcMotorSimple.Direction>> motorInfo;
     protected DcMotorEx motor;
 
     public RunToPositionMotor(String name, double power, DcMotorSimple.Direction direction) {
@@ -15,14 +20,13 @@ public class RunToPositionMotor extends RunToPosition {
     }
 
     public RunToPositionMotor(String name, double power, DcMotorSimple.Direction direction, int min, int max) {
-        super(name, power, min, max);
-        this.direction = direction;
+        super(power, min, max);
+        motorInfo = List.of(new Pair<>(name, direction));
     }
 
     @Override
     public void init(HardwareMap map) {
-        motor = (DcMotorEx) map.get(DcMotor.class, name);
-        motor.setDirection(direction);
+        motor = DcMotorsEx.of(map, motorInfo);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

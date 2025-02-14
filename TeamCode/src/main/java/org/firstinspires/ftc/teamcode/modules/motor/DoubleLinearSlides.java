@@ -30,8 +30,8 @@ public class DoubleLinearSlides extends TwoRunToPositionMotors {
     @Override
     public void init(HardwareMap map) {
         super.init(map);
-        elevatorBtnLeft = map.get(RevTouchSensor.class, name + "LeftBtn");
-        elevatorBtnRight = map.get(RevTouchSensor.class, name + "RightBtn");
+        elevatorBtnLeft = map.get(RevTouchSensor.class, motorInfoLeft.get(0).first + "Btn");
+        elevatorBtnRight = map.get(RevTouchSensor.class, motorInfoRight.get(0).first + "Btn");
     }
 
     /**

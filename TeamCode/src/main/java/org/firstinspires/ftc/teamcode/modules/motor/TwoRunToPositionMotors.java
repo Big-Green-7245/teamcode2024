@@ -1,42 +1,41 @@
 package org.firstinspires.ftc.teamcode.modules.motor;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import android.util.Pair;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+import java.util.List;
+
 /**
  * Two motors instead of one.
  */
 public class TwoRunToPositionMotors extends RunToPosition {
-    private final DcMotorSimple.Direction directionLeft;
-    private final DcMotorSimple.Direction directionRight;
+    // Allow a collection of motors for each of the left and right motors.
+    protected final List<Pair<String, DcMotorSimple.Direction>> motorInfoLeft;
+    protected final List<Pair<String, DcMotorSimple.Direction>> motorInfoRight;
     protected DcMotorEx motorLeft;
     protected DcMotorEx motorRight;
 
     public TwoRunToPositionMotors(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight) {
-        super(name, power);
-        this.directionLeft = directionLeft;
-        this.directionRight = directionRight;
+        this(name, power, directionLeft, directionRight, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     public TwoRunToPositionMotors(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight, int min, int max) {
-        super(name, power, min, max);
-        this.directionLeft = directionLeft;
-        this.directionRight = directionRight;
+        super(power, min, max);
+        motorInfoLeft = List.of(new Pair<>(name + "Left", directionLeft));
+        motorInfoRight = List.of(new Pair<>(name + "Right", directionRight));
     }
 
     @Override
     public void init(HardwareMap map) {
-        motorLeft = (DcMotorEx) map.get(DcMotor.class, name + "Left");
-        motorLeft.setDirection(directionLeft);
+        motorLeft = DcMotorsEx.of(map, motorInfoLeft);
         motorLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        motorRight = (DcMotorEx) map.get(DcMotor.class, name + "Right");
-        motorRight.setDirection(directionRight);
+        motorRight = DcMotorsEx.of(map, motorInfoRight);
         motorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);

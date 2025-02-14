@@ -6,17 +6,15 @@ import org.firstinspires.ftc.teamcode.modules.util.Tickable;
 import org.firstinspires.ftc.teamcode.util.FinishCondition;
 
 public abstract class RunToPosition implements Modulable, Tickable, FinishCondition {
-    protected final String name;
     protected final double power;
     protected final int min;
     protected final int max;
 
-    public RunToPosition(String name, double power) {
-        this(name, power, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    public RunToPosition(double power) {
+        this(power, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
-    protected RunToPosition(String name, double power, int min, int max) {
-        this.name = name;
+    public RunToPosition(double power, int min, int max) {
         this.power = power;
         this.min = min;
         this.max = max;
