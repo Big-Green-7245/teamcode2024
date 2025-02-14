@@ -98,7 +98,7 @@ public class AutoBasket extends LinearOpMode {
                                     .build()
                     ),
                     new SequentialAction(
-                            AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake),
+                            AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake, 0.5),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
@@ -135,7 +135,7 @@ public class AutoBasket extends LinearOpMode {
                                 .build()
                 ),
                 new SequentialAction(
-                        AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake),
+                        AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake, 1),
                         new SleepAction(0.5),
                         AutoHelper.transferSample(activeIntake),
                         AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)

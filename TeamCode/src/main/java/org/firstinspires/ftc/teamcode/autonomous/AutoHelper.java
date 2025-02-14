@@ -10,7 +10,7 @@ import java.lang.Math;
 import java.util.List;
 
 public class AutoHelper {
-    public static final EncoderConstants OUTPUT_SLIDE = EncoderConstants.YELLOW_JACKET_1150;
+    public static final EncoderConstants OUTPUT_SLIDE = EncoderConstants.YELLOW_JACKET_435;
 
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
@@ -70,9 +70,9 @@ public class AutoHelper {
         );
     }
 
-    static Action intakeSample(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake) {
+    static Action intakeSample(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake, double intakeSlidePosition) {
         return new SequentialAction(
-                new InstantAction(() -> intakeSlide.setPosition(1)),
+                new InstantAction(() -> intakeSlide.setPosition(intakeSlidePosition)),
                 new SleepAction(0.5),
                 new InstantAction(() -> {
                     intakePivot.setAction(false);
