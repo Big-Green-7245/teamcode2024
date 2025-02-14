@@ -38,11 +38,10 @@ public class AutoHelper {
     static final List<Pose2d> SUBMERSIBLE_POSES = List.of(SUBMERSIBLE_1_POSE, SUBMERSIBLE_2_POSE, SUBMERSIBLE_3_POSE, SUBMERSIBLE_4_POSE);
     public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
 
-    static Action moveSlideToPos(RunToPosition slide, RunToPosition hanging, int pos) {
+    static Action moveSlideToPos(RunToPosition slide, int pos) {
         return new SequentialAction(
                 new InstantAction(() -> {
                     slide.startMoveToPos(pos);
-                    hanging.startMoveToPos(pos);
                 }),
                 telemetryPacket -> {
                     slide.tick();
@@ -51,10 +50,9 @@ public class AutoHelper {
         );
     }
 
-    static Action retractSlide(RunToPosition slide, RunToPosition hanging) {
+    static Action retractSlide(RunToPosition slide) {
         return new SequentialAction(
                 new InstantAction(slide::startRetraction),
-                new InstantAction(hanging::startRetraction),
                 telemetryPacket -> {
                     slide.tick();
                     return !slide.isFinished();

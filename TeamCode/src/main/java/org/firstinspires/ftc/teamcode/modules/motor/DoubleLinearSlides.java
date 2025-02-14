@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.modules.motor;
 
+import android.util.Pair;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import java.util.List;
 
 /**
  * This class adds a limit switch (rev touch sensor) at position 0 on top of two run to position motors.
@@ -21,6 +24,10 @@ public class DoubleLinearSlides extends TwoRunToPositionMotors {
 
     public DoubleLinearSlides(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight, int min, int max) {
         super(name, power, directionLeft, directionRight, min, max);
+    }
+
+    public DoubleLinearSlides(List<Pair<String, DcMotorSimple.Direction>> motorInfoLeft, List<Pair<String, DcMotorSimple.Direction>> motorInfoRight, double power, int min, int max) {
+        super(motorInfoLeft, motorInfoRight, power, min, max);
     }
 
     public boolean[] areElevatorButtonsPressed() {

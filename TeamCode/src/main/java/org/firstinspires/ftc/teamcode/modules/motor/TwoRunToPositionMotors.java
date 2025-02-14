@@ -23,9 +23,13 @@ public class TwoRunToPositionMotors extends RunToPosition {
     }
 
     public TwoRunToPositionMotors(String name, double power, DcMotorSimple.Direction directionLeft, DcMotorSimple.Direction directionRight, int min, int max) {
+        this(List.of(new Pair<>(name + "Left", directionLeft)), List.of(new Pair<>(name + "Right", directionRight)), power, min, max);
+    }
+
+    public TwoRunToPositionMotors(List<Pair<String, DcMotorSimple.Direction>> motorInfoLeft, List<Pair<String, DcMotorSimple.Direction>> motorInfoRight, double power, int min, int max) {
         super(power, min, max);
-        motorInfoLeft = List.of(new Pair<>(name + "Left", directionLeft));
-        motorInfoRight = List.of(new Pair<>(name + "Right", directionRight));
+        this.motorInfoLeft = motorInfoLeft;
+        this.motorInfoRight = motorInfoRight;
     }
 
     @Override

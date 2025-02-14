@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import android.util.Pair;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -7,12 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.sun.tools.javac.util.List;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
-import org.firstinspires.ftc.teamcode.modules.motor.TwoRunToPositionMotors;
+import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 /**
@@ -29,7 +30,6 @@ public class AutoBasketPathOnly extends LinearOpMode {
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
-    private TwoRunToPositionMotors hanging;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,17 +41,19 @@ public class AutoBasketPathOnly extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
+        outputSlide = new DoubleLinearSlides(
+                List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
+                List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
+                1, Integer.MIN_VALUE, Integer.MAX_VALUE
+        );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
-        hanging = new TwoRunToPositionMotors("hangingMotor", 1, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
-        hanging.init(hardwareMap);
 
         // Wait for start
         telemetryWrapper.setLineAndRender(1, "Basket Auto PATH ONLY \tPress start to start >");

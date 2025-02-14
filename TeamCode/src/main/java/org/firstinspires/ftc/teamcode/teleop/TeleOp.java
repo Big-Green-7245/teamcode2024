@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import android.util.Pair;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -11,10 +12,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.autonomous.AutoHelper;
-import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
-import org.firstinspires.ftc.teamcode.modules.motor.TwoRunToPositionMotors;
+import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.EncoderConstants;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
@@ -37,7 +37,6 @@ public class TeleOp extends LinearOpMode {
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
-    private TwoRunToPositionMotors hanging;
 
     public TeleOp(Pose2d initialPose) {
         this.initialPose = initialPose;
@@ -56,17 +55,19 @@ public class TeleOp extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution()));
+        outputSlide = new DoubleLinearSlides(
+                List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
+                List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
+                1, 10, (int) (8.58 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution())
+        );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
-        hanging = new TwoRunToPositionMotors("hangingMotor", 1, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
-        hanging.init(hardwareMap);
 
         // Manual bulk caching to ensure sensors only get read once per loop
         // This can save a lot of time in the execution loop
@@ -127,27 +128,22 @@ public class TeleOp extends LinearOpMode {
             if (gp2.pressing(ButtonHelper.right_bumper) || gp1.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the specimen output position
                 outputSlide.startMoveToPos(AutoHelper.SPECIMEN_SLIDE_HIGH);
-                hanging.startMoveToRelativePos(AutoHelper.SPECIMEN_SLIDE_HIGH - outputSlide.getCurrentPosition());
             } else if (gp2.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the basket output position
                 outputSlide.startMoveToPos(AutoHelper.BASKET_SLIDE_HIGH);
-                hanging.startMoveToRelativePos(AutoHelper.BASKET_SLIDE_HIGH - outputSlide.getCurrentPosition());
             } else if (gp1.pressing(ButtonHelper.CIRCLE)) {
                 // Hanging step 1, robot slightly off the ground
                 int hangingPosition = (int) (2.42 * EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution());
                 outputSlide.startMoveToPos(hangingPosition);
-                hanging.startMoveToRelativePos(hangingPosition - outputSlide.getCurrentPosition());
             } else if (gp2.pressing(ButtonHelper.CROSS) || gp1.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
                 outputBox.setAction(false);
                 // Retract the slide to the bottom
                 outputSlide.startRetraction();
-                hanging.startRetraction();
             } else if (Math.abs(gamepad2.right_stick_y) > 0.0001) {
                 // Move output slide by the right stick y if it is not zero and the slide is not currently moving to a position
                 int relativePosition = (int) (-gamepad2.right_stick_y * 500);
                 outputSlide.startMoveToRelativePos(relativePosition);
-                hanging.startMoveToRelativePos(relativePosition);
             }
             outputSlide.tick();
             if (gp2.pressing(ButtonHelper.SQUARE)) {
@@ -167,13 +163,6 @@ public class TeleOp extends LinearOpMode {
 
             double specimenClawTime = timer.milliseconds();
 
-            // Hanging motors
-            if (Math.abs(gamepad1.right_trigger - gamepad1.left_trigger) > 0.0001) {
-                hanging.startMoveToRelativePos((int) ((gamepad1.right_trigger - gamepad1.left_trigger) * 100));
-            }
-
-            double hangingTime = timer.milliseconds();
-
             // Update telemetry
 //            telemetryWrapper.setLine(1, "TeleOp \tRunning");
 //            telemetryWrapper.setLine(2, "Gamepad2RightStickY: %s", gamepad2.right_stick_y * 500);
@@ -187,13 +176,11 @@ public class TeleOp extends LinearOpMode {
 //            telemetryWrapper.setLine(5, "OutputSlideButton Left: %s; Right: %s", elevatorButtons[0], elevatorButtons[1]);
 //            double telemetryElevatorButtonsTime = timer.milliseconds();
 //            telemetryWrapper.setLine(6, "OutputSlideCurrent: %sA", outputSlide.getCurrent());
-//            double telemetrySlideCurrentTime = timer.milliseconds();
-//            telemetryWrapper.setLine(7, "HangingMotorsCurrent: %sA", hanging.getCurrent());
 
             // Debug loop times
             double telemetryTime = timer.milliseconds();
-            telemetryWrapper.setLine(8, "TeleOp loop time: %.2f ms; ClearBulkCacheTime: %.2f ms; Gamepads: %.2f ms; DriveTrain: %.2f ms; Intake: %.2f ms; Output: %.2f ms; SpecimenClaw: %.2f ms; Hanging: %.2f ms; TelemetryTime: %.2f ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, hangingTime - specimenClawTime, telemetryTime - hangingTime);
-//            telemetryWrapper.setLine(9, "OutputSlideTelemetry CurrentPos: %.2f ms; TargetPos: %.2f ms; Buttons: %.2f ms; Current: %.2f ms; HangingCurrent: %.2f ms", telemetryCurrentPositionsTime - hangingTime, telemetryTargetPositionsTime - telemetryCurrentPositionsTime, telemetryElevatorButtonsTime - telemetryTargetPositionsTime, telemetrySlideCurrentTime - telemetryElevatorButtonsTime, telemetryTime - telemetrySlideCurrentTime);
+            telemetryWrapper.setLine(8, "TeleOp loop time: %.2f ms; ClearBulkCacheTime: %.2f ms; Gamepads: %.2f ms; DriveTrain: %.2f ms; Intake: %.2f ms; Output: %.2f ms; SpecimenClaw: %.2f ms; TelemetryTime: %.2f ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime);
+//            telemetryWrapper.setLine(9, "OutputSlideTelemetry CurrentPos: %.2f ms; TargetPos: %.2f ms; Buttons: %.2f ms; Current: %.2f ms", telemetryCurrentPositionsTime - specimenClawTime, telemetryTargetPositionsTime - telemetryCurrentPositionsTime, telemetryElevatorButtonsTime - telemetryTargetPositionsTime, telemetryTime - telemetryElevatorButtonsTime);
             telemetryWrapper.render();
             timer.reset();
         }

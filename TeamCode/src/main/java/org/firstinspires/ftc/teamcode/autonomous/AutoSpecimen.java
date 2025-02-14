@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import android.util.Pair;
 import com.acmerobotics.roadrunner.*;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.sun.tools.javac.util.List;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
-import org.firstinspires.ftc.teamcode.modules.motor.TwoRunToPositionMotors;
+import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
@@ -26,7 +27,6 @@ public class AutoSpecimen extends LinearOpMode {
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
-    private TwoRunToPositionMotors hanging;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,17 +38,19 @@ public class AutoSpecimen extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        outputSlide = new DoubleLinearSlides("outputSlide", 1, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD);
+        outputSlide = new DoubleLinearSlides(
+                List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
+                List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
+                1, Integer.MIN_VALUE, Integer.MAX_VALUE
+        );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
-        hanging = new TwoRunToPositionMotors("hangingMotor", 1, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
-        hanging.init(hardwareMap);
 
         specimenClaw.setAction(true);
 
@@ -67,7 +69,7 @@ public class AutoSpecimen extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToConstantHeading(AutoHelper.INITIAL_SUBMERSIBLE_POSE.position, 3 * Math.PI / 2)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, hanging, AutoHelper.SPECIMEN_SLIDE_HIGH)
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH)
         ));
 
         // Move to first sample while resetting specimen claw and retracting slides
@@ -84,7 +86,7 @@ public class AutoSpecimen extends LinearOpMode {
 
                 // Start retracting the output slides while we start moving
                 new SequentialAction(
-                        AutoHelper.retractSlide(outputSlide, hanging),
+                        AutoHelper.retractSlide(outputSlide),
                         AutoHelper.startIntake(intakePivot, activeIntake),
                         new InstantAction(() -> intakeSlide.setPosition(AutoHelper.SPECIMEN_INTAKE_SLIDE_PREPARE))
                 ),
@@ -174,7 +176,7 @@ public class AutoSpecimen extends LinearOpMode {
                     new SequentialAction(
                             new InstantAction(() -> specimenClaw.setAction(true)),
                             new SleepAction(0.1),
-                            AutoHelper.moveSlideToPos(outputSlide, hanging, AutoHelper.SPECIMEN_SLIDE_HIGH)
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH)
                     )
             ));
 
@@ -187,7 +189,7 @@ public class AutoSpecimen extends LinearOpMode {
                                     .splineToLinearHeading(AutoHelper.OBSERVATION_ZONE_POSE, Math.PI / 2)
                                     .build()
                     ),
-                    AutoHelper.retractSlide(outputSlide, hanging),
+                    AutoHelper.retractSlide(outputSlide),
                     new SequentialAction(
                             new SleepAction(0.5),
                             new InstantAction(() -> specimenClaw.setAction(false))
