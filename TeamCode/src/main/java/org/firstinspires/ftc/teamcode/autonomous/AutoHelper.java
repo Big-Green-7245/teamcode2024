@@ -40,9 +40,7 @@ public class AutoHelper {
 
     static Action moveSlideToPos(RunToPosition slide, int pos) {
         return new SequentialAction(
-                new InstantAction(() -> {
-                    slide.startMoveToPos(pos);
-                }),
+                new InstantAction(() -> slide.startMoveToPos(pos)),
                 telemetryPacket -> {
                     slide.tick();
                     return !slide.isFinished();

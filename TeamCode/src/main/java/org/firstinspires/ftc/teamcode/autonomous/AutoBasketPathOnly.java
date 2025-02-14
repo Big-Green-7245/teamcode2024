@@ -26,7 +26,6 @@ public class AutoBasketPathOnly extends LinearOpMode {
     private MecanumDrive drive;
     private ServoToggle intakeSlide;
     private ServoToggle intakePivot;
-    private Servo activeIntake;
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
@@ -40,7 +39,6 @@ public class AutoBasketPathOnly extends LinearOpMode {
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
-        activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
