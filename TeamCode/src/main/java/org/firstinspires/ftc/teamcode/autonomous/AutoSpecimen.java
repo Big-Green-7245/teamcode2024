@@ -69,7 +69,7 @@ public class AutoSpecimen extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToConstantHeading(AutoHelper.INITIAL_SUBMERSIBLE_POSE.position, 3 * Math.PI / 2)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH)
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH, 0)
         ));
 
         // Move to first sample while resetting specimen claw and retracting slides
@@ -176,7 +176,7 @@ public class AutoSpecimen extends LinearOpMode {
                     new SequentialAction(
                             new InstantAction(() -> specimenClaw.setAction(true)),
                             new SleepAction(0.1),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH)
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH, 0)
                     )
             ));
 

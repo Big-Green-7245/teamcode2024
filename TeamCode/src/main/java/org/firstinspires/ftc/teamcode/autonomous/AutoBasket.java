@@ -68,7 +68,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -91,17 +91,18 @@ public class AutoBasket extends LinearOpMode {
             // Intake the sample and move to basket
             Actions.runBlocking(new ParallelAction(
                     new SequentialAction(
-                            new SleepAction(0.5),
                             drive.actionBuilder(samplePose)
-                                    .setTangent(Math.PI / 2)
+                                    .setTangent(0)
+                                    .lineToX(samplePose.position.x + 3)
                                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                                     .build()
                     ),
                     new SequentialAction(
-                            AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake, 0.5),
+                            new SleepAction(0.3),
+                            AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
                     )
             ));
 
@@ -135,10 +136,12 @@ public class AutoBasket extends LinearOpMode {
                                 .build()
                 ),
                 new SequentialAction(
-                        AutoHelper.intakeSample(intakeSlide, intakePivot, activeIntake, 1),
+                        new InstantAction(() -> intakeSlide.setPosition(1)),
+                        new SleepAction(0.5),
+                        AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                         new SleepAction(0.5),
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH)
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
                 )
         ));
 

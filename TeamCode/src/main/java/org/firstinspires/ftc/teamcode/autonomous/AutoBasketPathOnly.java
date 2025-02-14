@@ -83,7 +83,8 @@ public class AutoBasketPathOnly extends LinearOpMode {
             // Move to basket
             Actions.runBlocking(new ParallelAction(
                     drive.actionBuilder(samplePose)
-                            .setTangent(Math.PI / 2)
+                            .setTangent(0)
+                            .lineToX(samplePose.position.x + 3)
                             .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                             .build()
             ));

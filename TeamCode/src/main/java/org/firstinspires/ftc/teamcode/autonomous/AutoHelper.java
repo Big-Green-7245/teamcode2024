@@ -40,12 +40,18 @@ public class AutoHelper {
     static final List<Pose2d> SUBMERSIBLE_POSES = List.of(SUBMERSIBLE_1_POSE, SUBMERSIBLE_2_POSE, SUBMERSIBLE_3_POSE, SUBMERSIBLE_4_POSE);
     public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * OUTPUT_SLIDE.getPulsesPerRevolution());
 
-    static Action moveSlideToPos(RunToPosition slide, int pos) {
+    /**
+     * @param returnTolerance This action will return when the motor is within this given tolerance in encoder ticks.
+     *                        The motor will still continue to run to position, just that this action will return early.
+     *                        Passing 0 will wait for the motor to finish using the default firmware tolerance.
+     */
+    static Action moveSlideToPos(RunToPosition slide, int pos, int returnTolerance) {
         return new SequentialAction(
                 new InstantAction(() -> slide.startMoveToPos(pos)),
                 telemetryPacket -> {
                     slide.tick();
-                    return !slide.isFinished();
+                    if (returnTolerance <= 0) return !slide.isFinished();
+                    return Math.abs(slide.getTargetPosition() - slide.getCurrentPosition()) > returnTolerance;
                 }
         );
     }
@@ -70,10 +76,8 @@ public class AutoHelper {
         );
     }
 
-    static Action intakeSample(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake, double intakeSlidePosition) {
+    static Action retractIntake(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake) {
         return new SequentialAction(
-                new InstantAction(() -> intakeSlide.setPosition(intakeSlidePosition)),
-                new SleepAction(0.5),
                 new InstantAction(() -> {
                     intakePivot.setAction(false);
                     intakeSlide.setAction(false);
