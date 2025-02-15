@@ -132,8 +132,7 @@ public class TeleOp extends LinearOpMode {
                 outputSlide.startMoveToPos(AutoHelper.BASKET_SLIDE_HIGH);
             } else if (gp1.pressing(ButtonHelper.CIRCLE)) {
                 // Hanging step 1, robot slightly off the ground
-                int hangingPosition = (int) (2.42 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution());
-                outputSlide.startMoveToPos(hangingPosition);
+                outputSlide.startMoveToPos((int) (2.42 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()));
             } else if (gp2.pressing(ButtonHelper.CROSS) || gp1.pressing(ButtonHelper.CROSS)) {
                 // Move the output box back
                 outputBox.setAction(false);
@@ -141,8 +140,7 @@ public class TeleOp extends LinearOpMode {
                 outputSlide.startRetraction();
             } else if (Math.abs(gamepad2.right_stick_y) > 0.0001) {
                 // Move output slide by the right stick y if it is not zero and the slide is not currently moving to a position
-                int relativePosition = (int) (-gamepad2.right_stick_y * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution());
-                outputSlide.startMoveToRelativePos(relativePosition);
+                outputSlide.startMoveToRelativePos((int) (-gamepad2.right_stick_y * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()));
             }
             outputSlide.tick();
             if (gp2.pressing(ButtonHelper.SQUARE)) {

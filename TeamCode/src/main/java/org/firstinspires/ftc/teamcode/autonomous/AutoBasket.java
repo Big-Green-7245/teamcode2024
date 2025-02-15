@@ -68,7 +68,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -98,11 +98,11 @@ public class AutoBasket extends LinearOpMode {
                                     .build()
                     ),
                     new SequentialAction(
-                            new SleepAction(0.3),
+                            new SleepAction(0.5),
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
                     )
             ));
 
@@ -121,7 +121,7 @@ public class AutoBasket extends LinearOpMode {
                 AutoHelper.retractSlide(outputSlide),
                 new SequentialAction(
                         new SleepAction(1),
-                        new InstantAction(() -> intakeSlide.setPosition(0.4))
+                        new InstantAction(() -> intakeSlide.setPosition(0.3))
                 )
         ));
 
@@ -141,7 +141,7 @@ public class AutoBasket extends LinearOpMode {
                         AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                         new SleepAction(0.5),
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
                 )
         ));
 
@@ -153,10 +153,10 @@ public class AutoBasket extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.BASKET_POSE)
                         .setTangent(5 * Math.PI / 4)
-                        .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
+                        .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_2, Math.PI)
                         .build(),
                 new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.retractSlide(outputSlide)
+                AutoHelper.moveSlideToPos(outputSlide, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), 0)
         ));
     }
 }

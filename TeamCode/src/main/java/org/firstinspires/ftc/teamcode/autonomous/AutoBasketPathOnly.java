@@ -112,7 +112,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.BASKET_POSE)
                         .setTangent(5 * Math.PI / 4)
-                        .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
+                        .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_2, Math.PI)
                         .build()
         ));
     }

@@ -48,7 +48,7 @@ public class DoubleLinearSlides extends TwoRunToPositionMotors {
      */
     @Override
     public void startRetraction() {
-        startMoveToPos(-1000);
+        startMoveToPos(-2000);
     }
 
     /**

@@ -41,7 +41,7 @@ public class LinearSlide extends RunToPositionMotor {
      */
     @Override
     public void startRetraction() {
-        startMoveToPos(-1000);
+        startMoveToPos(-2000);
     }
 
     /**
