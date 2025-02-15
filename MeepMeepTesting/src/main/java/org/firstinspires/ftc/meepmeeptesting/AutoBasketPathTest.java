@@ -12,7 +12,7 @@ public class AutoBasketPathTest {
     private static final Pose2d SAMPLE_2_POSE = new Pose2d(45, 26, 0);
     private static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 26, 0);
     private static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
-    private static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(23, 10, 0);
+    private static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(22, 10, 0);
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);

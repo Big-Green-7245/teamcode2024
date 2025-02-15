@@ -156,7 +156,7 @@ public class AutoBasket extends LinearOpMode {
                         .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_2, Math.PI)
                         .build(),
                 new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.moveSlideToPos(outputSlide, (int) (3 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), 0)
+                AutoHelper.moveSlideToPos(outputSlide, (int) (3.2 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), 0)
         ));
     }
 }
