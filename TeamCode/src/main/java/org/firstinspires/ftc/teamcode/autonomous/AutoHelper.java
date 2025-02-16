@@ -18,8 +18,8 @@ public class AutoHelper {
     static final Pose2d SAMPLE_2_POSE = new Pose2d(45, 26, 0);
     static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 26, 0);
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
-    public static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
-    public static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(22, 10, 0);
+    public static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 10, Math.PI);
+    public static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(22, 8, 0);
     public static final int BASKET_SLIDE_HIGH = (int) (7.3 * OUTPUT_SLIDE.getPulsesPerRevolution());
 
     static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);

@@ -89,11 +89,14 @@ public class AutoBasket extends LinearOpMode {
             ));
 
             // Intake the sample and move to basket
+            MecanumDrive.PARAMS.maxWheelVel = 50;
+            MecanumDrive.PARAMS.minProfileAccel = -30;
+            MecanumDrive.PARAMS.maxProfileAccel = 50;
             Actions.runBlocking(new ParallelAction(
                     new SequentialAction(
                             drive.actionBuilder(samplePose)
                                     .setTangent(0)
-                                    .lineToX(samplePose.position.x + 3)
+                                    .lineToX(samplePose.position.x + 4)
                                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                                     .build()
                     ),
@@ -105,6 +108,9 @@ public class AutoBasket extends LinearOpMode {
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
                     )
             ));
+            MecanumDrive.PARAMS.maxWheelVel = 70;
+            MecanumDrive.PARAMS.minProfileAccel = -50;
+            MecanumDrive.PARAMS.maxProfileAccel = 70;
 
             // Deposit the sample
             outputBox.setAction(true);
@@ -156,7 +162,7 @@ public class AutoBasket extends LinearOpMode {
                         .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_2, Math.PI)
                         .build(),
                 new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.moveSlideToPos(outputSlide, (int) (3.2 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), 0)
+                AutoHelper.moveSlideToPos(outputSlide, (int) (3.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), 0)
         ));
     }
 }
