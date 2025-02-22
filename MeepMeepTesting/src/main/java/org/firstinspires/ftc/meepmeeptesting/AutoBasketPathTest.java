@@ -8,9 +8,9 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 public class AutoBasketPathTest {
     private static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     private static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
-    private static final Pose2d SAMPLE_1_POSE = new Pose2d(35, 26, 0);
-    private static final Pose2d SAMPLE_2_POSE = new Pose2d(45, 26, 0);
-    private static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 26, 0);
+    private static final Pose2d SAMPLE_1_POSE = new Pose2d(38, 35.5, 7 * Math.PI / 4); // 48, 25.5
+    private static final Pose2d SAMPLE_2_POSE = new Pose2d(48, 35.5, 7 * Math.PI / 4); // 58, 25.5
+    private static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 25.5, 0); // 68, 25.5
     private static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 12, Math.PI);
     private static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(22, 10, 0);
 
@@ -28,24 +28,21 @@ public class AutoBasketPathTest {
                 .splineToLinearHeading(BASKET_POSE, Math.PI / 4)
                 // Move to first sample while resetting output box and retracting slides
                 .setTangent(5 * Math.PI / 4)
-                .splineToLinearHeading(SAMPLE_1_POSE, 3 * Math.PI / 2)
+                .splineToSplineHeading(SAMPLE_1_POSE, SAMPLE_1_POSE.heading)
                 // Move to basket the second time and deposit
-                .setTangent(0)
-                .lineToX(SAMPLE_1_POSE.position.x + 4)
+                .lineToX(SAMPLE_1_POSE.position.x + 4 * SAMPLE_1_POSE.heading.real)
                 .splineToSplineHeading(BASKET_POSE, Math.PI / 4)
                 // Move to second sample while resetting output box and retracting slides
                 .setTangent(5 * Math.PI / 4)
-                .splineToLinearHeading(SAMPLE_2_POSE, 3 * Math.PI / 2)
+                .splineToSplineHeading(SAMPLE_2_POSE, SAMPLE_2_POSE.heading)
                 // Move to basket the third time and deposit
-                .setTangent(0)
-                .lineToX(SAMPLE_2_POSE.position.x + 4)
+                .lineToX(SAMPLE_2_POSE.position.x + 4 * SAMPLE_2_POSE.heading.real)
                 .splineToSplineHeading(BASKET_POSE, Math.PI / 4)
                 // Move to third sample while resetting output box and retracting slides
                 .setTangent(5 * Math.PI / 4)
-                .splineToLinearHeading(SAMPLE_3_POSE, 3 * Math.PI / 2)
+                .splineToSplineHeading(SAMPLE_3_POSE, SAMPLE_3_POSE.heading)
                 // Move to basket the fourth time and deposit
-                .setTangent(0)
-                .lineToX(SAMPLE_3_POSE.position.x + 4)
+                .lineToX(SAMPLE_3_POSE.position.x + 4 * SAMPLE_3_POSE.heading.real)
                 .splineToSplineHeading(BASKET_POSE, Math.PI / 4)
                 // Move to ascent zone while resetting output box and retracting slides
                 .setTangent(5 * Math.PI / 4)

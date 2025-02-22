@@ -14,9 +14,9 @@ public class AutoHelper {
 
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
-    static final Pose2d SAMPLE_1_POSE = new Pose2d(35, 26, 0);
-    static final Pose2d SAMPLE_2_POSE = new Pose2d(45, 26, 0);
-    static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 26, 0);
+    static final Pose2d SAMPLE_1_POSE = new Pose2d(38, 35.5, 7 * Math.PI / 4); // 48, 25.5
+    static final Pose2d SAMPLE_2_POSE = new Pose2d(48, 35.5, 7 * Math.PI / 4); // 58, 25.5
+    static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 25.5, 0); // 68, 25.5
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
     public static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 10, Math.PI);
     public static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(22, 8, 0);

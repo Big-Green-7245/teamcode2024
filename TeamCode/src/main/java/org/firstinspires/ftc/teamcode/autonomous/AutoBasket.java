@@ -74,43 +74,26 @@ public class AutoBasket extends LinearOpMode {
         sleep(500);
 
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
-            // Move to sample while resetting output box and retracting slides
-            Actions.runBlocking(new ParallelAction(
-                    drive.actionBuilder(AutoHelper.BASKET_POSE)
-                            .setTangent(5 * Math.PI / 4)
-                            .splineToSplineHeading(samplePose, 3 * Math.PI / 2)
-                            .build(),
-                    new InstantAction(() -> outputBox.setAction(false)),
-                    AutoHelper.retractSlide(outputSlide),
-                    new SequentialAction(
-                            new SleepAction(1),
+            Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_POSE)
+                    // Move to sample while resetting output box and retracting slides
+                    .setTangent(5 * Math.PI / 4)
+                    .splineToSplineHeading(samplePose, samplePose.heading)
+                    .afterTime(0, new ParallelAction(
+                            new InstantAction(() -> outputBox.setAction(false)),
+                            AutoHelper.retractSlide(outputSlide),
                             AutoHelper.startIntake(intakePivot, activeIntake)
-                    )
-            ));
-
-            // Intake the sample and move to basket
-            MecanumDrive.PARAMS.maxWheelVel = 50;
-            MecanumDrive.PARAMS.minProfileAccel = -30;
-            MecanumDrive.PARAMS.maxProfileAccel = 50;
-            Actions.runBlocking(new ParallelAction(
-                    new SequentialAction(
-                            drive.actionBuilder(samplePose)
-                                    .setTangent(0)
-                                    .lineToX(samplePose.position.x + 4)
-                                    .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                                    .build()
-                    ),
-                    new SequentialAction(
-                            new SleepAction(0.5),
+                    ))
+                    // Intake the sample and move to basket
+                    .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
+                    .afterTime(0.5, new SequentialAction(
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
-                    )
-            ));
-            MecanumDrive.PARAMS.maxWheelVel = 70;
-            MecanumDrive.PARAMS.minProfileAccel = -50;
-            MecanumDrive.PARAMS.maxProfileAccel = 70;
+                    ))
+                    .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                    .build()
+            );
 
             // Deposit the sample
             outputBox.setAction(true);
