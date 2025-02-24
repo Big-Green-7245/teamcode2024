@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import android.util.Pair;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.*;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -18,12 +18,18 @@ import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
+import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class TeleOp extends LinearOpMode {
     // Define constants
     private final ElapsedTime timer = new ElapsedTime();
     private final Pose2d initialPose;
+
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
+    private final List<Action> actions = new ArrayList<>();
 
     // Declare modules
     private List<LynxModule> hubs;
@@ -100,6 +106,9 @@ public class TeleOp extends LinearOpMode {
             double gamepadsTime = timer.milliseconds();
 
             // Move drive train
+            if (Math.abs(gamepad1.left_stick_y) > 0.0001 || Math.abs(gamepad1.left_stick_x) > 0.0001 || Math.abs(gamepad1.right_stick_x) > 0.0001) {
+                actions.clear();
+            }
             driveTrain.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x), -gamepad1.right_stick_x));
             driveTrain.updatePoseEstimate();
 
@@ -124,7 +133,30 @@ public class TeleOp extends LinearOpMode {
             double intakeTime = timer.milliseconds();
 
             // Move output slide
-            if (gp2.pressing(ButtonHelper.right_bumper) || gp1.pressing(ButtonHelper.TRIANGLE)) {
+            if (gp1.pressing(ButtonHelper.left_bumper)) {
+                // Automatically transfer, drive, and deposit sample in the high basket
+                actions.add(new SequentialAction(
+                        new ParallelAction(
+                                new SequentialAction(
+                                        new SleepAction(0.5),
+                                        driveTrain.actionBuilder(driveTrain.pose)
+                                                .setTangent(driveTrain.pose.heading.plus(Math.PI))
+                                                .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                                                .build()
+                                ),
+                                new SequentialAction(
+                                        AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
+                                        new SleepAction(0.5),
+                                        AutoHelper.transferSample(activeIntake),
+                                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                                )
+                        ),
+                        new InstantAction(() -> outputBox.setAction(true)),
+                        new SleepAction(0.5),
+                        new InstantAction(() -> outputBox.setAction(false)),
+                        AutoHelper.retractSlide(outputSlide)
+                ));
+            } else if (gp2.pressing(ButtonHelper.right_bumper) || gp1.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the specimen output position
                 outputSlide.startMoveToPos(AutoHelper.SPECIMEN_SLIDE_HIGH);
             } else if (gp2.pressing(ButtonHelper.TRIANGLE)) {
@@ -143,12 +175,8 @@ public class TeleOp extends LinearOpMode {
                 outputSlide.startMoveToRelativePos((int) (-gamepad2.right_stick_y * AutoHelper.OUTPUT_SLIDE_ENCODER));
             }
             outputSlide.tick();
-            if (gp2.pressing(ButtonHelper.SQUARE)) {
+            if (gp2.pressing(ButtonHelper.SQUARE) || gp1.pressing(ButtonHelper.right_bumper)) {
                 outputBox.toggleAction();
-            } else if (gp1.pressing(ButtonHelper.right_bumper)) {
-                outputBox.setAction(true);
-            } else if (gp1.pressing(ButtonHelper.left_bumper)) {
-                outputBox.setAction(false);
             }
 
             double outputTime = timer.milliseconds();
@@ -159,6 +187,21 @@ public class TeleOp extends LinearOpMode {
             }
 
             double specimenClawTime = timer.milliseconds();
+
+            // Run actions
+            if (!actions.isEmpty()) {
+                TelemetryPacket packet = new TelemetryPacket();
+                for (Iterator<Action> iterator = actions.iterator(); iterator.hasNext(); ) {
+                    Action action = iterator.next();
+                    action.preview(packet.fieldOverlay());
+                    if (!action.run(packet)) {
+                        iterator.remove();
+                    }
+                }
+                dashboard.sendTelemetryPacket(packet);
+            }
+
+            double autoActionsTime = timer.milliseconds();
 
             // Update telemetry
 //            telemetryWrapper.setLine(1, "TeleOp \tRunning");
@@ -176,7 +219,7 @@ public class TeleOp extends LinearOpMode {
 
             // Debug loop times
             double telemetryTime = timer.milliseconds();
-            telemetryWrapper.setLine(8, "TeleOp loop time: %.2f ms; ClearBulkCacheTime: %.2f ms; Gamepads: %.2f ms; DriveTrain: %.2f ms; Intake: %.2f ms; Output: %.2f ms; SpecimenClaw: %.2f ms; TelemetryTime: %.2f ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, telemetryTime - specimenClawTime);
+            telemetryWrapper.setLine(8, "TeleOp loop time: %.2f ms; ClearBulkCacheTime: %.2f ms; Gamepads: %.2f ms; DriveTrain: %.2f ms; Intake: %.2f ms; Output: %.2f ms; SpecimenClaw: %.2f ms; AutoActionsTime: %.2f ms; TelemetryTime: %.2f ms", telemetryTime, clearBulkCacheTime, gamepadsTime - clearBulkCacheTime, driveTrainTime - gamepadsTime, intakeTime - driveTrainTime, outputTime - intakeTime, specimenClawTime - outputTime, autoActionsTime - specimenClawTime, telemetryTime - autoActionsTime);
 //            telemetryWrapper.setLine(9, "OutputSlideTelemetry CurrentPos: %.2f ms; TargetPos: %.2f ms; Buttons: %.2f ms; Current: %.2f ms", telemetryCurrentPositionsTime - specimenClawTime, telemetryTargetPositionsTime - telemetryCurrentPositionsTime, telemetryElevatorButtonsTime - telemetryTargetPositionsTime, telemetryTime - telemetryElevatorButtonsTime);
             telemetryWrapper.render();
             timer.reset();

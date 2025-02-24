@@ -13,7 +13,7 @@ public class AutoHelper {
     public static final double OUTPUT_SLIDE_ENCODER = EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution() / 1.5;
 
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
-    static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
+    public static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
     static final Pose2d SAMPLE_1_POSE = new Pose2d(38, 35.5, 7 * Math.PI / 4); // 48, 25.5
     static final Pose2d SAMPLE_2_POSE = new Pose2d(48, 35.5, 7 * Math.PI / 4); // 58, 25.5
     static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 25.5, 0); // 68, 25.5
@@ -46,7 +46,7 @@ public class AutoHelper {
      *                        The motor will still continue to run to position, just that this action will return early.
      *                        Passing 0 will wait for the motor to finish using the default firmware tolerance.
      */
-    static Action moveSlideToPos(RunToPosition slide, int pos, int returnTolerance) {
+    public static Action moveSlideToPos(RunToPosition slide, int pos, int returnTolerance) {
         return new SequentialAction(
                 new InstantAction(() -> slide.startMoveToPos(pos)),
                 telemetryPacket -> {
@@ -57,7 +57,7 @@ public class AutoHelper {
         );
     }
 
-    static Action retractSlide(RunToPosition slide) {
+    public static Action retractSlide(RunToPosition slide) {
         return new SequentialAction(
                 new InstantAction(slide::startRetraction),
                 telemetryPacket -> {
@@ -67,7 +67,7 @@ public class AutoHelper {
         );
     }
 
-    static Action startIntake(ServoToggle intakePivot, Servo activeIntake) {
+    public static Action startIntake(ServoToggle intakePivot, Servo activeIntake) {
         return new SequentialAction(
                 new InstantAction(() -> {
                     intakePivot.setAction(true);
@@ -77,7 +77,7 @@ public class AutoHelper {
         );
     }
 
-    static Action retractIntake(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake) {
+    public static Action retractIntake(ServoToggle intakeSlide, ServoToggle intakePivot, Servo activeIntake) {
         return new SequentialAction(
                 new InstantAction(() -> {
                     intakePivot.setAction(false);
@@ -88,7 +88,7 @@ public class AutoHelper {
         );
     }
 
-    static Action transferSample(Servo activeIntake) {
+    public static Action transferSample(Servo activeIntake) {
         return new SequentialAction(
                 new InstantAction(() -> activeIntake.setPosition(0)),
                 new SleepAction(0.5),
