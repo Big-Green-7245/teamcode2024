@@ -10,7 +10,7 @@ import java.lang.Math;
 import java.util.List;
 
 public class AutoHelper {
-    public static final EncoderConstants OUTPUT_SLIDE = EncoderConstants.YELLOW_JACKET_435;
+    public static final double OUTPUT_SLIDE_ENCODER = EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution() / 1.5;
 
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
@@ -20,7 +20,7 @@ public class AutoHelper {
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
     public static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 10, Math.PI);
     public static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(22, 8, 0);
-    public static final int BASKET_SLIDE_HIGH = (int) (7.3 * OUTPUT_SLIDE.getPulsesPerRevolution());
+    public static final int BASKET_SLIDE_HIGH = (int) (7.3 * OUTPUT_SLIDE_ENCODER);
 
     static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);
     static final double SUBMERSIBLE_Y = 34;
@@ -39,7 +39,7 @@ public class AutoHelper {
     static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
     static final Pose2d SUBMERSIBLE_4_POSE = new Pose2d(-12, SUBMERSIBLE_Y, Math.PI / 2);
     static final List<Pose2d> SUBMERSIBLE_POSES = List.of(SUBMERSIBLE_1_POSE, SUBMERSIBLE_2_POSE, SUBMERSIBLE_3_POSE, SUBMERSIBLE_4_POSE);
-    public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * OUTPUT_SLIDE.getPulsesPerRevolution());
+    public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * OUTPUT_SLIDE_ENCODER);
 
     /**
      * @param returnTolerance This action will return when the motor is within this given tolerance in encoder ticks.

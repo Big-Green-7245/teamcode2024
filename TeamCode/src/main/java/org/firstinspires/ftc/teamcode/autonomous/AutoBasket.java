@@ -42,7 +42,7 @@ public class AutoBasket extends LinearOpMode {
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
-                1, (int) (0.1 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), Integer.MAX_VALUE
+                1, (int) (0.1 * AutoHelper.OUTPUT_SLIDE_ENCODER), Integer.MAX_VALUE
         );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
         specimenClaw = new ServoToggle("specimenClaw", 0, 0.2, false);
@@ -68,7 +68,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -89,7 +89,7 @@ public class AutoBasket extends LinearOpMode {
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
                     ))
                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                     .build()
@@ -130,7 +130,7 @@ public class AutoBasket extends LinearOpMode {
                         AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                         new SleepAction(0.5),
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()))
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
                 )
         ));
 
@@ -145,7 +145,7 @@ public class AutoBasket extends LinearOpMode {
                         .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_2, Math.PI)
                         .build(),
                 new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.moveSlideToPos(outputSlide, (int) (3.5 * AutoHelper.OUTPUT_SLIDE.getPulsesPerRevolution()), 0)
+                AutoHelper.moveSlideToPos(outputSlide, (int) (3.5 * AutoHelper.OUTPUT_SLIDE_ENCODER), 0)
         ));
     }
 }
