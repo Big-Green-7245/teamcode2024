@@ -47,6 +47,10 @@ public class AutoBasketPathTest {
                 // Move to ascent zone while resetting output box and retracting slides
                 .setTangent(5 * Math.PI / 4)
                 .splineTo(ASCENT_ZONE_POSE.position, Math.PI)
+                // Intake a sample and move to basket
+                .setTangent(3 * Math.PI / 2)
+                .lineToYConstantHeading(ASCENT_ZONE_POSE.position.y - 4)
+                .lineToYConstantHeading(ASCENT_ZONE_POSE.position.y)
                 // Move to basket the fifth time and deposit
                 .setTangent(0)
                 .splineToLinearHeading(BASKET_POSE, Math.PI / 4)

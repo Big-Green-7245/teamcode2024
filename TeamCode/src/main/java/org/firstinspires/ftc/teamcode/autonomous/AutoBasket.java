@@ -116,6 +116,12 @@ public class AutoBasket extends LinearOpMode {
 
         // Intake a sample and move to basket
         Actions.runBlocking(AutoHelper.startIntake(intakePivot, activeIntake));
+        Actions.runBlocking(drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
+                .setTangent(3 * Math.PI / 2)
+                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y - 4)
+                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y)
+                .build()
+        );
         Actions.runBlocking(new ParallelAction(
                 new SequentialAction(
                         new SleepAction(0.5),

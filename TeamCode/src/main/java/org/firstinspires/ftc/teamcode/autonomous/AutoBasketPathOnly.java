@@ -92,6 +92,14 @@ public class AutoBasketPathOnly extends LinearOpMode {
                         .build()
         ));
 
+        // Intake a sample and move to basket
+        Actions.runBlocking(drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
+                .setTangent(3 * Math.PI / 2)
+                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y - 4)
+                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y)
+                .build()
+        );
+
         // Move to basket
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
