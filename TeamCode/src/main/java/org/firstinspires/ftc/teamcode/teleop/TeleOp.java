@@ -109,7 +109,9 @@ public class TeleOp extends LinearOpMode {
             if (Math.abs(gamepad1.left_stick_y) > 0.0001 || Math.abs(gamepad1.left_stick_x) > 0.0001 || Math.abs(gamepad1.right_stick_x) > 0.0001) {
                 actions.clear();
             }
-            driveTrain.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x), -gamepad1.right_stick_x));
+            if (actions.isEmpty()) {
+                driveTrain.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x), -gamepad1.right_stick_x));
+            }
             driveTrain.updatePoseEstimate();
 
             double driveTrainTime = timer.milliseconds();
@@ -128,7 +130,9 @@ public class TeleOp extends LinearOpMode {
                 // Toggle intake pivot between up and down
                 intakePivot.toggleAction();
             }
-            activeIntake.setPosition((gamepad2.right_trigger - gamepad2.left_trigger) / 2 + 0.5);
+            if (actions.isEmpty()) {
+                activeIntake.setPosition((gamepad2.right_trigger - gamepad2.left_trigger) / 2 + 0.5);
+            }
 
             double intakeTime = timer.milliseconds();
 
@@ -148,7 +152,7 @@ public class TeleOp extends LinearOpMode {
                                         AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                                         new SleepAction(0.5),
                                         AutoHelper.transferSample(activeIntake),
-                                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
                                 )
                         ),
                         new InstantAction(() -> outputBox.setAction(true)),

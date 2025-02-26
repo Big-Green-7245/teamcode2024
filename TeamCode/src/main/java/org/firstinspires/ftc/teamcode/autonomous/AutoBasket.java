@@ -68,7 +68,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -77,19 +77,19 @@ public class AutoBasket extends LinearOpMode {
             Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_POSE)
                     // Move to sample while resetting output box and retracting slides
                     .setTangent(5 * Math.PI / 4)
-                    .splineToSplineHeading(samplePose, samplePose.heading)
                     .afterTime(0, new ParallelAction(
                             new InstantAction(() -> outputBox.setAction(false)),
                             AutoHelper.retractSlide(outputSlide),
                             AutoHelper.startIntake(intakePivot, activeIntake)
                     ))
+                    .splineToSplineHeading(samplePose, samplePose.heading)
                     // Intake the sample and move to basket
                     .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
                     .afterTime(0.5, new SequentialAction(
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.5),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
                     ))
                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                     .build()
@@ -136,7 +136,7 @@ public class AutoBasket extends LinearOpMode {
                         AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                         new SleepAction(0.5),
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (2.5 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
                 )
         ));
 
