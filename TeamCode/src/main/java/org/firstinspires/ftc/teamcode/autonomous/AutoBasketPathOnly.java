@@ -73,12 +73,15 @@ public class AutoBasketPathOnly extends LinearOpMode {
         sleep(AutoHelper.BASKET_DEPOSIT_TIME);
 
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
+            // Move to sample
             Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_POSE)
-                    // Move to sample
                     .setTangent(5 * Math.PI / 4)
                     .splineToSplineHeading(samplePose, samplePose.heading)
-                    // Move to basket
-                    .endTrajectory()
+                    .build()
+            );
+
+            // Move to basket
+            Actions.runBlocking(drive.actionBuilder(samplePose)
                     .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                     .build()
@@ -86,36 +89,38 @@ public class AutoBasketPathOnly extends LinearOpMode {
             sleep(AutoHelper.BASKET_DEPOSIT_TIME);
         }
 
+        for (Pose2d submersiblePose : AutoHelper.SAMPLE_SUBMERSIBLE_POSES) {
+            // Move to ascent zone
+            Actions.runBlocking(new ParallelAction(
+                    drive.actionBuilder(AutoHelper.BASKET_POSE)
+                            .setTangent(5 * Math.PI / 4)
+                            .splineTo(submersiblePose.position, Math.PI)
+                            .build()
+            ));
+
+            // Intake a sample and move to basket
+            Actions.runBlocking(drive.actionBuilder(submersiblePose)
+                    .setTangent(3 * Math.PI / 2)
+                    .lineToYConstantHeading(submersiblePose.position.y - 4)
+                    .lineToYConstantHeading(submersiblePose.position.y)
+                    .build()
+            );
+
+            // Move to basket
+            Actions.runBlocking(new ParallelAction(
+                    drive.actionBuilder(submersiblePose)
+                            .setTangent(0)
+                            .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                            .build()
+            ));
+            sleep(AutoHelper.BASKET_DEPOSIT_TIME);
+        }
+
         // Move to ascent zone
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.BASKET_POSE)
                         .setTangent(5 * Math.PI / 4)
-                        .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
-                        .build()
-        ));
-
-        // Intake a sample and move to basket
-        Actions.runBlocking(drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
-                .setTangent(3 * Math.PI / 2)
-                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y - 4)
-                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y)
-                .build()
-        );
-
-        // Move to basket
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
-                        .setTangent(0)
-                        .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                        .build()
-        ));
-        sleep(AutoHelper.BASKET_DEPOSIT_TIME);
-
-        // Move to ascent zone
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_2, Math.PI)
+                        .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_PARKING, Math.PI)
                         .build()
         ));
     }

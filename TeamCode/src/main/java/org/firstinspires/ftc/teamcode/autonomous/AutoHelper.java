@@ -14,12 +14,14 @@ public class AutoHelper {
 
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     public static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
-    static final Pose2d SAMPLE_1_POSE = new Pose2d(38, 35.5, 7 * Math.PI / 4); // 48, 25.5
-    static final Pose2d SAMPLE_2_POSE = new Pose2d(48, 35.5, 7 * Math.PI / 4); // 58, 25.5
-    static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 25.5, 0); // 68, 25.5
+    private static final Pose2d SAMPLE_1_POSE = new Pose2d(38, 35.5, 7 * Math.PI / 4); // 48, 25.5
+    private static final Pose2d SAMPLE_2_POSE = new Pose2d(48, 35.5, 7 * Math.PI / 4); // 58, 25.5
+    private static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 25.5, 0); // 68, 25.5
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
-    public static final Pose2d ASCENT_ZONE_POSE = new Pose2d(24, 10, Math.PI);
-    public static final Pose2d ASCENT_ZONE_POSE_2 = new Pose2d(22, 8, 0);
+    private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_1 = new Pose2d(24, 10, Math.PI);
+    private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_2 = new Pose2d(24, 8, Math.PI);
+    static final List<Pose2d> SAMPLE_SUBMERSIBLE_POSES = List.of(SAMPLE_SUBMERSIBLE_POSE_1, SAMPLE_SUBMERSIBLE_POSE_2);
+    public static final Pose2d ASCENT_ZONE_POSE_PARKING = new Pose2d(22, 8, 0);
     public static final int BASKET_SLIDE_HIGH = (int) (7.3 * OUTPUT_SLIDE_ENCODER);
     public static final int BASKET_SLIDE_TOLERANCE = (int) (5 * OUTPUT_SLIDE_ENCODER);
     public static final long BASKET_DEPOSIT_TIME = 750;
@@ -36,11 +38,11 @@ public class AutoHelper {
     static final List<Pose2d> SPECIMEN_SAMPLE_POSES = List.of(SPECIMEN_SAMPLE_1_POSE, SPECIMEN_SAMPLE_2_POSE, SPECIMEN_SAMPLE_3_POSE);
     static final Pose2d SPECIMEN_SAMPLE_3_DEPOSIT_POSE = new Pose2d(-40, 52, 3 * Math.PI / 4);
     public static final Pose2d OBSERVATION_ZONE_POSE = new Pose2d(-36, 61, 3 * Math.PI / 2);
-    static final Pose2d SUBMERSIBLE_1_POSE = new Pose2d(-6, SUBMERSIBLE_Y, Math.PI / 2);
-    static final Pose2d SUBMERSIBLE_2_POSE = new Pose2d(-8, SUBMERSIBLE_Y, Math.PI / 2);
-    static final Pose2d SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
-    static final Pose2d SUBMERSIBLE_4_POSE = new Pose2d(-12, SUBMERSIBLE_Y, Math.PI / 2);
-    static final List<Pose2d> SUBMERSIBLE_POSES = List.of(SUBMERSIBLE_1_POSE, SUBMERSIBLE_2_POSE, SUBMERSIBLE_3_POSE, SUBMERSIBLE_4_POSE);
+    private static final Pose2d SPECIMEN_SUBMERSIBLE_1_POSE = new Pose2d(-6, SUBMERSIBLE_Y, Math.PI / 2);
+    private static final Pose2d SPECIMEN_SUBMERSIBLE_2_POSE = new Pose2d(-8, SUBMERSIBLE_Y, Math.PI / 2);
+    private static final Pose2d SPECIMEN_SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
+    private static final Pose2d SPECIMEN_SUBMERSIBLE_4_POSE = new Pose2d(-12, SUBMERSIBLE_Y, Math.PI / 2);
+    static final List<Pose2d> SPECIMEN_SUBMERSIBLE_POSES = List.of(SPECIMEN_SUBMERSIBLE_1_POSE, SPECIMEN_SUBMERSIBLE_2_POSE, SPECIMEN_SUBMERSIBLE_3_POSE, SPECIMEN_SUBMERSIBLE_4_POSE);
     public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * OUTPUT_SLIDE_ENCODER);
 
     /**

@@ -111,55 +111,57 @@ public class AutoBasket extends LinearOpMode {
             sleep(AutoHelper.BASKET_DEPOSIT_TIME);
         }
 
+        for (Pose2d submersiblePose : AutoHelper.SAMPLE_SUBMERSIBLE_POSES) {
+            // Move to ascent zone while resetting output box and retracting slides
+            Actions.runBlocking(new ParallelAction(
+                    drive.actionBuilder(AutoHelper.BASKET_POSE)
+                            .setTangent(5 * Math.PI / 4)
+                            .splineTo(submersiblePose.position, Math.PI)
+                            .build(),
+                    new InstantAction(() -> outputBox.setAction(false)),
+                    AutoHelper.retractSlide(outputSlide),
+                    new SequentialAction(
+                            new SleepAction(1),
+                            new InstantAction(() -> intakeSlide.setPosition(0.3))
+                    )
+            ));
+
+            // Intake a sample and move to basket
+            Actions.runBlocking(AutoHelper.startIntake(intakePivot, activeIntake));
+            Actions.runBlocking(drive.actionBuilder(submersiblePose)
+                    .setTangent(3 * Math.PI / 2)
+                    .lineToYConstantHeading(submersiblePose.position.y - 4)
+                    .lineToYConstantHeading(submersiblePose.position.y)
+                    .build()
+            );
+            Actions.runBlocking(new ParallelAction(
+                    new SequentialAction(
+                            new SleepAction(0.5),
+                            drive.actionBuilder(submersiblePose)
+                                    .setTangent(0)
+                                    .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                                    .build()
+                    ),
+                    new SequentialAction(
+                            new InstantAction(() -> intakeSlide.setPosition(1)),
+                            new SleepAction(0.5),
+                            AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
+                            new SleepAction(0.1),
+                            AutoHelper.transferSample(activeIntake),
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
+                    )
+            ));
+
+            // Deposit the sample
+            outputBox.setAction(true);
+            sleep(AutoHelper.BASKET_DEPOSIT_TIME);
+        }
+
         // Move to ascent zone while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.BASKET_POSE)
                         .setTangent(5 * Math.PI / 4)
-                        .splineTo(AutoHelper.ASCENT_ZONE_POSE.position, Math.PI)
-                        .build(),
-                new InstantAction(() -> outputBox.setAction(false)),
-                AutoHelper.retractSlide(outputSlide),
-                new SequentialAction(
-                        new SleepAction(1),
-                        new InstantAction(() -> intakeSlide.setPosition(0.3))
-                )
-        ));
-
-        // Intake a sample and move to basket
-        Actions.runBlocking(AutoHelper.startIntake(intakePivot, activeIntake));
-        Actions.runBlocking(drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
-                .setTangent(3 * Math.PI / 2)
-                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y - 4)
-                .lineToYConstantHeading(AutoHelper.ASCENT_ZONE_POSE.position.y)
-                .build()
-        );
-        Actions.runBlocking(new ParallelAction(
-                new SequentialAction(
-                        new SleepAction(0.5),
-                        drive.actionBuilder(AutoHelper.ASCENT_ZONE_POSE)
-                                .setTangent(0)
-                                .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
-                                .build()
-                ),
-                new SequentialAction(
-                        new InstantAction(() -> intakeSlide.setPosition(1)),
-                        new SleepAction(0.5),
-                        AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
-                        new SleepAction(0.1),
-                        AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
-                )
-        ));
-
-        // Deposit the sample
-        outputBox.setAction(true);
-        sleep(AutoHelper.BASKET_DEPOSIT_TIME);
-
-        // Move to ascent zone while resetting output box and retracting slides
-        Actions.runBlocking(new ParallelAction(
-                drive.actionBuilder(AutoHelper.BASKET_POSE)
-                        .setTangent(5 * Math.PI / 4)
-                        .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_2, Math.PI)
+                        .splineToLinearHeading(AutoHelper.ASCENT_ZONE_POSE_PARKING, Math.PI)
                         .build(),
                 new InstantAction(() -> outputBox.setAction(false)),
                 AutoHelper.moveSlideToPos(outputSlide, (int) (3.5 * AutoHelper.OUTPUT_SLIDE_ENCODER), 0)

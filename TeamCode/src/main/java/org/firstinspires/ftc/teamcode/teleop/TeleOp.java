@@ -158,8 +158,14 @@ public class TeleOp extends LinearOpMode {
                         ),
                         new InstantAction(() -> outputBox.setAction(true)),
                         new SleepAction(AutoHelper.BASKET_DEPOSIT_TIME / 1000d),
-                        new InstantAction(() -> outputBox.setAction(false)),
-                        AutoHelper.retractSlide(outputSlide)
+                        new ParallelAction(
+                                driveTrain.actionBuilder(AutoHelper.BASKET_POSE)
+                                        .setTangent(5 * Math.PI / 4)
+                                        .splineToLinearHeading(driveTrain.pose, driveTrain.pose.heading)
+                                        .build(),
+                                new InstantAction(() -> outputBox.setAction(false)),
+                                AutoHelper.retractSlide(outputSlide)
+                        )
                 ));
             } else if (gp2.pressing(ButtonHelper.right_bumper) || gp1.pressing(ButtonHelper.TRIANGLE)) {
                 // Move the slide to the specimen output position

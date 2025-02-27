@@ -95,7 +95,7 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
                 .build()
         );
 
-        for (Pose2d submersiblePose : AutoHelper.SUBMERSIBLE_POSES) {
+        for (Pose2d submersiblePose : AutoHelper.SPECIMEN_SUBMERSIBLE_POSES) {
             // Pick up specimen and move to submersible
             Actions.runBlocking(drive.actionBuilder(AutoHelper.OBSERVATION_ZONE_POSE)
                     .setTangent(7 * Math.PI / 4)
