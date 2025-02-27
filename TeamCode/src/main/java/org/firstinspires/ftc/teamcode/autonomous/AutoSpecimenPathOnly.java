@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
+@SuppressWarnings("FieldCanBeLocal")
 @Autonomous(name = "AutoSpecimenPathOnly", group = "Big Green", preselectTeleOp = "TeleOpSpecimen")
 public class AutoSpecimenPathOnly extends LinearOpMode {
     private TelemetryWrapper telemetryWrapper;

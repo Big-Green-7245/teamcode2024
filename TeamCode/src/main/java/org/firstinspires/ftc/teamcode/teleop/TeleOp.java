@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class TeleOp extends LinearOpMode {
     // Define constants
     private final ElapsedTime timer = new ElapsedTime();

@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
 
+@SuppressWarnings("FieldCanBeLocal")
 @Autonomous(name = "AutoSpecimen", group = "Big Green", preselectTeleOp = "TeleOpSpecimen")
 public class AutoSpecimen extends LinearOpMode {
     private TelemetryWrapper telemetryWrapper;

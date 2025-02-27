@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
 
+@SuppressWarnings("FieldCanBeLocal")
 @Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOpBasket")
 public class AutoBasket extends LinearOpMode {
     // Declare modules

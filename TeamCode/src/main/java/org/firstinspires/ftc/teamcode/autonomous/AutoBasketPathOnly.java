@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 /**
  * This runs the path in {@link AutoBasket} without the input and output modules.
  */
+@SuppressWarnings("FieldCanBeLocal")
 @Autonomous(name = "AutoBasketPathOnly", group = "Big Green", preselectTeleOp = "TeleOpBasket")
 public class AutoBasketPathOnly extends LinearOpMode {
     // Declare modules
