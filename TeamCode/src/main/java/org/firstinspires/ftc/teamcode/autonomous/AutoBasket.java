@@ -72,11 +72,11 @@ public class AutoBasket extends LinearOpMode {
                 AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
         ));
         outputBox.setAction(true);
-        sleep(500);
+        sleep(AutoHelper.BASKET_DEPOSIT_TIME);
 
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
+            // Move to sample while resetting output box and retracting slides
             Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_POSE)
-                    // Move to sample while resetting output box and retracting slides
                     .setTangent(5 * Math.PI / 4)
                     .afterTime(0, new ParallelAction(
                             new InstantAction(() -> outputBox.setAction(false)),
@@ -84,8 +84,14 @@ public class AutoBasket extends LinearOpMode {
                             AutoHelper.startIntake(intakePivot, activeIntake)
                     ))
                     .splineToSplineHeading(samplePose, samplePose.heading)
-                    // Intake the sample and move to basket
-                    .endTrajectory()
+                    .build()
+            );
+
+            // Intake the sample and move to basket
+            MecanumDrive.PARAMS.maxWheelVel = 50;
+            MecanumDrive.PARAMS.minProfileAccel = -30;
+            MecanumDrive.PARAMS.maxProfileAccel = 50;
+            Actions.runBlocking(drive.actionBuilder(samplePose)
                     .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
                     .afterTime(0.5, new SequentialAction(
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
@@ -96,10 +102,13 @@ public class AutoBasket extends LinearOpMode {
                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                     .build()
             );
+            MecanumDrive.PARAMS.maxWheelVel = 70;
+            MecanumDrive.PARAMS.minProfileAccel = -50;
+            MecanumDrive.PARAMS.maxProfileAccel = 70;
 
             // Deposit the sample
             outputBox.setAction(true);
-            sleep(500);
+            sleep(AutoHelper.BASKET_DEPOSIT_TIME);
         }
 
         // Move to ascent zone while resetting output box and retracting slides
@@ -144,7 +153,7 @@ public class AutoBasket extends LinearOpMode {
 
         // Deposit the sample
         outputBox.setAction(true);
-        sleep(500);
+        sleep(AutoHelper.BASKET_DEPOSIT_TIME);
 
         // Move to ascent zone while resetting output box and retracting slides
         Actions.runBlocking(new ParallelAction(

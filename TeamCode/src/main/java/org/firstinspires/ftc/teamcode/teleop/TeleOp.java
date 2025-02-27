@@ -157,7 +157,7 @@ public class TeleOp extends LinearOpMode {
                                 )
                         ),
                         new InstantAction(() -> outputBox.setAction(true)),
-                        new SleepAction(0.5),
+                        new SleepAction(AutoHelper.BASKET_DEPOSIT_TIME / 1000d),
                         new InstantAction(() -> outputBox.setAction(false)),
                         AutoHelper.retractSlide(outputSlide)
                 ));
