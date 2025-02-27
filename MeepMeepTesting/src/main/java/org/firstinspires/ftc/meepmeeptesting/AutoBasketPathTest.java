@@ -30,18 +30,21 @@ public class AutoBasketPathTest {
                 .setTangent(5 * Math.PI / 4)
                 .splineToSplineHeading(SAMPLE_1_POSE, SAMPLE_1_POSE.heading)
                 // Move to basket the second time and deposit
+                .endTrajectory()
                 .lineToX(SAMPLE_1_POSE.position.x + 4 * SAMPLE_1_POSE.heading.real)
                 .splineToSplineHeading(BASKET_POSE, Math.PI / 4)
                 // Move to second sample while resetting output box and retracting slides
                 .setTangent(5 * Math.PI / 4)
                 .splineToSplineHeading(SAMPLE_2_POSE, SAMPLE_2_POSE.heading)
                 // Move to basket the third time and deposit
+                .endTrajectory()
                 .lineToX(SAMPLE_2_POSE.position.x + 4 * SAMPLE_2_POSE.heading.real)
                 .splineToSplineHeading(BASKET_POSE, Math.PI / 4)
                 // Move to third sample while resetting output box and retracting slides
                 .setTangent(5 * Math.PI / 4)
                 .splineToSplineHeading(SAMPLE_3_POSE, SAMPLE_3_POSE.heading)
                 // Move to basket the fourth time and deposit
+                .endTrajectory()
                 .lineToX(SAMPLE_3_POSE.position.x + 4 * SAMPLE_3_POSE.heading.real)
                 .splineToSplineHeading(BASKET_POSE, Math.PI / 4)
                 // Move to ascent zone while resetting output box and retracting slides

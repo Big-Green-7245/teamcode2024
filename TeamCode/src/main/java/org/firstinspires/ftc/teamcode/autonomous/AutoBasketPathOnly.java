@@ -77,6 +77,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
                     .setTangent(5 * Math.PI / 4)
                     .splineToSplineHeading(samplePose, samplePose.heading)
                     // Move to basket
+                    .endTrajectory()
                     .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                     .build()

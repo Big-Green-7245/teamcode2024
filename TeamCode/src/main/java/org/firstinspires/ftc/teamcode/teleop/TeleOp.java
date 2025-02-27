@@ -150,9 +150,9 @@ public class TeleOp extends LinearOpMode {
                                 ),
                                 new SequentialAction(
                                         AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
-                                        new SleepAction(0.5),
+                                        new SleepAction(0.1),
                                         AutoHelper.transferSample(activeIntake),
-                                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
                                 )
                         ),
                         new InstantAction(() -> outputBox.setAction(true)),

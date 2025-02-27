@@ -68,7 +68,7 @@ public class AutoBasket extends LinearOpMode {
                         .setTangent(3 * Math.PI / 2)
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
         ));
         outputBox.setAction(true);
         sleep(500);
@@ -84,12 +84,13 @@ public class AutoBasket extends LinearOpMode {
                     ))
                     .splineToSplineHeading(samplePose, samplePose.heading)
                     // Intake the sample and move to basket
+                    .endTrajectory()
                     .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
                     .afterTime(0.5, new SequentialAction(
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
-                            new SleepAction(0.5),
+                            new SleepAction(0.1),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
                     ))
                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                     .build()
@@ -134,9 +135,9 @@ public class AutoBasket extends LinearOpMode {
                         new InstantAction(() -> intakeSlide.setPosition(1)),
                         new SleepAction(0.5),
                         AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
-                        new SleepAction(0.5),
+                        new SleepAction(0.1),
                         AutoHelper.transferSample(activeIntake),
-                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, (int) (4 * AutoHelper.OUTPUT_SLIDE_ENCODER))
+                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
                 )
         ));
 
