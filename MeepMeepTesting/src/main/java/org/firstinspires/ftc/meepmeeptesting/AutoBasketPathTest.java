@@ -49,10 +49,6 @@ public class AutoBasketPathTest {
                     .setTangent(5 * Math.PI / 4)
                     .splineTo(submersiblePose.position, Math.PI)
                     // Intake a sample and move to basket
-                    .setTangent(3 * Math.PI / 2)
-                    .lineToYConstantHeading(submersiblePose.position.y - 4)
-                    .lineToYConstantHeading(submersiblePose.position.y)
-                    // Move to basket and deposit
                     .setTangent(0)
                     .splineToLinearHeading(BASKET_POSE, Math.PI / 4);
         }

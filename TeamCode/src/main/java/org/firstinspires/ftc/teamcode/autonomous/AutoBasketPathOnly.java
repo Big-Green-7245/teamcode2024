@@ -27,6 +27,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
     private MecanumDrive drive;
     private ServoToggle intakeSlide;
     private ServoToggle intakePivot;
+    private ServoToggle intakeSweeper;
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
@@ -40,6 +41,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
         drive = new PinpointDrive(hardwareMap, AutoHelper.BASKET_INITIAL_POSE);
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
+        intakeSweeper = new ServoToggle("intakeSweeper", 0, 0.3, false);
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
@@ -50,6 +52,7 @@ public class AutoBasketPathOnly extends LinearOpMode {
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
+        intakeSweeper.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
@@ -95,14 +98,6 @@ public class AutoBasketPathOnly extends LinearOpMode {
             ));
 
             // Intake a sample and move to basket
-            Actions.runBlocking(drive.actionBuilder(submersiblePose)
-                    .setTangent(3 * Math.PI / 2)
-                    .lineToYConstantHeading(submersiblePose.position.y - 4)
-                    .lineToYConstantHeading(submersiblePose.position.y)
-                    .build()
-            );
-
-            // Move to basket
             Actions.runBlocking(new ParallelAction(
                     drive.actionBuilder(submersiblePose)
                             .setTangent(0)

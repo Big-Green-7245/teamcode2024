@@ -26,6 +26,7 @@ public class AutoBasket extends LinearOpMode {
     private ServoToggle intakeSlide;
     private ServoToggle intakePivot;
     private Servo activeIntake;
+    private ServoToggle intakeSweeper;
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
@@ -40,6 +41,7 @@ public class AutoBasket extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
+        intakeSweeper = new ServoToggle("intakeSweeper", 0, 0.3, false);
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
@@ -50,6 +52,7 @@ public class AutoBasket extends LinearOpMode {
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
+        intakeSweeper.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
@@ -123,13 +126,8 @@ public class AutoBasket extends LinearOpMode {
             ));
 
             // Intake a sample and move to basket
+            intakeSweeper.setAction(true);
             Actions.runBlocking(AutoHelper.startIntake(intakePivot, activeIntake));
-            Actions.runBlocking(drive.actionBuilder(submersiblePose)
-                    .setTangent(3 * Math.PI / 2)
-                    .lineToYConstantHeading(submersiblePose.position.y - 4)
-                    .lineToYConstantHeading(submersiblePose.position.y)
-                    .build()
-            );
             Actions.runBlocking(new ParallelAction(
                     new SequentialAction(
                             new SleepAction(0.5),
@@ -142,6 +140,7 @@ public class AutoBasket extends LinearOpMode {
                             new InstantAction(() -> intakeSlide.setPosition(1)),
                             new SleepAction(0.5),
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
+                            new InstantAction(() -> intakeSweeper.setAction(false)),
                             new SleepAction(0.1),
                             AutoHelper.transferSample(activeIntake),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)

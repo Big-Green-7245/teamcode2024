@@ -40,6 +40,7 @@ public class TeleOp extends LinearOpMode {
     private ServoToggle intakeSlide;
     private ServoToggle intakePivot;
     private Servo activeIntake;
+    private ServoToggle intakeSweeper;
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
@@ -61,6 +62,7 @@ public class TeleOp extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
+        intakeSweeper = new ServoToggle("intakeSweeper", 0, 0.3, false);
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
@@ -71,6 +73,7 @@ public class TeleOp extends LinearOpMode {
 
         intakeSlide.init(hardwareMap);
         intakePivot.init(hardwareMap);
+        intakeSweeper.init(hardwareMap);
         outputSlide.init(hardwareMap);
         outputBox.init(hardwareMap);
         specimenClaw.init(hardwareMap);
@@ -133,6 +136,10 @@ public class TeleOp extends LinearOpMode {
             }
             if (actions.isEmpty()) {
                 activeIntake.setPosition((gamepad2.right_trigger - gamepad2.left_trigger) / 2 + 0.5);
+            }
+            if (gp2.pressing(ButtonHelper.dpad_left)) {
+                // Toggle intake sweeper
+                intakeSweeper.toggleAction();
             }
 
             double intakeTime = timer.milliseconds();
