@@ -73,15 +73,11 @@ public class AutoBasketPathOnly extends LinearOpMode {
         sleep(AutoHelper.BASKET_DEPOSIT_TIME);
 
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
-            // Move to sample
             Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_POSE)
+                    // Move to sample
                     .setTangent(5 * Math.PI / 4)
                     .splineToSplineHeading(samplePose, samplePose.heading)
-                    .build()
-            );
-
-            // Move to basket
-            Actions.runBlocking(drive.actionBuilder(samplePose)
+                    // Move to basket
                     .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
                     .splineToSplineHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                     .build()

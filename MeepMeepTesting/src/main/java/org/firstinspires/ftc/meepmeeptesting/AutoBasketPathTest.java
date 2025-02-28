@@ -34,14 +34,11 @@ public class AutoBasketPathTest {
                 .splineToLinearHeading(BASKET_POSE, Math.PI / 4);
 
         for (Pose2d samplePose : SAMPLE_POSES) {
-            // Move to sample while resetting output box and retracting slides
             builder = builder
+                    // Move to sample while resetting output box and retracting slides
                     .setTangent(5 * Math.PI / 4)
-                    .splineToSplineHeading(samplePose, samplePose.heading);
-
-            // Move to basket and deposit
-            builder = builder
-                    .endTrajectory()
+                    .splineToSplineHeading(samplePose, samplePose.heading)
+                    // Move to basket and deposit
                     .lineToX(samplePose.position.x + 4 * samplePose.heading.real)
                     .splineToSplineHeading(BASKET_POSE, Math.PI / 4);
         }
