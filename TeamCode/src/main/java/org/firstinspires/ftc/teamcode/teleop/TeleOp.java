@@ -128,7 +128,7 @@ public class TeleOp extends LinearOpMode {
                 intakeSlide.setAction(false);
             } else if (Math.abs(gamepad2.left_stick_y) > 0.0001) {
                 // Move intake slides
-                intakeSlide.setPosition(intakeSlide.getPosition() - gamepad2.left_stick_y * 0.2);
+                intakeSlide.setPosition(intakeSlide.getPosition() - gamepad2.left_stick_y * 0.1);
             }
             if (gp2.pressing(ButtonHelper.dpad_right)) {
                 // Toggle intake pivot between up and down

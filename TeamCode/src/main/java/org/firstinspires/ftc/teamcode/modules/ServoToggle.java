@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.modules.util.Modulable;
 
 public class ServoToggle implements Modulable {
@@ -32,7 +33,11 @@ public class ServoToggle implements Modulable {
     }
 
     public double getPosition() {
-        return servo.getPosition();
+        return getPosition(servo);
+    }
+
+    public double getPosition(Servo servo) {
+        return getPosition(servo, idlePos, actionPos);
     }
 
     /**
@@ -60,5 +65,18 @@ public class ServoToggle implements Modulable {
     public void toggleAction() {
         setAction(!action);
     }
-}
 
+    /**
+     * Gets the position of the servo, scaled to the given min and max positions.
+     * <p>
+     * This gets around the incorrect reverse in {@link com.qualcomm.robotcore.hardware.ServoImpl#getPosition() ServoImpl#getPosition()},
+     * where {@link com.qualcomm.robotcore.hardware.ServoImpl#reverse(double) ServoImpl#reverse(double)} is called before {@link Range#scale(double, double, double, double, double)}.
+     */
+    @SuppressWarnings("JavadocReference")
+    public static double getPosition(Servo servo, double posMin, double posMax) {
+        double position = servo.getController().getServoPosition(servo.getPortNumber());
+        double scaled = Range.scale(position, posMin, posMax, Servo.MIN_POSITION, Servo.MAX_POSITION);
+        if (servo.getDirection() == Servo.Direction.REVERSE) scaled = Servo.MAX_POSITION - scaled + Servo.MIN_POSITION;
+        return Range.clip(scaled, Servo.MIN_POSITION, Servo.MAX_POSITION);
+    }
+}

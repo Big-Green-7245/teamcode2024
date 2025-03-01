@@ -30,7 +30,7 @@ public class DoubleServoToggle extends ServoToggle {
 
     @Override
     public double getPosition() {
-        return (leftServo.getPosition() + rightServo.getPosition()) / 2;
+        return (getPosition(leftServo) + getPosition(rightServo)) / 2;
     }
 
     @Override
