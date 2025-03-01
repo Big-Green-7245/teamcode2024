@@ -41,7 +41,7 @@ public class AutoBasket extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
-        intakeSweeper = new ServoToggle("intakeSweeper", 0, 0.3, false);
+        intakeSweeper = new ServoToggle("intakeSweeper", 0, 0.5, false);
         outputSlide = new DoubleLinearSlides(
                 List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
                 List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
