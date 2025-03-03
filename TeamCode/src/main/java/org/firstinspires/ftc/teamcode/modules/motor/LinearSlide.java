@@ -31,7 +31,7 @@ public class LinearSlide extends RunToPositionMotor {
     @Override
     public void init(HardwareMap map) {
         super.init(map);
-        elevatorButton = map.get(RevTouchSensor.class, motorInfo.get(0).first + "Btn");
+        elevatorButton = map.get(RevTouchSensor.class, motorInfo.get(0).name() + "Btn");
     }
 
     /**

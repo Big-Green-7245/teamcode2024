@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.modules.motor;
 
-import android.util.Pair;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,11 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RunToPositionMotor extends RunToPosition {
     // Allow a collection of motors.
-    protected final List<Pair<String, DcMotorSimple.Direction>> motorInfo;
+    protected final List<MotorInfo> motorInfo;
     protected DcMotorEx motor;
 
     public RunToPositionMotor(String name, double power, DcMotorSimple.Direction direction) {
@@ -21,7 +19,7 @@ public class RunToPositionMotor extends RunToPosition {
 
     public RunToPositionMotor(String name, double power, DcMotorSimple.Direction direction, int min, int max) {
         super(power, min, max);
-        motorInfo = List.of(new Pair<>(name, direction));
+        motorInfo = List.of(new MotorInfo(name, direction));
     }
 
     @Override

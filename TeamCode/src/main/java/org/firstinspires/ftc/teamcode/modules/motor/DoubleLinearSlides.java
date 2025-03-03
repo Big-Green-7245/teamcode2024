@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.modules.motor;
 
-import android.util.Pair;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -26,7 +25,7 @@ public class DoubleLinearSlides extends TwoRunToPositionMotors {
         super(name, power, directionLeft, directionRight, min, max);
     }
 
-    public DoubleLinearSlides(List<Pair<String, DcMotorSimple.Direction>> motorInfoLeft, List<Pair<String, DcMotorSimple.Direction>> motorInfoRight, double power, int min, int max) {
+    public DoubleLinearSlides(List<MotorInfo> motorInfoLeft, List<MotorInfo> motorInfoRight, double power, int min, int max) {
         super(motorInfoLeft, motorInfoRight, power, min, max);
     }
 
@@ -37,8 +36,8 @@ public class DoubleLinearSlides extends TwoRunToPositionMotors {
     @Override
     public void init(HardwareMap map) {
         super.init(map);
-        elevatorBtnLeft = map.get(RevTouchSensor.class, motorInfoLeft.get(0).first + "Btn");
-        elevatorBtnRight = map.get(RevTouchSensor.class, motorInfoRight.get(0).first + "Btn");
+        elevatorBtnLeft = map.get(RevTouchSensor.class, motorInfoLeft.get(0).name() + "Btn");
+        elevatorBtnRight = map.get(RevTouchSensor.class, motorInfoRight.get(0).name() + "Btn");
     }
 
     /**

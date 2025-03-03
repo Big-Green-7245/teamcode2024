@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.modules.motor;
 
-import android.util.Pair;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,6 +12,9 @@ import java.util.stream.Collectors;
  * A group of motors that implements the {@link DcMotorEx} interface.
  * Get methods will delegate to the first motor in the list.
  * Set methods will call the same method on all motors in the list.
+ * <p>
+ * This is designed to be used with motors that are rigidly mechanically connected,
+ * with no wiggle room.
  */
 public class DcMotorsEx implements DcMotorEx {
     private final List<DcMotorEx> motors;
@@ -24,21 +26,14 @@ public class DcMotorsEx implements DcMotorEx {
         this.motors = motors;
     }
 
-    public static DcMotorEx of(HardwareMap map, List<Pair<String, Direction>> motorInfos) {
+    public static DcMotorEx of(HardwareMap map, List<MotorInfo> motorInfos) {
         if (motorInfos.isEmpty()) {
             throw new IllegalArgumentException("List of motors cannot be empty");
         }
-        if (motorInfos.size() > 1) {
-            return new DcMotorsEx(motorInfos.stream().map(motorInfo -> {
-                DcMotorEx motor = (DcMotorEx) map.get(DcMotor.class, motorInfo.first);
-                motor.setDirection(motorInfo.second);
-                return motor;
-            }).collect(Collectors.toList()));
-        } else {
-            DcMotorEx motor = (DcMotorEx) map.get(DcMotor.class, motorInfos.get(0).first);
-            motor.setDirection(motorInfos.get(0).second);
-            return motor;
+        if (motorInfos.size() == 1) {
+            return motorInfos.get(0).motor(map);
         }
+        return new DcMotorsEx(motorInfos.stream().map(motorInfo -> motorInfo.motor(map)).collect(Collectors.toList()));
     }
 
     private DcMotorEx motor() {

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import android.util.Pair;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,6 +12,7 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.motor.MotorInfo;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -36,8 +36,8 @@ public class AutoSpecimenPathOnly extends LinearOpMode {
         intakeSlide = new DoubleServoToggle("intakeSlide", 0, 0.3, Servo.Direction.REVERSE, Servo.Direction.FORWARD);
         intakePivot = new DoubleServoToggle("intakePivot", 0, 0.66, Servo.Direction.FORWARD, Servo.Direction.REVERSE);
         outputSlide = new DoubleLinearSlides(
-                List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
-                List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
+                List.of(new MotorInfo("outputSlideLeft", DcMotorSimple.Direction.REVERSE), new MotorInfo("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
+                List.of(new MotorInfo("outputSlideRight", DcMotorSimple.Direction.FORWARD), new MotorInfo("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
                 1, (int) (0.1 * AutoHelper.OUTPUT_SLIDE_ENCODER), Integer.MAX_VALUE
         );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);

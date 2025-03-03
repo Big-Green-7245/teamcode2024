@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.util.Pair;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.*;
@@ -15,6 +14,7 @@ import org.firstinspires.ftc.teamcode.autonomous.AutoHelper;
 import org.firstinspires.ftc.teamcode.modules.DoubleServoToggle;
 import org.firstinspires.ftc.teamcode.modules.ServoToggle;
 import org.firstinspires.ftc.teamcode.modules.motor.DoubleLinearSlides;
+import org.firstinspires.ftc.teamcode.modules.motor.MotorInfo;
 import org.firstinspires.ftc.teamcode.util.ButtonHelper;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
@@ -64,8 +64,8 @@ public class TeleOp extends LinearOpMode {
         activeIntake = hardwareMap.get(Servo.class, "activeIntake");
         intakeSweeper = new ServoToggle("intakeSweeper", 0, 0.5, false);
         outputSlide = new DoubleLinearSlides(
-                List.of(Pair.create("outputSlideLeft", DcMotorSimple.Direction.REVERSE), Pair.create("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
-                List.of(Pair.create("outputSlideRight", DcMotorSimple.Direction.FORWARD), Pair.create("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
+                List.of(new MotorInfo("outputSlideLeft", DcMotorSimple.Direction.REVERSE), new MotorInfo("outputSlideLeft2", DcMotorSimple.Direction.FORWARD)),
+                List.of(new MotorInfo("outputSlideRight", DcMotorSimple.Direction.FORWARD), new MotorInfo("outputSlideRight2", DcMotorSimple.Direction.REVERSE)),
                 1, (int) (0.1 * AutoHelper.OUTPUT_SLIDE_ENCODER), (int) (8.58 * AutoHelper.OUTPUT_SLIDE_ENCODER)
         );
         outputBox = new ServoToggle("outputBox", 0, 0.4, true);
