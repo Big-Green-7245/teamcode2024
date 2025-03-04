@@ -37,10 +37,11 @@ public class AutoBasketPathTest {
             builder = builder
                     // Move to sample while resetting output box and retracting slides
                     .setTangent(5 * Math.PI / 4)
-                    .splineToLinearHeading(samplePose, samplePose.heading)
+                    .splineTo(samplePose.position, samplePose.heading)
                     // Move to basket and deposit
                     .setTangent(samplePose.heading.plus(Math.PI))
-                    .splineToLinearHeading(BASKET_POSE, Math.PI / 4);
+                    .setReversed(true)
+                    .splineTo(BASKET_POSE.position, Math.PI / 4);
         }
 
         for (Pose2d submersiblePose : SAMPLE_SUBMERSIBLE_POSES) {

@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.util.EncoderConstants;
 
 import java.lang.Math;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class AutoHelper {
     public static final double OUTPUT_SLIDE_ENCODER = EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution() / 1.5;
@@ -100,10 +101,10 @@ public class AutoHelper {
         );
     }
 
-    public static Action depositSample(RunToPosition outputSlide, ServoToggle outputBox) {
+    public static Action depositSample(BooleanSupplier outputSlideExtended, ServoToggle outputBox) {
         return new SequentialAction(
                 // Wait for the slide to be within a tolerance to the basket height
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE),
+                telemetryPacket -> !outputSlideExtended.getAsBoolean(),
                 // Deposit the sample
                 new InstantAction(() -> outputBox.setAction(true)),
                 new SleepAction(AutoHelper.BASKET_DEPOSIT_TIME)

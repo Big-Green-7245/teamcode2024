@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.modules.motor.MotorInfo;
 import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings("FieldCanBeLocal")
 @Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOpBasket")
@@ -70,7 +71,7 @@ public class AutoBasket extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.BASKET_INITIAL_POSE)
                         .setTangent(3 * Math.PI / 2)
-                        .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlide, outputBox))
+                        .beforeEndDisp(0.5, AutoHelper.depositSample(() -> true, outputBox))
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
                 AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
@@ -80,6 +81,7 @@ public class AutoBasket extends LinearOpMode {
         MecanumDrive.PARAMS.minProfileAccel = -30;
         MecanumDrive.PARAMS.maxProfileAccel = 50;
         for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
+            AtomicBoolean outputSlideExtended = new AtomicBoolean(false);
             Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_POSE)
                     // Move to sample while resetting output box and retracting slides
                     .setTangent(5 * Math.PI / 4)
@@ -89,18 +91,20 @@ public class AutoBasket extends LinearOpMode {
                             AutoHelper.startIntake(intakePivot, activeIntake)
                     ))
                     .beforeEndDisp(0.5, new InstantAction(() -> intakeSlide.setAction(true)))
-                    .splineToLinearHeading(samplePose, samplePose.heading)
+                    .splineTo(samplePose.position, samplePose.heading)
                     // Intake the sample and move to basket
                     .setTangent(samplePose.heading.plus(Math.PI))
-                    .afterTime(0.5, new SequentialAction(
+                    .setReversed(true)
+                    .afterTime(0, new SequentialAction(
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.1),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE),
+                            new InstantAction(() -> outputSlideExtended.set(true))
                     ))
                     // When the robot is within 0.5 inches to the basket, deposit the sample
-                    .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlide, outputBox))
-                    .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                    .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
+                    .splineTo(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                     .build()
             );
         }
@@ -125,6 +129,7 @@ public class AutoBasket extends LinearOpMode {
             ));
 
             // Intake a sample and move to basket
+            AtomicBoolean outputSlideExtended = new AtomicBoolean(false);
             Actions.runBlocking(AutoHelper.startIntake(intakePivot, activeIntake));
             Actions.runBlocking(new ParallelAction(
                     new SequentialAction(
@@ -132,7 +137,7 @@ public class AutoBasket extends LinearOpMode {
                             drive.actionBuilder(submersiblePose)
                                     .setTangent(0)
                                     .setReversed(true)
-                                    .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlide, outputBox))
+                                    .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
                                     .splineTo(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                                     .build()
                     ),
@@ -143,7 +148,8 @@ public class AutoBasket extends LinearOpMode {
                             new InstantAction(() -> intakeSweeper.setAction(false)),
                             new SleepAction(0.1),
                             AutoHelper.transferSample(activeIntake),
-                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
+                            AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE),
+                            new InstantAction(() -> outputSlideExtended.set(true))
                     )
             ));
         }

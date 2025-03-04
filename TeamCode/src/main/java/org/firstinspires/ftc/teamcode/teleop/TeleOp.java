@@ -22,6 +22,7 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class TeleOp extends LinearOpMode {
@@ -147,6 +148,7 @@ public class TeleOp extends LinearOpMode {
             // Move output slide
             if (gp1.pressing(ButtonHelper.left_bumper)) {
                 // Automatically transfer, drive, and deposit sample in the high basket
+                AtomicBoolean outputSlideExtended = new AtomicBoolean(false);
                 actions.add(new SequentialAction(
                         new ParallelAction(
                                 new SequentialAction(
@@ -154,7 +156,7 @@ public class TeleOp extends LinearOpMode {
                                         driveTrain.actionBuilder(driveTrain.pose)
                                                 .setTangent(driveTrain.pose.heading.plus(Math.PI))
                                                 .setReversed(true)
-                                                .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlide, outputBox))
+                                                .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
                                                 .splineTo(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                                                 .build()
                                 ),
@@ -162,7 +164,8 @@ public class TeleOp extends LinearOpMode {
                                         AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                                         new SleepAction(0.1),
                                         AutoHelper.transferSample(activeIntake),
-                                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
+                                        AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE),
+                                        new InstantAction(() -> outputSlideExtended.set(true))
                                 )
                         ),
                         new ParallelAction(
