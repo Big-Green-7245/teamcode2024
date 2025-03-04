@@ -156,7 +156,7 @@ public class TeleOp extends LinearOpMode {
                                         driveTrain.actionBuilder(driveTrain.pose)
                                                 .setTangent(driveTrain.pose.heading.plus(Math.PI))
                                                 .setReversed(true)
-                                                .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
+                                                .beforeEndDisp(1, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
                                                 .splineTo(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                                                 .build()
                                 ),

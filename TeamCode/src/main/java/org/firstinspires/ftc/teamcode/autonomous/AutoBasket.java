@@ -71,7 +71,7 @@ public class AutoBasket extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.BASKET_INITIAL_POSE)
                         .setTangent(3 * Math.PI / 2)
-                        .beforeEndDisp(0.5, AutoHelper.depositSample(() -> true, outputBox))
+                        .beforeEndDisp(1, AutoHelper.depositSample(() -> true, outputBox))
                         .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
                         .build(),
                 AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
@@ -90,20 +90,20 @@ public class AutoBasket extends LinearOpMode {
                             AutoHelper.retractSlide(outputSlide),
                             AutoHelper.startIntake(intakePivot, activeIntake)
                     ))
-                    .beforeEndDisp(0.5, new InstantAction(() -> intakeSlide.setAction(true)))
+                    .beforeEndDisp(1, () -> intakeSlide.setAction(true))
                     .splineTo(samplePose.position, samplePose.heading)
                     // Intake the sample and move to basket
                     .setTangent(samplePose.heading.plus(Math.PI))
                     .setReversed(true)
-                    .afterTime(0, new SequentialAction(
+                    .afterTime(0.3, new SequentialAction(
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.1),
                             AutoHelper.transferSample(activeIntake),
                             AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE),
                             new InstantAction(() -> outputSlideExtended.set(true))
                     ))
-                    // When the robot is within 0.5 inches to the basket, deposit the sample
-                    .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
+                    // When the robot is within one inch to the basket, deposit the sample
+                    .beforeEndDisp(1, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
                     .splineTo(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                     .build()
             );
@@ -117,7 +117,7 @@ public class AutoBasket extends LinearOpMode {
             Actions.runBlocking(new ParallelAction(
                     drive.actionBuilder(AutoHelper.BASKET_POSE)
                             .setTangent(5 * Math.PI / 4)
-                            .beforeEndDisp(0.5, new InstantAction(() -> intakeSweeper.setAction(true)))
+                            .beforeEndDisp(1, () -> intakeSweeper.setAction(true))
                             .splineTo(submersiblePose.position, Math.PI)
                             .build(),
                     new InstantAction(() -> outputBox.setAction(false)),
@@ -137,7 +137,7 @@ public class AutoBasket extends LinearOpMode {
                             drive.actionBuilder(submersiblePose)
                                     .setTangent(0)
                                     .setReversed(true)
-                                    .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
+                                    .beforeEndDisp(1, AutoHelper.depositSample(outputSlideExtended::get, outputBox))
                                     .splineTo(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                                     .build()
                     ),

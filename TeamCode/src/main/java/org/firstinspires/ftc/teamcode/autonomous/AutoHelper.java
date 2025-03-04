@@ -96,7 +96,7 @@ public class AutoHelper {
     public static Action transferSample(Servo activeIntake) {
         return new SequentialAction(
                 new InstantAction(() -> activeIntake.setPosition(0)),
-                new SleepAction(0.5),
+                new SleepAction(0.7),
                 new InstantAction(() -> activeIntake.setPosition(0.5))
         );
     }
