@@ -14,9 +14,9 @@ public class AutoHelper {
 
     static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
     public static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
-    private static final Pose2d SAMPLE_1_POSE = new Pose2d(38, 35.5, 7 * Math.PI / 4); // 48, 25.5
-    private static final Pose2d SAMPLE_2_POSE = new Pose2d(48, 35.5, 7 * Math.PI / 4); // 58, 25.5
-    private static final Pose2d SAMPLE_3_POSE = new Pose2d(55, 25.5, 0); // 68, 25.5
+    private static final Pose2d SAMPLE_1_POSE = new Pose2d(48, 39, 3 * Math.PI / 2); // 48, 25.5
+    private static final Pose2d SAMPLE_2_POSE = new Pose2d(51, 37.5, 5 * Math.PI / 3); // 58, 25.5
+    private static final Pose2d SAMPLE_3_POSE = new Pose2d(58, 35.5, 7 * Math.PI / 4); // 68, 25.5
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
     private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_1 = new Pose2d(24, 10, Math.PI);
     private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_2 = new Pose2d(24, 8, Math.PI);
@@ -24,7 +24,7 @@ public class AutoHelper {
     public static final Pose2d ASCENT_ZONE_POSE_PARKING = new Pose2d(22, 8, 0);
     public static final int BASKET_SLIDE_HIGH = (int) (7.3 * OUTPUT_SLIDE_ENCODER);
     public static final int BASKET_SLIDE_TOLERANCE = (int) (5 * OUTPUT_SLIDE_ENCODER);
-    public static final long BASKET_DEPOSIT_TIME = 750;
+    public static final double BASKET_DEPOSIT_TIME = 0.75;
 
     static final Pose2d SPECIMEN_INITIAL_POSE = new Pose2d(-12, 63, Math.PI / 2);
     static final double SUBMERSIBLE_Y = 34;
@@ -97,6 +97,16 @@ public class AutoHelper {
                 new InstantAction(() -> activeIntake.setPosition(0)),
                 new SleepAction(0.5),
                 new InstantAction(() -> activeIntake.setPosition(0.5))
+        );
+    }
+
+    public static Action depositSample(RunToPosition outputSlide, ServoToggle outputBox) {
+        return new SequentialAction(
+                // Wait for the slide to be within a tolerance to the basket height
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE),
+                // Deposit the sample
+                new InstantAction(() -> outputBox.setAction(true)),
+                new SleepAction(AutoHelper.BASKET_DEPOSIT_TIME)
         );
     }
 }

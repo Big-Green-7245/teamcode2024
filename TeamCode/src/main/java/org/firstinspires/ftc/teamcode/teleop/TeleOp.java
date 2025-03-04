@@ -153,7 +153,9 @@ public class TeleOp extends LinearOpMode {
                                         new SleepAction(0.5),
                                         driveTrain.actionBuilder(driveTrain.pose)
                                                 .setTangent(driveTrain.pose.heading.plus(Math.PI))
-                                                .splineToLinearHeading(AutoHelper.BASKET_POSE, Math.PI / 4)
+                                                .setReversed(true)
+                                                .beforeEndDisp(0.5, AutoHelper.depositSample(outputSlide, outputBox))
+                                                .splineTo(AutoHelper.BASKET_POSE.position, Math.PI / 4)
                                                 .build()
                                 ),
                                 new SequentialAction(
@@ -163,12 +165,10 @@ public class TeleOp extends LinearOpMode {
                                         AutoHelper.moveSlideToPos(outputSlide, AutoHelper.BASKET_SLIDE_HIGH, AutoHelper.BASKET_SLIDE_TOLERANCE)
                                 )
                         ),
-                        new InstantAction(() -> outputBox.setAction(true)),
-                        new SleepAction(AutoHelper.BASKET_DEPOSIT_TIME / 1000d),
                         new ParallelAction(
                                 driveTrain.actionBuilder(AutoHelper.BASKET_POSE)
                                         .setTangent(5 * Math.PI / 4)
-                                        .splineToLinearHeading(driveTrain.pose, driveTrain.pose.heading)
+                                        .splineTo(driveTrain.pose.position, driveTrain.pose.heading)
                                         .build(),
                                 new InstantAction(() -> outputBox.setAction(false)),
                                 AutoHelper.retractSlide(outputSlide)
