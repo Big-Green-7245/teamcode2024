@@ -95,7 +95,7 @@ public class AutoBasket extends LinearOpMode {
                     // Intake the sample and move to basket
                     .setTangent(samplePose.heading.plus(Math.PI))
                     .setReversed(true)
-                    .afterTime(0.3, new SequentialAction(
+                    .afterTime(0.2, new SequentialAction(
                             AutoHelper.retractIntake(intakeSlide, intakePivot, activeIntake),
                             new SleepAction(0.1),
                             AutoHelper.transferSample(activeIntake),
