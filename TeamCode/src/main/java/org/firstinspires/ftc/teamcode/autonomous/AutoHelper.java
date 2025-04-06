@@ -13,13 +13,14 @@ import java.util.function.BooleanSupplier;
 public class AutoHelper {
     public static final double OUTPUT_SLIDE_ENCODER = EncoderConstants.YELLOW_JACKET_435.getPulsesPerRevolution() / 1.5;
 
-    static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
+    static final Pose2d BASKET_INITIAL_POSE = new Pose2d(35.5, 61.5, 3 * Math.PI / 2);
     public static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
     private static final Pose2d SAMPLE_1_POSE = new Pose2d(48, 39, 3 * Math.PI / 2); // 48, 25.5
     private static final Pose2d SAMPLE_2_POSE = new Pose2d(51, 37.5, 5 * Math.PI / 3); // 58, 25.5
     private static final Pose2d SAMPLE_3_POSE = new Pose2d(58, 35.5, 7 * Math.PI / 4); // 68, 25.5
+    static final Pose2d SAMPLE_25650_POSE = new Pose2d(6, 58.5, 11 * Math.PI / 12); // -18, 65
     static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
-    private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_1 = new Pose2d(24, 10, Math.PI);
+    static final Pose2d SAMPLE_SUBMERSIBLE_POSE_1 = new Pose2d(24, 10, Math.PI);
     private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_2 = new Pose2d(24, 8, Math.PI);
     static final List<Pose2d> SAMPLE_SUBMERSIBLE_POSES = List.of(SAMPLE_SUBMERSIBLE_POSE_1, SAMPLE_SUBMERSIBLE_POSE_2);
     public static final Pose2d ASCENT_ZONE_POSE_PARKING = new Pose2d(22, 8, 0);
@@ -44,6 +45,7 @@ public class AutoHelper {
     private static final Pose2d SPECIMEN_SUBMERSIBLE_3_POSE = new Pose2d(-10, SUBMERSIBLE_Y, Math.PI / 2);
     private static final Pose2d SPECIMEN_SUBMERSIBLE_4_POSE = new Pose2d(-12, SUBMERSIBLE_Y, Math.PI / 2);
     static final List<Pose2d> SPECIMEN_SUBMERSIBLE_POSES = List.of(SPECIMEN_SUBMERSIBLE_1_POSE, SPECIMEN_SUBMERSIBLE_2_POSE, SPECIMEN_SUBMERSIBLE_3_POSE, SPECIMEN_SUBMERSIBLE_4_POSE);
+    public static final int SPECIMEN_INITIAL_SLIDE_HIGH = (int) (3.52 * OUTPUT_SLIDE_ENCODER);
     public static final int SPECIMEN_SLIDE_HIGH = (int) (3.64 * OUTPUT_SLIDE_ENCODER);
 
     /**

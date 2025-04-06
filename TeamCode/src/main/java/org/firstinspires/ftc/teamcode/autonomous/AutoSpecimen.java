@@ -65,13 +65,19 @@ public class AutoSpecimen extends LinearOpMode {
         // See AutoSpecimenPathTest.java for a visualization
 
         // Move to submersible and deposit the preload specimen
+        MecanumDrive.PARAMS.maxWheelVel = 50;
+        MecanumDrive.PARAMS.minProfileAccel = -30;
+        MecanumDrive.PARAMS.maxProfileAccel = 50;
         Actions.runBlocking(new ParallelAction(
                 drive.actionBuilder(AutoHelper.SPECIMEN_INITIAL_POSE)
                         .setTangent(3 * Math.PI / 2)
                         .splineToConstantHeading(AutoHelper.INITIAL_SUBMERSIBLE_POSE.position, 3 * Math.PI / 2)
                         .build(),
-                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_SLIDE_HIGH, 0)
+                AutoHelper.moveSlideToPos(outputSlide, AutoHelper.SPECIMEN_INITIAL_SLIDE_HIGH, 0)
         ));
+        MecanumDrive.PARAMS.maxWheelVel = 70;
+        MecanumDrive.PARAMS.minProfileAccel = -50;
+        MecanumDrive.PARAMS.maxProfileAccel = 70;
 
         // Move to first sample while resetting specimen claw and retracting slides
         Actions.runBlocking(new ParallelAction(

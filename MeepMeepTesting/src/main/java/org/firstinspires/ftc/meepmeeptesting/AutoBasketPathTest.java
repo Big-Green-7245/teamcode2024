@@ -7,13 +7,16 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AutoBasketPathTest {
-    private static final Pose2d BASKET_INITIAL_POSE = new Pose2d(36, 61, 3 * Math.PI / 2);
+    private static final Pose2d BASKET_INITIAL_POSE = new Pose2d(35.5, 61.5, 3 * Math.PI / 2);
     private static final Pose2d BASKET_POSE = new Pose2d(55, 55, 5 * Math.PI / 4);
     private static final Pose2d SAMPLE_1_POSE = new Pose2d(48, 39, 3 * Math.PI / 2); // 48, 25.5
     private static final Pose2d SAMPLE_2_POSE = new Pose2d(51, 37.5, 5 * Math.PI / 3); // 58, 25.5
     private static final Pose2d SAMPLE_3_POSE = new Pose2d(58, 35.5, 7 * Math.PI / 4); // 68, 25.5
+    private static final Pose2d SAMPLE_25650_POSE = new Pose2d(6, 58.5, 11 * Math.PI / 12); // -18, 65
     private static final List<Pose2d> SAMPLE_POSES = List.of(SAMPLE_1_POSE, SAMPLE_2_POSE, SAMPLE_3_POSE);
     private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_1 = new Pose2d(24, 10, Math.PI);
     private static final Pose2d SAMPLE_SUBMERSIBLE_POSE_2 = new Pose2d(24, 8, Math.PI);
@@ -33,7 +36,7 @@ public class AutoBasketPathTest {
                 .setTangent(3 * Math.PI / 2)
                 .splineToLinearHeading(BASKET_POSE, Math.PI / 4);
 
-        for (Pose2d samplePose : SAMPLE_POSES) {
+        for (Pose2d samplePose : Stream.concat(SAMPLE_POSES.stream(), Stream.of(SAMPLE_25650_POSE)).collect(Collectors.toList())) {
             builder = builder
                     // Move to sample while resetting output box and retracting slides
                     .setTangent(5 * Math.PI / 4)

@@ -17,10 +17,13 @@ import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 import java.lang.Math;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("FieldCanBeLocal")
 @Autonomous(name = "AutoBasket", group = "Big Green", preselectTeleOp = "TeleOpBasket")
 public class AutoBasket extends LinearOpMode {
+    private final boolean team25650;
     // Declare modules
     private TelemetryWrapper telemetryWrapper;
     private MecanumDrive drive;
@@ -31,6 +34,14 @@ public class AutoBasket extends LinearOpMode {
     private DoubleLinearSlides outputSlide;
     private ServoToggle outputBox;
     private ServoToggle specimenClaw;
+
+    public AutoBasket() {
+        this(false);
+    }
+
+    public AutoBasket(boolean team25650) {
+        this.team25650 = team25650;
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -80,7 +91,7 @@ public class AutoBasket extends LinearOpMode {
         MecanumDrive.PARAMS.maxWheelVel = 50;
         MecanumDrive.PARAMS.minProfileAccel = -30;
         MecanumDrive.PARAMS.maxProfileAccel = 50;
-        for (Pose2d samplePose : AutoHelper.SAMPLE_POSES) {
+        for (Pose2d samplePose : team25650 ? Stream.concat(AutoHelper.SAMPLE_POSES.stream(), Stream.of(AutoHelper.SAMPLE_25650_POSE)).collect(Collectors.toList()) : AutoHelper.SAMPLE_POSES) {
             AtomicBoolean outputSlideExtended = new AtomicBoolean(false);
             Actions.runBlocking(drive.actionBuilder(AutoHelper.BASKET_POSE)
                     // Move to sample while resetting output box and retracting slides
@@ -88,7 +99,8 @@ public class AutoBasket extends LinearOpMode {
                     .afterTime(0, new ParallelAction(
                             new InstantAction(() -> outputBox.setAction(false)),
                             AutoHelper.retractSlide(outputSlide),
-                            AutoHelper.startIntake(intakePivot, activeIntake)
+                            AutoHelper.startIntake(intakePivot, activeIntake),
+                            new InstantAction(samplePose == AutoHelper.SAMPLE_25650_POSE ? () -> intakeSlide.setPosition(0.5) : () -> {})
                     ))
                     .beforeEndDisp(1, () -> intakeSlide.setAction(true))
                     .splineTo(samplePose.position, samplePose.heading)
@@ -112,7 +124,7 @@ public class AutoBasket extends LinearOpMode {
         MecanumDrive.PARAMS.minProfileAccel = -50;
         MecanumDrive.PARAMS.maxProfileAccel = 70;
 
-        for (Pose2d submersiblePose : AutoHelper.SAMPLE_SUBMERSIBLE_POSES) {
+        for (Pose2d submersiblePose : team25650 ? List.of(AutoHelper.SAMPLE_SUBMERSIBLE_POSE_1) : AutoHelper.SAMPLE_SUBMERSIBLE_POSES) {
             // Move to ascent zone while resetting output box and retracting slides
             Actions.runBlocking(new ParallelAction(
                     drive.actionBuilder(AutoHelper.BASKET_POSE)
